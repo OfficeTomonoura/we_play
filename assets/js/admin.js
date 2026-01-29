@@ -2,7 +2,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     initTrendChart();
     initReferralChart();
+    initLogout();
 });
+
+function initLogout() {
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('ログアウトしますか？')) {
+                window.location.href = '../index.html';
+            }
+        });
+    }
+}
 
 function initTrendChart() {
     const ctx = document.getElementById('registrationTrend').getContext('2d');

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プレミアム・イベント参加申込 | WE PLAY</title>
+    <meta name="description" content="未来を共創する次世代イベントの参加申込フォーム。最先端の体験をあなたに。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <section class="form-wrapper">
+            <header class="form-header">
+                <div class="logo">
+                    <span class="logo-text">一般社団法人福山青年会議所</span>
+                </div>
+                <h1>We Play 未来人財育成委員会</h1>
+                <h2>映画作ろうぜ！！<br>〜地域で育む協働の絆〜</h2>
+                <p>参加をご希望の方は、以下のフォームより必要事項をご入力ください。</p>
+            </header>
+
+            <form id="registrationForm" class="registration-form" novalidate>
+                <div class="form-group">
+                    <label for="name">
+                        <i data-lucide="user"></i> お名前
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" name="name" placeholder="山田 太郎" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="school">
+                        <i data-lucide="graduation-cap"></i> 学校名
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" id="school" name="school" placeholder="〇〇中学校 / 〇〇高校" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade">
+                        <i data-lucide="hash"></i> 学年
+                    </label>
+                    <div class="input-wrapper">
+                        <select id="grade" name="grade" required>
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="1">1年生</option>
+                            <option value="2">2年生</option>
+                            <option value="3">3年生</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role-1">
+                        <i data-lucide="star"></i> 第1希望役職
+                    </label>
+                    <div class="input-wrapper">
+                        <select id="role-1" name="role-1" required>
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="director">監督</option>
+                            <option value="actor">演者</option>
+                            <option value="props">小道具</option>
+                            <option value="producer">プロデューサー</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role-2">
+                        <i data-lucide="star"></i> 第2希望役職
+                    </label>
+                    <div class="input-wrapper">
+                        <select id="role-2" name="role-2" required>
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="director">監督</option>
+                            <option value="actor">演者</option>
+                            <option value="props">小道具</option>
+                            <option value="producer">プロデューサー</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role-3">
+                        <i data-lucide="star"></i> 第3希望役職
+                    </label>
+                    <div class="input-wrapper">
+                        <select id="role-3" name="role-3" required>
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="director">監督</option>
+                            <option value="actor">演者</option>
+                            <option value="props">小道具</option>
+                            <option value="producer">プロデューサー</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="referral">
+                        <i data-lucide="megaphone"></i> 何で知ったか
+                    </label>
+                    <div class="input-wrapper">
+                        <select id="referral" name="referral" required>
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="teacher">先生から知らされた</option>
+                            <option value="friend">友達から聞いた</option>
+                            <option value="poster">ポスターを見た</option>
+                            <option value="family">家族から聞いた</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i data-lucide="mail"></i> メールアドレス
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="example@weplay.com" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">
+                        <i data-lucide="phone"></i> 電話番号
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="tel" id="phone" name="phone" placeholder="090-0000-0000" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">
+                        <i data-lucide="message-square"></i> ご要望・メッセージ
+                    </label>
+                    <div class="input-wrapper">
+                        <textarea id="message" name="message" rows="4" placeholder="ご質問や特別なリクエストがあればご記入ください"></textarea>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="privacy" required>
+                        <span class="checkmark"></span>
+                        <span class="label-text"><a href="#">プライバシーポリシー</a>に同意する</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    <span>送信する</span>
+                    <i data-lucide="arrow-right"></i>
+                </button>
+            </form>
+
+            <div id="successMessage" class="success-overlay" style="display: none;">
+                <div class="success-content">
+                    <div class="success-icon">
+                        <i data-lucide="check-circle-2"></i>
+                    </div>
+                    <h2>申し込み完了</h2>
+                    <p>ありがとうございます。確認メールをお送りしました。</p>
+                    <button type="button" class="close-btn" onclick="location.reload()">閉じる</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/form.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

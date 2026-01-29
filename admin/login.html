@@ -41,12 +41,16 @@
             </header>
 
             <form id="loginForm" class="registration-form">
+                <div id="loginError"
+                    style="display: none; color: #ff007a; background: rgba(255, 0, 122, 0.1); padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; text-align: center; border: 1px solid rgba(255, 0, 122, 0.2); margin-bottom: 1rem;">
+                    メールアドレスまたはパスワードが正しくありません。
+                </div>
                 <div class="form-group">
                     <label for="email">
                         <i data-lucide="mail"></i> メールアドレス
                     </label>
                     <div class="input-wrapper">
-                        <input type="email" id="email" name="email" placeholder="admin@example.com" required>
+                        <input type="email" id="email" name="email" placeholder="test@example.com" required>
                         <span class="focus-border"></span>
                     </div>
                 </div>
@@ -56,7 +60,7 @@
                         <i data-lucide="lock"></i> パスワード
                     </label>
                     <div class="input-wrapper">
-                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <input type="password" id="password" name="password" placeholder="password" required>
                         <span class="focus-border"></span>
                     </div>
                 </div>
@@ -67,7 +71,7 @@
                 </button>
 
                 <p style="text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-dim);">
-                    <a href="../index.html" style="color: var(--primary); text-decoration: none;">応募フォームへ戻る</a>
+                    <a href="../register.html" style="color: var(--primary); text-decoration: none;">応募フォームへ戻る</a>
                 </p>
             </form>
         </section>
@@ -77,10 +81,47 @@
         lucide.createIcons();
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            // In Phase 4, this will be Supabase Auth
-            window.location.href = 'index.html';
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('loginError');
+
+            // --- モック用のログインチェック ---
+            // テストアカウント: test@example.com / password
+            if (email === 'test@example.com' && password === 'password') {
+                // 成功時はダッシュボードへ
+                window.location.href = 'index.html';
+            } else {
+                // 失敗時はエラー表示
+                errorMsg.style.display = 'block';
+                // アイコンを再ロード（必要に応じて）
+                setTimeout(() => {
+                    errorMsg.style.animation = 'shake 0.5s ease-in-out';
+                }, 10);
+                setTimeout(() => {
+                    errorMsg.style.animation = '';
+                }, 510);
+            }
         });
     </script>
+    <style>
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
 </body>
 
 </html>
