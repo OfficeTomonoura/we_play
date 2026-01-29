@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理ダッシュボード | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+                <a href="../index.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-search">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="応募者を検索...">
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>We Play 事業ポータル</h1>
+                    <p>本日も活動お疲れ様です。現在の応募状況を確認しましょう。</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--color: #00f2ff;">
+                            <i data-lucide="user-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="label">総応募数</span>
+                            <span class="count">24</span>
+                        </div>
+                        <div class="stat-trend positive">+12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--color: #7000ff;">
+                            <i data-lucide="clapperboard"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="label">監督希望</span>
+                            <span class="count">8</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--color: #ff007a;">
+                            <i data-lucide="theater"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="label">演者希望</span>
+                            <span class="count">12</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--color: #ffea00;">
+                            <i data-lucide="wrench"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="label">小道具希望</span>
+                            <span class="count">4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Area -->
+                <div class="charts-row">
+                    <div class="chart-container main-chart">
+                        <h3>応募推移</h3>
+                        <canvas id="registrationTrend"></canvas>
+                    </div>
+                    <div class="chart-container secondary-chart">
+                        <h3>認知経路</h3>
+                        <canvas id="referralSource"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Registrations Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>最近の応募</h3>
+                        <button class="view-all">すべて表示</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>氏名</th>
+                                <th>学校 / 学年</th>
+                                <th>第一希望</th>
+                                <th>応募日</th>
+                                <th>ステータス</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="name">山田 太郎</span>
+                                        <span class="email">yamada@example.com</span>
+                                    </div>
+                                </td>
+                                <td>福山中学校 / 2年生</td>
+                                <td>監督</td>
+                                <td>2026/01/29</td>
+                                <td><span class="status-badge new">新規</span></td>
+                                <td><button class="action-btn"><i data-lucide="more-horizontal"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="name">佐藤 花子</span>
+                                        <span class="email">sato@example.com</span>
+                                    </div>
+                                </td>
+                                <td>福山高校 / 1年生</td>
+                                <td>演者</td>
+                                <td>2026/01/28</td>
+                                <td><span class="status-badge reviewed">確認済み</span></td>
+                                <td><button class="action-btn"><i data-lucide="more-horizontal"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="name">田中 一郎</span>
+                                        <span class="email">tanaka@example.com</span>
+                                    </div>
+                                </td>
+                                <td>備後中学校 / 3年生</td>
+                                <td>プロデューサー</td>
+                                <td>2026/01/27</td>
+                                <td><span class="status-badge new">新規</span></td>
+                                <td><button class="action-btn"><i data-lucide="more-horizontal"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

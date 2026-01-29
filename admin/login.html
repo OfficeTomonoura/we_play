@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理ログイン | We Play</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css"> <!-- Reuse main form styles for consistency -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .login-box {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <section class="form-wrapper login-box">
+            <header class="form-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY ADMIN</span>
+                </div>
+                <h1>Portal Sign In</h1>
+                <p class="login-subtitle">管理者情報を入力してログインしてください。</p>
+            </header>
+
+            <form id="loginForm" class="registration-form">
+                <div class="form-group">
+                    <label for="email">
+                        <i data-lucide="mail"></i> メールアドレス
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="admin@example.com" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i data-lucide="lock"></i> パスワード
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    <span>ログイン</span>
+                    <i data-lucide="log-in"></i>
+                </button>
+
+                <p style="text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-dim);">
+                    <a href="../index.html" style="color: var(--primary); text-decoration: none;">応募フォームへ戻る</a>
+                </p>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In Phase 4, this will be Supabase Auth
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+
+</html>
