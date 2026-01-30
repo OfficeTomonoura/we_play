@@ -274,8 +274,34 @@
                 if (picField) picField.value = profile.pictureUrl;
 
                 console.log('LIFF User Linked:', profile.userId);
+
+                // Check if already applied
+                await checkRedirect(profile.userId);
+
             } catch (err) {
                 console.error('Error getting profile:', err);
+            }
+        }
+
+        async function checkRedirect(userId) {
+            if (!window.supabaseClient) return;
+            try {
+                // Determine base path for redirect (LP is usually at root or ../index.html relative to this file?)
+                // register.html is in root (same level as index.html).
+
+                const { data, error } = await window.supabaseClient
+                    .from('applicants')
+                    .select('id')
+                    .eq('line_user_id', userId)
+                    .maybeSingle();
+
+                if (data) {
+                    // Already applied, redirect to LP
+                    console.log('Already applied, redirecting to LP...');
+                    window.location.href = 'index.html'; // Adjust if needed
+                }
+            } catch (e) {
+                console.warn('Check redirect failed', e);
             }
         }
     </script>
