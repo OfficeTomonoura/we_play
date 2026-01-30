@@ -255,7 +255,7 @@
                     setLiffData();
                 } else if (!isLocal) {
                     // Force login if in production (HTTPS)
-                    // liff.login(); // Auto-login disabled for now to allow viewing form without LINE
+                    liff.login();
                 }
             } catch (err) {
                 console.warn('LIFF Initialization failed:', err);
