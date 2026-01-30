@@ -138,14 +138,14 @@ body {
 .nav-submenu {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s var(--easing);
+    transition: max-height 0.3s var(--easing);
     display: flex;
     flex-direction: column;
 }
 
 .nav-submenu.open {
-    max-height: 2000px;
-    /* ネストに対応するため高めに設定 */
+    max-height: 500px;
+    /* 適切な値に制限 */
     margin-bottom: 0.5rem;
 }
 

@@ -3,32 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 各機能の初期化（要素が存在する場合のみ実行）
     if (document.getElementById('registrationTrend')) initTrendChart();
     if (document.getElementById('referralSource')) initReferralChart();
-
-    initLogout();
-    initSidebarAccordion();
 });
-
-function initSidebarAccordion() {
-    const toggles = document.querySelectorAll('.nav-item-toggle');
-    toggles.forEach(toggle => {
-        toggle.addEventListener('click', () => {
-            const submenu = toggle.nextElementSibling;
-            toggle.classList.toggle('open');
-            submenu.classList.toggle('open');
-        });
-    });
-}
-
-function initLogout() {
-    const logoutBtn = document.querySelector('.logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('ログアウトしますか？')) {
-                window.location.href = '../index.html';
-            }
-        });
-    }
-}
 
 function initTrendChart() {
     const ctx = document.getElementById('registrationTrend').getContext('2d');

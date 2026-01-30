@@ -27,115 +27,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <span class="logo-text">WE PLAY</span>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <!-- MAIN Section -->
-                <div class="nav-section">MAIN</div>
-                <a href="index.html" class="nav-item">
-                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
-                </a>
-                <a href="applicants.html" class="nav-item">
-                    <i data-lucide="users"></i> <span>応募者一覧</span>
-                </a>
-                <a href="selected.html" class="nav-item active">
-                    <i data-lucide="user-check"></i> <span>選抜者</span>
-                </a>
-                <a href="members.html" class="nav-item">
-                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
-                </a>
-                <a href="collaborators.html" class="nav-item">
-                    <i data-lucide="heart"></i> <span>協力者一覧</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
-                </a>
-
-                <!-- DOCUMENTS Section -->
-                <div class="nav-section">DOCUMENTS</div>
-                <div class="nav-item-container">
-                    <div class="nav-item nav-item-toggle">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <i data-lucide="file-text"></i> <span>議案</span>
-                        </div>
-                        <i data-lucide="chevron-right" class="toggle-icon"></i>
-                    </div>
-                    <div class="nav-submenu">
-                        <!-- 2段目: 理事会 -->
-                        <div class="nav-item-container">
-                            <div class="nav-item nav-item-toggle level-2">
-                                <span>理事会</span>
-                                <i data-lucide="chevron-right" class="toggle-icon"></i>
-                            </div>
-                            <div class="nav-submenu">
-                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
-                            </div>
-                        </div>
-                        <!-- 2段目: 常任理事会 -->
-                        <div class="nav-item-container">
-                            <div class="nav-item nav-item-toggle level-2">
-                                <span>常任理事会</span>
-                                <i data-lucide="chevron-right" class="toggle-icon"></i>
-                            </div>
-                            <div class="nav-submenu">
-                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
-                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- MANUAL Section -->
-                <div class="nav-section">MANUAL</div>
-                <div class="nav-item-container">
-                    <div class="nav-item nav-item-toggle">
-                        <i data-lucide="book-open"></i> <span>マニュアル</span>
-                        <i data-lucide="chevron-right" class="toggle-icon"></i>
-                    </div>
-                    <div class="nav-submenu">
-                        <a href="database.html" class="submenu-item">データベース設計</a>
-                    </div>
-                </div>
-
-                <!-- SYSTEM Section -->
-                <div class="nav-section">SYSTEM</div>
-                <a href="#" class="nav-item">
-                    <i data-lucide="settings"></i> <span>設定</span>
-                </a>
-
-                <!-- OTHERS Section -->
-                <div class="nav-section">OTHERS</div>
-                <a href="../register.html" class="nav-item">
-                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
-                </a>
-            </nav>
-            <div class="sidebar-footer">
-                <button class="logout-btn">
-                    <i data-lucide="log-out"></i> <span>ログアウト</span>
-                </button>
-            </div>
-        </aside>
-
+ <div id="app-sidebar"></div>
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-header">
@@ -329,6 +221,7 @@
         </main>
     </div>
 
+    <script src="components.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script>
         lucide.createIcons();
