@@ -133,6 +133,8 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-client.js"></script>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
         lucide.createIcons();
@@ -146,8 +148,7 @@
                 if (liff.isLoggedIn()) {
                     const profile = await liff.getProfile();
                     showLineUser(profile);
-                } else {
-                    // Not logged in: do nothing, or show generic login button if needed
+                    checkApplicationStatus(profile.userId);
                 }
             } catch (err) {
                 console.warn('LIFF Init failed:', err);
@@ -165,10 +166,70 @@
                     </div>
                 `;
             }
-            // Optional: Hide admin login if regular user is logged in?
-            // document.querySelector('.btn-login').style.display = 'none';
+        }
+
+        async function checkApplicationStatus(userId) {
+            if (!window.supabaseClient) return;
+
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('applicants')
+                    .select('id, status')
+                    .eq('line_user_id', userId)
+                    .maybeSingle();
+
+                if (data) {
+                    // Already applied
+                    const ctaBtns = document.querySelectorAll('.btn-primary'); // Hero and bottom CTA
+                    ctaBtns.forEach(btn => {
+                        btn.textContent = '応募状況を確認する';
+                        btn.href = 'javascript:void(0)';
+                        btn.classList.add('btn-status-check'); // Style marker
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            openStatusModal();
+                        });
+                        // Change style slightly to indicate status check
+                        btn.style.background = 'linear-gradient(135deg, #00b900 0%, #008500 100%)';
+                        btn.style.boxShadow = '0 0 20px rgba(0, 185, 0, 0.4)';
+                    });
+                }
+            } catch (err) {
+                console.error('Error checking status:', err);
+            }
+        }
+
+        function openStatusModal() {
+            const modal = document.getElementById('statusModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeStatusModal() {
+            const modal = document.getElementById('statusModal');
+            if (modal) modal.style.display = 'none';
         }
     </script>
+
+    <!-- Status Modal -->
+    <div id="statusModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; bg: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);">
+        <div class="glass-card"
+            style="width: 90%; max-width: 400px; padding: 2rem; text-align: center; border: 1px solid var(--primary);">
+            <div style="margin-bottom: 1.5rem;">
+                <i data-lucide="clipboard-check" style="width: 48px; height: 48px; color: var(--primary);"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: white;">審査中</h3>
+            <p style="color: var(--text-dim); line-height: 1.6; margin-bottom: 2rem;">
+                ご応募ありがとうございます。<br>
+                現在、選考（審査）を進めております。<br>
+                結果が出るまで今しばらくお待ちください。
+            </p>
+            <button onclick="closeStatusModal()"
+                style="background: transparent; border: 1px solid var(--glass-border); color: white; padding: 0.8rem 2rem; border-radius: 2rem; cursor: pointer; transition: all 0.3s;">
+                閉じる
+            </button>
+        </div>
+    </div>
 </body>
 
 </html>
