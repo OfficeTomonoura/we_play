@@ -100,6 +100,7 @@ function renderSidebar() {
                     <div class="nav-submenu">
                         <a href="database.html" class="submenu-item" data-page="database.html">データベース設計</a>
                         <a href="manual_liff.html" class="submenu-item" data-page="manual_liff.html">LINE連携・LIFF実装</a>
+                        <a href="manual_notify.html" class="submenu-item" data-page="manual_notify.html">LINE通知機能設定</a>
                     </div>
                 </div>
 

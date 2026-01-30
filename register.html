@@ -51,6 +51,22 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="gender">
+                        <i data-lucide="user"></i> 性別
+                    </label>
+                    <div class="input-wrapper">
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                            <option value="other">選択しない</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="school">
                         <i data-lucide="graduation-cap"></i> 学校名
                     </label>
@@ -134,10 +150,12 @@
                     <div class="input-wrapper">
                         <select id="referral" name="referral" required>
                             <option value="" disabled selected>選択してください</option>
-                            <option value="teacher">先生から知らされた</option>
-                            <option value="friend">友達から聞いた</option>
-                            <option value="poster">ポスターを見た</option>
-                            <option value="family">家族から聞いた</option>
+                            <option value="teacher">学校の先生</option>
+                            <option value="advisor">部活動の顧問</option>
+                            <option value="friend">友人・知人</option>
+                            <option value="poster">ポスター・チラシ</option>
+                            <option value="family">家族</option>
+                            <option value="sns">SNS (Instagram/X)</option>
                             <option value="other">その他</option>
                         </select>
                         <i data-lucide="chevron-down" class="select-icon"></i>
@@ -213,6 +231,8 @@
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-client.js"></script>
     <script src="assets/js/form.js"></script>
     <script>
         lucide.createIcons();

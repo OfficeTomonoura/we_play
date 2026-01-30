@@ -27,7 +27,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
- <div id="app-sidebar"></div>
+        <div id="app-sidebar"></div>
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-header">
@@ -92,7 +92,10 @@
                             <tr>
                                 <th>氏名 / 学校</th>
                                 <th>学年</th>
-                                <th>第一希望</th>
+                                <th>性別</th>
+                                <th>第一</th>
+                                <th>第二</th>
+                                <th>第三</th>
                                 <th>応募日</th>
                                 <th>ステータス</th>
                                 <th style="text-align: right;">アクション</th>
@@ -232,6 +235,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
+                    <span id="modalKana" style="font-size: 0.8rem; color: var(--text-dim); display: block;"></span>
                     <h2 id="modalName" style="font-weight: 800; font-size: 1.5rem; margin-bottom: 0.2rem;">氏名 未設定</h2>
                     <span id="modalDate" style="font-size: 0.8rem; color: var(--text-dim);">応募日: -</span>
                 </div>
@@ -245,6 +249,11 @@
                     <div class="detail-section">
                         <h4>基本情報</h4>
                         <div class="detail-text">
+                            <div style="margin-bottom: 0.8rem;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">性別</label>
+                                <p id="modalGender" style="font-weight: 600;"></p>
+                            </div>
                             <div style="margin-bottom: 0.8rem;">
                                 <label
                                     style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">学校
@@ -279,6 +288,8 @@
                                 <label
                                     style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">認知経路</label>
                                 <p id="modalReferral" style="font-size: 0.9rem;"></p>
+                                <p id="modalReferralOther"
+                                    style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem;"></p>
                             </div>
                         </div>
                     </div>
@@ -292,48 +303,259 @@
                 </div>
 
                 <div class="modal-footer"
-                    style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                    <div class="status-control">
-                        <label style="font-size: 0.8rem; color: var(--text-dim); margin-right: 1rem;">ステータス:</label>
-                        <select class="admin-select" id="statusChange">
-                            <option value="new">新規</option>
-                            <option value="reviewed">確認済み</option>
-                            <option value="pending">保留</option>
-                        </select>
+                    style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+                    <!-- Column 2: Status & Assign -->
+                    <div class="detail-section">
+                        <h4>ステータス管理</h4>
+                        <div class="detail-text">
+                            <label
+                                style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem;">現在のステータス</label>
+                            <select id="modalStatus" class="admin-select" style="width: 100%; margin-bottom: 1.5rem;">
+                                <option value="新規">新規</option>
+                                <option value="確認済み">確認済み</option>
+                                <option value="採用">採用</option>
+                                <option value="不採用">不採用</option>
+                            </select>
+
+                            <label
+                                style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem;">役職決定</label>
+                            <select id="modalAssignedRole" class="admin-select"
+                                style="width: 100%; margin-bottom: 1.5rem;">
+                                <option value="">未定</option>
+                            </select>
+                        </div>
                     </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <button onclick="closeModal()"
-                            style="background: transparent; border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1.5rem; border-radius: 12px; cursor: pointer;">閉じる</button>
-                        <button
-                            style="background: var(--primary); color: black; border: none; padding: 0.6rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer;">変更を保存</button>
-                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+                    <button onclick="closeModal()"
+                        style="background: transparent; border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1.5rem; border-radius: 12px; cursor: pointer;">閉じる</button>
+                    <button id="saveStatusBtn"
+                        style="background: var(--primary); color: black; border: none; padding: 0.6rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer;">変更を保存</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
     <script src="components.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script>
         lucide.createIcons();
 
-        function openDetails(data) {
-            document.getElementById('modalName').textContent = data.name;
-            document.getElementById('modalEmail').textContent = data.email;
-            document.getElementById('modalPhone').textContent = data.phone;
-            document.getElementById('modalSchoolGrade').textContent = data.school + ' / ' + data.grade;
-            document.getElementById('modalDate').textContent = '応募日: ' + data.date;
-            document.getElementById('modalReferral').textContent = data.referral;
-            document.getElementById('modalMessage').textContent = data.message || '（メッセージなし）';
+        let allApplicants = []; // Store fetched data
 
-            document.getElementById('role1').textContent = data.roles[0];
-            document.getElementById('role2').textContent = data.roles[1];
-            document.getElementById('role3').textContent = data.roles[2];
+        async function fetchApplicants() {
+            try {
+                // Show loading state if needed
+                const tbody = document.getElementById('applicantsTableBody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+
+                const { data, error } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allApplicants = data;
+                renderTable(allApplicants);
+
+            } catch (err) {
+                console.error('Error fetching applicants:', err);
+                const tbody = document.getElementById('applicantsTableBody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: #ff4b4b; padding: 2rem;">データの取得に失敗しました</td></tr>';
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('applicantsTableBody');
+            tbody.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-dim);">データがありません</td></tr>';
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                // Format date (applied_at or created_at)
+                const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('ja-JP') : '-';
+
+                // Status badge class
+                let statusClass = 'new';
+                if (item.status === '確認済み') statusClass = 'reviewed';
+                else if (item.status === '不採用') statusClass = 'rejected'; // CSS needs update
+                else if (item.status === '採用') statusClass = 'selected';   // CSS needs update
+                // Fallback or other manual statuses can be handled here
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-meta">
+                            <span class="furigana" style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">${item.full_kana || ''}</span>
+                            <span class="name">${item.full_name || '未設定'}</span>
+                            <span class="email">${item.school_name || ''}</span>
+                        </div>
+                    </td>
+                    <td>${item.grade || '-'}</td>
+                    <td>${item.gender || '-'}</td>
+                    <td>${formatRole(item.desired_role_1)}</td>
+                    <td style="color: var(--text-dim);">${formatRole(item.desired_role_2)}</td>
+                    <td style="color: var(--text-dim);">${formatRole(item.desired_role_3)}</td>
+                    <td>${dateStr}</td>
+                    <td><span class="status-badge ${statusClass}">${item.status || '新規'}</span></td>
+                    <td style="text-align: right;">
+                        <button class="action-btn" onclick="event.stopPropagation(); console.log('Action for ${item.id}')"><i data-lucide="more-vertical"></i></button>
+                    </td>
+                `;
+
+                // Add click event for details
+                tr.addEventListener('click', () => openDetails(item));
+
+                tbody.appendChild(tr);
+            });
+
+            // Re-initialize icons for new elements
+            lucide.createIcons();
+
+            // Simple count update
+            const resultInfo = document.querySelector('.results-info');
+            if (resultInfo) resultInfo.textContent = `全 ${data.length} 件を表示`;
+        }
+
+        let currentApplicantId = null;
+
+        function formatRole(roleKey) {
+            const roleMap = {
+                'director': '監督',
+                'actor': '演者',
+                'props': '小道具',
+                'producer': 'プロデューサー'
+            };
+            return roleMap[roleKey] || roleKey || '-';
+        }
+
+        async function openDetails(data) {
+            currentApplicantId = data.id;
+            const dateStr = data.created_at ? new Date(data.created_at).toLocaleDateString('ja-JP') : '-';
+
+            // Safe helper
+            const setText = (id, text) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text;
+            };
+
+            setText('modalName', data.full_name || '未設定');
+            setText('modalKana', data.full_kana || '');
+            setText('modalGender', data.gender || '-');
+            setText('modalEmail', data.email || (data.line_user_id ? 'LINE連携済み' : '-'));
+            setText('modalPhone', data.phone || '-');
+            setText('modalSchoolGrade', (data.school_name || '') + ' / ' + (data.grade || ''));
+            setText('modalDate', '応募日: ' + dateStr);
+
+            const referralMap = {
+                'teacher': '学校の先生',
+                'advisor': '部活動の顧問',
+                'friend': '友人・知人',
+                'poster': 'ポスター・チラシ',
+                'family': '家族',
+                'sns': 'SNS (Instagram/X)',
+                'other': 'その他'
+            };
+            let referralText = referralMap[data.referral_source] || data.referral_source || '-';
+            setText('modalReferral', referralText);
+            setText('modalReferralOther', data.referral_source_other || '');
+            setText('modalMessage', data.message || '（メッセージなし）');
+
+            setText('role1', formatRole(data.desired_role_1));
+            setText('role2', formatRole(data.desired_role_2));
+            setText('role3', formatRole(data.desired_role_3));
 
             const modal = document.getElementById('detailModal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+
+            // Set current status
+            const statusSelect = document.getElementById('modalStatus');
+            if (statusSelect) statusSelect.value = data.status || '新規';
+
+            // Populate Assigned Role Select from DB
+            const assignedSelect = document.getElementById('modalAssignedRole');
+            if (assignedSelect) {
+                assignedSelect.innerHTML = '<option value="">読み込み中...</option>';
+                const { data: roles, error } = await window.supabaseClient
+                    .from('roles')
+                    .select('id, name, code')
+                    .order('code'); // or name
+
+                if (!error && roles) {
+                    assignedSelect.innerHTML = '<option value="">未定</option>';
+                    roles.forEach(role => {
+                        const opt = document.createElement('option');
+                        opt.value = role.id; // Save ID
+                        opt.textContent = role.name;
+                        assignedSelect.appendChild(opt);
+                    });
+
+                    // Set selected value
+                    // Prefer assigned_role_id if exists, else try to match assigned_role text
+                    if (data.assigned_role_id) {
+                        assignedSelect.value = data.assigned_role_id;
+                    } else if (data.assigned_role) {
+                        // Fallback matching
+                        const match = roles.find(r => r.name === data.assigned_role || r.code === data.assigned_role);
+                        if (match) assignedSelect.value = match.id;
+                    }
+                } else {
+                    assignedSelect.innerHTML = '<option value="">読み込みエラー</option>';
+                }
+            }
         }
+
+        async function saveStatus() {
+            if (!currentApplicantId) return;
+
+            const status = document.getElementById('modalStatus').value;
+            const assignedRoleSelect = document.getElementById('modalAssignedRole');
+            const assignedRoleId = assignedRoleSelect.value || null;
+            const assignedRoleName = assignedRoleSelect.selectedIndex >= 0 ? assignedRoleSelect.options[assignedRoleSelect.selectedIndex].text : null;
+            // "未定" or "読み込み中..." might catch, so be careful. 
+            // If value is empty, role name should ideally be null or empty string.
+            // If text is "未定", maybe save as null.
+
+            const btn = document.getElementById('saveStatusBtn');
+            const originalText = btn.textContent;
+
+            try {
+                btn.textContent = '保存中...';
+                btn.disabled = true;
+
+                const { error } = await window.supabaseClient
+                    .from('applicants')
+                    .update({
+                        status: status,
+                        assigned_role_id: assignedRoleId,
+                        assigned_role: assignedRoleId ? assignedRoleName : null, // syncing legacy text column
+                        updated_at: new Date()
+                    })
+                    .eq('id', currentApplicantId);
+
+                if (error) throw error;
+
+                // Success
+                closeModal();
+                fetchApplicants(); // Refresh list
+
+            } catch (err) {
+                console.error('Error updating status:', err);
+                alert('更新に失敗しました');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById('saveStatusBtn').addEventListener('click', saveStatus);
 
         function closeModal() {
             const modal = document.getElementById('detailModal');
@@ -344,6 +566,9 @@
         document.getElementById('detailModal').addEventListener('click', function (e) {
             if (e.target === this) closeModal();
         });
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', fetchApplicants);
     </script>
 </body>
 

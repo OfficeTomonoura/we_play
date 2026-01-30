@@ -539,6 +539,16 @@ body {
     color: #bfaaff;
 }
 
+.status-badge.selected {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+}
+
+.status-badge.rejected {
+    background: rgba(255, 75, 75, 0.1);
+    color: #ff4b4b;
+}
+
 .action-btn {
     background: transparent;
     border: none;

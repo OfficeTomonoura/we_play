@@ -27,7 +27,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
- <div id="app-sidebar"></div>
+        <div id="app-sidebar"></div>
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-header">
@@ -221,10 +221,91 @@
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
     <script src="components.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script>
         lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', fetchSelectedApplicants);
+
+        async function fetchSelectedApplicants() {
+            const tbody = document.querySelector('.data-table tbody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+
+            try {
+                // Fetch applicants with status '採用' (Hired/Selected)
+                const { data, error } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*')
+                    .eq('status', '採用')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                tbody.innerHTML = '';
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">採用者はまだいません。</td></tr>';
+                    return;
+                }
+
+                data.forEach(item => {
+                    const tr = document.createElement('tr');
+
+                    // Role Badge Style
+                    const roleName = item.assigned_role || '未定';
+                    let roleStyle = 'background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3);';
+                    if (roleName.includes('監督') || roleName.includes('director')) {
+                        roleStyle = 'background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);';
+                    } else if (roleName.includes('演者') || roleName.includes('actor')) {
+                        roleStyle = 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);';
+                    } else if (roleName.includes('プロデューサー') || roleName.includes('producer')) {
+                        roleStyle = 'background: rgba(255, 234, 0, 0.1); color: #ffea00; border: 1px solid rgba(255, 234, 0, 0.3);';
+                    } else if (roleName.includes('小道具') || roleName.includes('props')) {
+                        roleStyle = 'background: rgba(0, 255, 122, 0.1); color: #00ff7a; border: 1px solid rgba(0, 255, 122, 0.3);';
+                    }
+
+                    tr.innerHTML = `
+                        <td>
+                            <div class="user-meta">
+                                <span class="furigana" style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">${item.full_kana || ''}</span>
+                                <span class="name">${item.full_name || '未設定'}</span>
+                                <span class="email">${item.school_name || ''}</span>
+                            </div>
+                        </td>
+                        <td>${item.grade || '-'}</td>
+                        <td><span class="status-badge" style="${roleStyle}">${roleName}</span></td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <span style="color: var(--text-main);">${item.phone || '-'}</span>
+                                <span style="font-size: 0.85rem; color: var(--text-dim);">${item.email || ''}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <span style="color: var(--text-dim); font-size: 0.9rem;">未定</span>
+                            </div>
+                        </td>
+                        <td style="text-align: right;">
+                            <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Update count
+                const resultInfo = document.querySelector('.results-info');
+                if (resultInfo) resultInfo.textContent = `全 ${data.length} 件を表示`;
+
+                lucide.createIcons();
+
+            } catch (err) {
+                console.error('Error fetching selected applicants:', err);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: red;">データの取得に失敗しました。</td></tr>';
+            }
+        }
     </script>
 </body>
 

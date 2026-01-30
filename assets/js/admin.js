@@ -1,5 +1,30 @@
+// Auth Guard: Check if user is logged in
+async function checkAuth() {
+    // login page check is not needed if this script is not loaded in login.html
+    // But safety check:
+    if (window.location.pathname.includes('/login.html')) return;
+
+    if (!window.supabaseClient) {
+        // Wait a bit for client script to load if race condition?
+        // Usually scripts are loaded sequentially.
+        console.warn('Supabase client not validation yet.');
+        return;
+    }
+
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    if (!session) {
+        // No session, redirect to login
+        // Construct relative path to login.html depending on current depth, 
+        // or just assume we are in admin/ folder mostly.
+        // Assuming this script is running in files inside /admin/
+        window.location.href = 'login.html';
+    }
+}
+
 // Chart Initialization
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuth();
+
     // 各機能の初期化（要素が存在する場合のみ実行）
     if (document.getElementById('registrationTrend')) initTrendChart();
     if (document.getElementById('referralSource')) initReferralChart();

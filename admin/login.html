@@ -77,29 +77,55 @@
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
     <script>
         lucide.createIcons();
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('loginError');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
 
-            // --- モック用のログインチェック ---
-            // テストアカウント: test@example.com / password
-            if (email === 'test@example.com' && password === 'password') {
-                // 成功時はダッシュボードへ
+            if (!window.supabaseClient) {
+                alert('システムエラー: データベース接続に失敗しました。');
+                return;
+            }
+
+            try {
+                // Disable button
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>認証中...</span>';
+
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                // ログイン成功 -> ダッシュボードへ
                 window.location.href = 'index.html';
-            } else {
-                // 失敗時はエラー表示
+
+            } catch (err) {
+                console.error('Login error:', err);
+
+                // エラー表示
                 errorMsg.style.display = 'block';
-                // アイコンを再ロード（必要に応じて）
-                setTimeout(() => {
-                    errorMsg.style.animation = 'shake 0.5s ease-in-out';
-                }, 10);
-                setTimeout(() => {
-                    errorMsg.style.animation = '';
-                }, 510);
+                errorMsg.textContent = 'メールアドレスまたはパスワードが正しくありません。';
+
+                // アニメーション
+                errorMsg.style.animation = 'none';
+                errorMsg.offsetHeight; /* trigger reflow */
+                errorMsg.style.animation = 'shake 0.5s ease-in-out';
+
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>ログイン</span><i data-lucide="log-in"></i>';
+                lucide.createIcons();
             }
         });
     </script>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Play Admin - LINE通知設定</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .table-definition {
+            margin-bottom: 3rem;
+        }
+
+        .table-definition h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .table-definition h2 i {
+            color: var(--primary);
+        }
+
+        .table-definition p {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        pre {
+            background: #1e1e1e;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+            color: #d4d4d4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div id="app-sidebar"></div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>LINE通知機能設定マニュアル</h1>
+                    <p>応募フォームから新しい応募があった際に、指定したLINEグループへ自動的に通知を送る機能のセットアップ手順です。</p>
+                </div>
+
+                <section class="table-definition">
+                    <h2><i data-lucide="book-open"></i> 1. 概要</h2>
+                    <p>
+                        LINE Notifyのサービス終了（2025年3月）に伴い、<strong>Messaging API</strong> を使用した通知機能を実装しました。<br>
+                        Webフォームからの応募時にSupabase Edge Functionを経由して、LINE Messaging APIのPush
+                        Messageを使用し、指定されたグループID宛に通知を送信します。
+                    </p>
+                </section>
+
+                <section class="table-definition">
+                    <h2><i data-lucide="settings"></i> 2. LINE公式アカウントの準備</h2>
+                    <p>通知を送る主体となる「Bot（公式アカウント）」を作成します。</p>
+                    <ol style="margin-left: 1.5rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.8;">
+                        <li><a href="https://developers.line.biz/console/" target="_blank"
+                                style="color: var(--primary);">LINE Developers Console</a> にログイン。</li>
+                        <li><strong>プロバイダー</strong>を作成（プロジェクト名や組織名）。</li>
+                        <li><strong>「Messaging API」</strong> チャネルを新規作成。</li>
+                        <li>作成後、<strong>「Messaging API設定」</strong> タブを開く。</li>
+                        <li>最下部の <strong>「チャネルアクセストークン（長期）」</strong> を発行し、コピーして控えておく。</li>
+                    </ol>
+                </section>
+
+                <section class="table-definition">
+                    <h2><i data-lucide="users"></i> 3. 通知先グループIDの取得</h2>
+                    <p>BotをLINEグループに参加させ、その「参加イベント (Join Event)」のログからグループID (`C...` で始まるID) を特定します。</p>
+                    <ol style="margin-left: 1.5rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.8;">
+                        <li>通知を送りたいLINEグループを作成（または既存のグループを使用）。</li>
+                        <li>作成したBot（公式アカウント）を友だち追加し、そのグループに<strong>「招待」</strong>する。</li>
+                        <li>(開発ログ確認手法) Botが招待されて参加した瞬間の Webhook イベントを Supabase Edge Functions
+                            のログで確認し、<code>groupId</code> を取得する。<br>※既に取得済みの場合は再取得不要。</li>
+                    </ol>
+                </section>
+
+                <section class="table-definition">
+                    <h2><i data-lucide="terminal"></i> 4. Supabase設定</h2>
+                    <h3 style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">4.1 環境変数の設定</h3>
+                    <p>取得したトークンとIDを Supabase プロジェクトの環境変数として設定します。</p>
+                    <pre><code>supabase secrets set LINE_CHANNEL_ACCESS_TOKEN='（取得したチャネルアクセストークン）'
+supabase secrets set LINE_TARGET_ID='（取得したグループID: Cxxxxxxxx...）'</code></pre>
+
+                    <h3 style="color: white; font-size: 1.1rem; margin: 1.5rem 0 0.5rem;">4.2 関数のデプロイ</h3>
+                    <pre><code>supabase functions deploy notify-applicant --no-verify-jwt</code></pre>
+                </section>
+
+                <section class="table-definition">
+                    <h2><i data-lucide="file-code"></i> 5. クライアント側の実装</h2>
+                    <p>Webフォーム (<code>assets/js/form.js</code>) 送信成功時の処理。</p>
+                    <pre><code>// form.js の送信成功処理内
+const { error } = await window.supabaseClient.functions.invoke('notify-applicant', {
+    body: {
+        record: insertedRecord, // 応募者データ
+        roles: ['監督', '演者']   // 希望役職リスト
+    }
+});</code></pre>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
+    <script src="components.js"></script>
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
