@@ -68,6 +68,25 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    overflow-y: auto;
+}
+
+/* Custom Scrollbar for Sidebar */
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
 }
 
 .nav-section {
@@ -97,6 +116,84 @@ body {
 .nav-item.active {
     color: var(--primary);
     background: rgba(0, 242, 255, 0.05);
+}
+
+.nav-item-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.nav-item-toggle .toggle-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s var(--easing);
+}
+
+.nav-item-toggle.open .toggle-icon {
+    transform: rotate(90deg);
+}
+
+.nav-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s var(--easing);
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-submenu.open {
+    max-height: 2000px;
+    /* ネストに対応するため高めに設定 */
+    margin-bottom: 0.5rem;
+}
+
+/* 階層ごとのインデント設定（アイテム単位） */
+.level-1 {
+    padding-left: 1rem;
+}
+
+.level-2 {
+    padding-left: 2rem !important;
+}
+
+.level-3 {
+    padding-left: 3.5rem !important;
+}
+
+.submenu-item {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    padding: 0.6rem 1rem;
+    text-decoration: none;
+    transition: color 0.3s;
+    border-bottom: 1px dashed rgba(0, 242, 255, 0.1);
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    color: var(--primary);
+}
+
+/* アコーディオン内のトグルアイテム（ネスト用） */
+.nav-submenu .nav-item-toggle {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    background: transparent;
+}
+
+.nav-submenu .nav-item-toggle:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.nav-submenu .nav-item-toggle .toggle-icon {
+    width: 14px;
+    height: 14px;
 }
 
 .nav-item i {
@@ -143,14 +240,15 @@ body {
     right: 0;
     left: var(--sidebar-width);
     height: var(--header-height);
-    background: rgba(5, 5, 7, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--glass-border);
+    background: rgba(5, 5, 7, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid rgba(0, 242, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
     z-index: 90;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header-search {
@@ -210,10 +308,29 @@ body {
 .content-wrapper {
     max-width: 1200px;
     margin: 0 auto;
+    padding-top: 2rem;
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+    margin-bottom: 3.5rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-header h2 {
+    margin: 0;
 }
 
 .welcome-banner {
-    margin: 2rem 0;
+    margin: 2rem 0 3rem;
 }
 
 .welcome-banner h1 {
@@ -240,7 +357,7 @@ body {
 
 .stat-card {
     background: var(--bg-card);
-    border: 1px solid var(--glass-border);
+    border: 2px solid rgba(0, 242, 255, 0.2);
     padding: 1.5rem;
     border-radius: 20px;
     display: flex;
@@ -248,6 +365,13 @@ body {
     gap: 1.2rem;
     position: relative;
     overflow: hidden;
+    transition: all 0.3s var(--easing);
+}
+
+.stat-card:hover {
+    border-color: rgba(0, 242, 255, 0.4);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .stat-card::before {
@@ -305,13 +429,18 @@ body {
 
 .chart-container {
     background: var(--bg-card);
-    border: 1px solid var(--glass-border);
+    border: 2px solid rgba(255, 255, 255, 0.15);
     padding: 1.5rem;
     border-radius: 20px;
     position: relative;
     height: 400px;
     display: flex;
     flex-direction: column;
+    transition: border-color 0.3s var(--easing);
+}
+
+.chart-container:hover {
+    border-color: rgba(255, 255, 255, 0.25);
 }
 
 .chart-container canvas {
@@ -329,9 +458,14 @@ body {
 /* Data Table */
 .table-container {
     background: var(--bg-card);
-    border: 1px solid var(--glass-border);
+    border: 2px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     padding: 1.5rem;
+    transition: border-color 0.3s var(--easing);
+}
+
+.table-container:hover {
+    border-color: rgba(255, 255, 255, 0.25);
 }
 
 .table-header {
@@ -409,6 +543,178 @@ body {
     background: transparent;
     border: none;
     color: var(--text-dim);
+    cursor: pointer;
+}
+
+/* Applicants Grid & Cards */
+.applicants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.applicant-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s var(--easing);
+    position: relative;
+    overflow: hidden;
+}
+
+.applicant-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+}
+
+.card-status {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-weight: 700;
+}
+
+.card-body h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.card-body .email {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.card-info {
+    display: grid;
+    gap: 0.8rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+}
+
+.info-item i {
+    width: 16px;
+    height: 16px;
+    color: var(--primary);
+}
+
+.info-item .label {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    min-width: 60px;
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 2rem;
+}
+
+.modal-content {
+    background: #0f0f13;
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalFadeIn 0.3s var(--easing);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    padding: 2rem;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-modal {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.3s;
+}
+
+.close-modal:hover {
+    color: white;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section h4 {
+    color: var(--primary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+}
+
+.detail-text {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.2rem;
+    border-radius: 12px;
+    line-height: 1.6;
+}
+
+.admin-select {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    outline: none;
     cursor: pointer;
 }
 

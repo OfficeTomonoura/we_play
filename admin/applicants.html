@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>応募者一覧 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .data-table tbody tr {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="applicants.html" class="nav-item active">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="selected.html" class="nav-item">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="collaborators.html" class="nav-item">
+                    <i data-lucide="heart"></i> <span>協力者一覧</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MANUAL Section -->
+                <div class="nav-section">MANUAL</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <i data-lucide="book-open"></i> <span>マニュアル</span>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="database.html" class="submenu-item">データベース設計</a>
+                    </div>
+                </div>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>応募者一覧</h1>
+                    <p>全応募者の情報をリスト形式で確認できます。行をクリックすると詳細を表示します。</p>
+                </div>
+
+                <!-- Filters area -->
+                <div class="filters-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <div class="filter-group">
+                        <select class="admin-select">
+                            <option value="">すべての希望役職</option>
+                            <option value="director">監督</option>
+                            <option value="actor">演者</option>
+                            <option value="props">小道具</option>
+                            <option value="producer">プロデューサー</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select class="admin-select">
+                            <option value="">すべてのステータス</option>
+                            <option value="new">新規</option>
+                            <option value="reviewed">確認済み</option>
+                            <option value="pending">保留</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select class="admin-select">
+                            <option value="20">20件表示</option>
+                            <option value="50">50件表示</option>
+                            <option value="100">100件表示</option>
+                        </select>
+                    </div>
+                    <button class="export-btn"
+                        style="margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1.2rem; border-radius: 12px; cursor: pointer;">
+                        <i data-lucide="download" style="width: 18px;"></i> CSV出力
+                    </button>
+                </div>
+
+                <!-- Applicants Table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>氏名 / 学校</th>
+                                <th>学年</th>
+                                <th>第一希望</th>
+                                <th>応募日</th>
+                                <th>ステータス</th>
+                                <th style="text-align: right;">アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicantsTableBody">
+                            <!-- Row 1 -->
+                            <tr
+                                onclick="openDetails({name: '山田 太郎', email: 'yamada@example.com', phone: '090-1234-5678', school: '福山中学校', grade: '2年生', roles: ['監督', 'プロデューサー', '演者'], referral: '先生から知らされた', date: '2026/01/29', message: '映画制作に興味があり、リーダーとしてチームをまとめたいと考えています。'})">
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">やまだ
+                                            たろう</span>
+                                        <span class="name">山田 太郎</span>
+                                        <span class="email">福山中学校</span>
+                                    </div>
+                                </td>
+                                <td>2年生</td>
+                                <td>監督</td>
+                                <td>2026/01/29</td>
+                                <td><span class="status-badge new">新規</span></td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr
+                                onclick="openDetails({name: '佐藤 花子', email: 'sato@example.com', phone: '080-8765-4321', school: '福山高校', grade: '1年生', roles: ['演者', '小道具', '監督'], referral: '友達から聞いた', date: '2026/01/28', message: '演劇部での経験を活かして、映像作品にも挑戦してみたいです。'})">
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">さとう
+                                            はなこ</span>
+                                        <span class="name">佐藤 花子</span>
+                                        <span class="email">福山高校</span>
+                                    </div>
+                                </td>
+                                <td>1年生</td>
+                                <td>演者</td>
+                                <td>2026/01/28</td>
+                                <td><span class="status-badge reviewed">確認済み</span></td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr
+                                onclick="openDetails({name: '田中 一郎', email: 'tanaka@example.com', phone: '090-5555-4444', school: '備後中学校', grade: '3年生', roles: ['プロデューサー', '監督', '小道具'], referral: 'ポスターを見た', date: '2026/01/27', message: '文化祭での企画運営が楽しかったので、本格的な映画制作の裏側を知りたいです。'})">
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">たなか
+                                            いちろう</span>
+                                        <span class="name">田中 一郎</span>
+                                        <span class="email">備後中学校</span>
+                                    </div>
+                                </td>
+                                <td>3年生</td>
+                                <td>プロデューサー</td>
+                                <td>2026/01/27</td>
+                                <td><span class="status-badge new">新規</span></td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr
+                                onclick="openDetails({name: '鈴木 美咲', email: 'suzuki@example.com', phone: '070-1111-2222', school: '福山第一高校', grade: '2年生', roles: ['小道具', '演者', '監督'], referral: '家族から聞いた', date: '2026/01/26', message: '物作りが好きです。映画の世界を彩る美術に貢献したいです。'})">
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">すずき
+                                            みさき</span>
+                                        <span class="name">鈴木 美咲</span>
+                                        <span class="email">福山第一高校</span>
+                                    </div>
+                                </td>
+                                <td>2年生</td>
+                                <td>小道具</td>
+                                <td>2026/01/26</td>
+                                <td><span class="status-badge reviewed">確認済み</span></td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 5 -->
+                            <tr
+                                onclick="openDetails({name: '伊藤 健一', email: 'ito@example.com', phone: '090-9999-8888', school: '南部中学校', grade: '1年生', roles: ['演者', '監督', 'プロデューサー'], referral: '友達から聞いた', date: '2026/01/25', message: '新しいことに挑戦するのが好きです。みんなで一つの作品を作ることに憧れています。'})">
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">いとう
+                                            けんいち</span>
+                                        <span class="name">伊藤 健一</span>
+                                        <span class="email">南部中学校</span>
+                                    </div>
+                                </td>
+                                <td>1年生</td>
+                                <td>演者</td>
+                                <td>2026/01/25</td>
+                                <td><span class="status-badge new">新規</span></td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-footer"
+                        style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+                        <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
+                            全 48 件中 1 - 20 件を表示
+                        </div>
+                        <div class="pagination" style="display: flex; gap: 0.5rem;">
+                            <button class="page-btn"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
+                                    data-lucide="chevron-left" style="width: 16px;"></i></button>
+                            <button class="page-btn active"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary); cursor: pointer;">1</button>
+                            <button class="page-btn"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;">2</button>
+                            <button class="page-btn"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;">3</button>
+                            <button class="page-btn"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
+                                    data-lucide="chevron-right" style="width: 16px;"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modalName" style="font-weight: 800; font-size: 1.5rem; margin-bottom: 0.2rem;">氏名 未設定</h2>
+                    <span id="modalDate" style="font-size: 0.8rem; color: var(--text-dim);">応募日: -</span>
+                </div>
+                <button class="close-modal" onclick="closeModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Column 1: Personal Info -->
+                    <div class="detail-section">
+                        <h4>基本情報</h4>
+                        <div class="detail-text">
+                            <div style="margin-bottom: 0.8rem;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">学校
+                                    / 学年</label>
+                                <p id="modalSchoolGrade" style="font-weight: 600;"></p>
+                            </div>
+                            <div style="margin-bottom: 0.8rem;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">メールアドレス</label>
+                                <p id="modalEmail" style="font-weight: 400;"></p>
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">電話番号</label>
+                                <p id="modalPhone" style="font-weight: 400;"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Selection Info -->
+                    <div class="detail-section">
+                        <h4>希望・認知経路</h4>
+                        <div class="detail-text">
+                            <div style="margin-bottom: 0.8rem;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">役職希望</label>
+                                <p style="font-size: 0.9rem;">1: <strong id="role1"></strong></p>
+                                <p style="font-size: 0.9rem;">2: <strong id="role2"></strong></p>
+                                <p style="font-size: 0.9rem;">3: <strong id="role3"></strong></p>
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">認知経路</label>
+                                <p id="modalReferral" style="font-size: 0.9rem;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>ご要望・メッセージ</h4>
+                    <div class="detail-text" id="modalMessage" style="min-height: 100px; line-height: 1.6;">
+                        <!-- Content here -->
+                    </div>
+                </div>
+
+                <div class="modal-footer"
+                    style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                    <div class="status-control">
+                        <label style="font-size: 0.8rem; color: var(--text-dim); margin-right: 1rem;">ステータス:</label>
+                        <select class="admin-select" id="statusChange">
+                            <option value="new">新規</option>
+                            <option value="reviewed">確認済み</option>
+                            <option value="pending">保留</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="closeModal()"
+                            style="background: transparent; border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1.5rem; border-radius: 12px; cursor: pointer;">閉じる</button>
+                        <button
+                            style="background: var(--primary); color: black; border: none; padding: 0.6rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer;">変更を保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function openDetails(data) {
+            document.getElementById('modalName').textContent = data.name;
+            document.getElementById('modalEmail').textContent = data.email;
+            document.getElementById('modalPhone').textContent = data.phone;
+            document.getElementById('modalSchoolGrade').textContent = data.school + ' / ' + data.grade;
+            document.getElementById('modalDate').textContent = '応募日: ' + data.date;
+            document.getElementById('modalReferral').textContent = data.referral;
+            document.getElementById('modalMessage').textContent = data.message || '（メッセージなし）';
+
+            document.getElementById('role1').textContent = data.roles[0];
+            document.getElementById('role2').textContent = data.roles[1];
+            document.getElementById('role3').textContent = data.roles[2];
+
+            const modal = document.getElementById('detailModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('detailModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+
+</html>

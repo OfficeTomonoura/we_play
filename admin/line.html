@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE公式運用 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .line-composer {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .composer-form {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option input[type="radio"]:checked+label {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .line-preview {
+            position: sticky;
+            top: 100px;
+        }
+
+        .preview-container {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 2rem;
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-header i {
+            color: #06C755;
+            width: 24px;
+            height: 24px;
+        }
+
+        .preview-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .line-message-bubble {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .flex-header {
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .flex-header-content {
+            text-align: center;
+            color: white;
+            z-index: 1;
+        }
+
+        .flex-header-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+        }
+
+        .flex-header-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        .flex-body {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .message-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+
+        .message-body {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            color: #4a4a4a;
+        }
+
+        .preview-link {
+            color: #0066cc;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .preview-link:hover {
+            text-decoration: none;
+            color: #004499;
+        }
+
+        .flex-footer {
+            padding: 1rem 1.5rem;
+            background: #f7f7f7;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .flex-footer i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .message-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+            text-align: right;
+        }
+
+        .send-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--bg-main);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .send-button:hover {
+            background: rgba(0, 242, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 242, 255, 0.4);
+        }
+
+        .char-count {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: right;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .line-composer {
+                grid-template-columns: 1fr;
+            }
+
+            .line-preview {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        /* Message Management Sections */
+        .management-section {
+            margin-top: 3rem;
+        }
+
+        .management-section h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .management-card {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .mgmt-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .mgmt-table th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mgmt-table td {
+            padding: 1.2rem 1rem;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .badge-status {
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-waiting {
+            background: rgba(255, 204, 0, 0.1);
+            color: #ffcc00;
+            border: 1px solid rgba(255, 204, 0, 0.3);
+        }
+
+        .badge-scheduled {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+        }
+
+        .badge-sent {
+            background: rgba(0, 255, 122, 0.1);
+            color: #00ff7a;
+            border: 1px solid rgba(0, 255, 122, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="applicants.html" class="nav-item">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="selected.html" class="nav-item">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="collaborators.html" class="nav-item">
+                    <i data-lucide="heart"></i> <span>協力者一覧</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="line.html" class="nav-item active">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MANUAL Section -->
+                <div class="nav-section">MANUAL</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <i data-lucide="book-open"></i> <span>マニュアル</span>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="database.html" class="submenu-item">データベース設計</a>
+                    </div>
+                </div>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>LINE公式運用</h1>
+                    <p>対外向け・対内向けのLINEメッセージを作成・配信します。</p>
+                </div>
+
+                <div class="line-composer">
+                    <!-- Composer Form -->
+                    <div class="composer-form">
+                        <h2
+                            style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-main);">
+                            メッセージ作成</h2>
+
+                        <!-- Target Selection -->
+                        <div class="form-group">
+                            <label>配信対象</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="target-external" name="target" value="external" checked>
+                                    <label for="target-external">
+                                        <i data-lucide="users"
+                                            style="width: 20px; height: 20px; margin-bottom: 0.3rem;"></i>
+                                        <div>対外向け</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem;">
+                                            応募者・選抜者</div>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="target-internal" name="target" value="internal">
+                                    <label for="target-internal">
+                                        <i data-lucide="briefcase"
+                                            style="width: 20px; height: 20px; margin-bottom: 0.3rem;"></i>
+                                        <div>対内向け</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem;">正会員
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date Time -->
+                        <div class="form-group">
+                            <label>送信日時指定 <span style="color: var(--accent); margin-left: 0.3rem;">*必須</span></label>
+                            <input type="datetime-local" id="sendDateTime" required>
+                            <div id="dateTimeNotice"
+                                style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5;">
+                                <div style="display: flex; align-items: flex-start; gap: 0.3rem;">
+                                    <i data-lucide="info" style="width: 14px; height: 14px; margin-top: 0.1rem;"></i>
+                                    <div>
+                                        配信可能時間: 平日 09:30-20:30<br>
+                                        <span style="color: var(--accent);">※土日祝日、および平日夜間・早朝は配信できません。</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dateTimeError"
+                                style="font-size: 0.8rem; color: #ff4d4d; margin-top: 0.5rem; display: none; align-items: center; gap: 0.3rem;">
+                                <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+                                <span>指定できない日時が選択されています</span>
+                            </div>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="form-group">
+                            <label>タイトル</label>
+                            <input type="text" id="messageTitle" placeholder="例: 第2回ワークショップのご案内" maxlength="100">
+                            <div class="char-count"><span id="titleCount">0</span> / 100</div>
+                        </div>
+
+                        <!-- Message Body -->
+                        <div class="form-group">
+                            <label>本文</label>
+                            <textarea id="messageBody"
+                                placeholder="メッセージ本文を入力してください...&#10;&#10;例:&#10;こんにちは！We Play事務局です。&#10;&#10;第2回ワークショップを以下の日程で開催します。&#10;日時: 2026年2月15日(土) 14:00-17:00&#10;場所: 福山市民センター&#10;&#10;ご参加お待ちしております！"
+                                maxlength="5000"></textarea>
+                            <div class="char-count"><span id="bodyCount">0</span> / 5000</div>
+                        </div>
+
+                        <!-- Send Button -->
+                        <button class="send-button" onclick="sendMessage()">
+                            <i data-lucide="check-circle"></i>
+                            メッセージ承認依頼
+                        </button>
+                    </div>
+
+                    <!-- LINE Preview -->
+                    <div class="line-preview">
+                        <div class="preview-container">
+                            <div class="preview-header">
+                                <i data-lucide="smartphone"></i>
+                                <h3>LINEプレビュー</h3>
+                            </div>
+
+                            <div class="line-message-bubble">
+                                <!-- Flex Header -->
+                                <div class="flex-header">
+                                    <div class="flex-header-content">
+                                        <div class="flex-header-icon">
+                                            <i data-lucide="megaphone"
+                                                style="width: 24px; height: 24px; color: white;"></i>
+                                        </div>
+                                        <div class="flex-header-title">We Play 事務局</div>
+                                    </div>
+                                </div>
+
+                                <!-- Flex Body -->
+                                <div class="flex-body">
+                                    <div class="message-title" id="previewTitle">タイトルがここに表示されます</div>
+                                    <div class="message-body" id="previewBody">本文がここに表示されます</div>
+                                </div>
+
+                                <!-- Flex Footer -->
+                                <div class="flex-footer">
+                                    <i data-lucide="calendar"></i>
+                                    <span id="previewDate">--</span>
+                                    <span style="margin: 0 0.3rem;">|</span>
+                                    <i data-lucide="clock"></i>
+                                    <span id="previewTime">--:--</span>
+                                </div>
+                            </div>
+
+                            <div class="message-timestamp">
+                                配信予定
+                            </div>
+
+                            <div
+                                style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px; font-size: 0.85rem; color: var(--text-dim);">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                                    <span style="font-weight: 600;">配信先情報</span>
+                                </div>
+                                <div id="recipientInfo">対外向け: 応募者・選抜者</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approval Waiting Section -->
+                <section class="management-section">
+                    <h2><i data-lucide="clock" style="color: #ffcc00;"></i> 承認待ちメッセージ</h2>
+                    <div class="management-card">
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>タイトル</th>
+                                    <th>配信対象</th>
+                                    <th>送信予定日時</th>
+                                    <th>ステータス</th>
+                                    <th style="text-align: right;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="waitingApprovalBody">
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td>第1回交流会のお知らせ</td>
+                                    <td>対外向け</td>
+                                    <td>2026/02/10 10:00</td>
+                                    <td><span class="badge-status badge-waiting">承認待ち</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Sending Waiting Section -->
+                <section class="management-section">
+                    <h2><i data-lucide="calendar" style="color: var(--primary);"></i> 送信待ちメッセージ</h2>
+                    <div class="management-card">
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>タイトル</th>
+                                    <th>配信対象</th>
+                                    <th>送信予定日時</th>
+                                    <th>ステータス</th>
+                                    <th style="text-align: right;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduledMessageBody">
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td>【重要】最終選考の結果について</td>
+                                    <td>対外向け</td>
+                                    <td>2026/02/05 09:30</td>
+                                    <td><span class="badge-status badge-scheduled">送信待ち</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Sent Section -->
+                <section class="management-section" style="margin-bottom: 3rem;">
+                    <h2><i data-lucide="check-check" style="color: #00ff7a;"></i> 送信済みメッセージ</h2>
+                    <div class="management-card">
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>タイトル</th>
+                                    <th>配信対象</th>
+                                    <th>送信完了日時</th>
+                                    <th>ステータス</th>
+                                    <th style="text-align: right;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sentMessageBody">
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td>事業ポータル公開のお知らせ</td>
+                                    <td>対内向け</td>
+                                    <td>2026/01/25 18:00</td>
+                                    <td><span class="badge-status badge-sent">送信済み</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Received Messages Section -->
+                <section class="management-section" style="margin-bottom: 3rem;">
+                    <h2><i data-lucide="inbox" style="color: #00f2ff;"></i> 受信メッセージ一覧</h2>
+                    <div class="management-card">
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>LINE User ID</th>
+                                    <th>メッセージ内容</th>
+                                    <th>受信日時</th>
+                                    <th style="text-align: right;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="receivedMessageBody">
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td>U1234567890abcdef1234567890abcdef</td>
+                                    <td>次回のワークショップに参加したいのですが、持ち物はありますか？</td>
+                                    <td>2026/01/29 14:30</td>
+                                    <td style="text-align: right;">
+                                        <button class="action-btn"><i data-lucide="message-square"></i></button>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr>
+                                    <td>U0987654321fedcba0987654321fedcba</td>
+                                    <td>ありがとうございます！楽しみにしています。</td>
+                                    <td>2026/01/29 10:15</td>
+                                    <td style="text-align: right;">
+                                        <button class="action-btn"><i data-lucide="message-square"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Update preview in real-time
+        const titleInput = document.getElementById('messageTitle');
+        const bodyInput = document.getElementById('messageBody');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewBody = document.getElementById('previewBody');
+        const previewTime = document.getElementById('previewTime');
+        const previewDate = document.getElementById('previewDate');
+        const titleCount = document.getElementById('titleCount');
+        const bodyCount = document.getElementById('bodyCount');
+        const recipientInfo = document.getElementById('recipientInfo');
+        const dateTimeInput = document.getElementById('sendDateTime');
+        const dateTimeError = document.getElementById('dateTimeError');
+
+        // 2026 Japanese Holidays
+        const HOLIDAYS_2026 = [
+            '2026-01-01', // 元日
+            '2026-01-12', // 成人の日
+            '2026-02-11', // 建国記念の日
+            '2026-02-23', // 天皇誕生日
+            '2026-03-20', // 春分の日
+            '2026-03-21', // 振替休日 (春分の日が土曜のため振替なしの場合もあるが、一般的なカレンダーに準拠)
+            '2026-04-29', // 昭和の日
+            '2026-05-03', // 憲法記念日
+            '2026-05-04', // みどりの日
+            '2026-05-05', // こどもの日
+            '2026-05-06', // 振替休日
+            '2026-07-20', // 海の日
+            '2026-08-11', // 山の日
+            '2026-09-21', // 敬老の日
+            '2026-09-22', // 国民の休日
+            '2026-09-23', // 秋分の日
+            '2026-10-12', // スポーツの日
+            '2026-11-03', // 文化の日
+            '2026-11-23', // 勤労感謝の日
+        ];
+
+        function isJapaneseHoliday(date) {
+            const dateStr = date.getFullYear() + '-' +
+                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(date.getDate()).padStart(2, '0');
+            return HOLIDAYS_2026.includes(dateStr);
+        }
+
+        function validateDateTime(date) {
+            const day = date.getDay(); // 0: 日, 6: 土
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const timeVal = hours * 100 + minutes;
+
+            // 1. 土日チェック -> 不可
+            if (day === 0 || day === 6) return false;
+
+            // 2. 祝日チェック -> 不可
+            if (isJapaneseHoliday(date)) return false;
+
+            // 3. 平日時間帯チェック (09:30 - 20:30 の間のみ許可)
+            if (timeVal >= 930 && timeVal <= 2030) return true;
+
+            return false;
+        }
+
+        // Set default date time (next valid slot)
+        function setDefaultDateTime() {
+            const now = new Date();
+            // とりあえず現在時刻をセットし、バリデーションで警告を出す
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            dateTimeInput.value = now.toISOString().slice(0, 16);
+            checkAndAlertDateTime(new Date(dateTimeInput.value));
+        }
+        setDefaultDateTime();
+
+        function checkAndAlertDateTime(date) {
+            if (!validateDateTime(date)) {
+                dateTimeError.style.display = 'flex';
+                dateTimeInput.style.borderColor = '#ff4d4d';
+            } else {
+                dateTimeError.style.display = 'none';
+                dateTimeInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }
+            updatePreviewDateTime(date);
+        }
+
+        function updatePreviewDateTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+            const weekday = weekdays[date.getDay()];
+
+            previewTime.textContent = `${hours}:${minutes}`;
+            previewDate.textContent = `${month}/${day}(${weekday})`;
+        }
+
+        dateTimeInput.addEventListener('change', (e) => {
+            if (e.target.value) {
+                checkAndAlertDateTime(new Date(e.target.value));
+            }
+        });
+
+        // Title input
+        titleInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            previewTitle.textContent = value || 'タイトルがここに表示されます';
+            titleCount.textContent = value.length;
+        });
+
+        // Helper to escape HTML and linkify URLs
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function (m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[m];
+            });
+        }
+
+        function linkify(text) {
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlPattern, '<a href="$1" target="_blank" class="preview-link">$1</a>');
+        }
+
+        // Body input
+        bodyInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (!value) {
+                previewBody.textContent = '本文がここに表示されます';
+            } else {
+                const escaped = escapeHTML(value);
+                previewBody.innerHTML = linkify(escaped);
+            }
+            bodyCount.textContent = value.length;
+        });
+
+        // Target selection
+        const targetRadios = document.querySelectorAll('input[name="target"]');
+        targetRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'external') {
+                    recipientInfo.textContent = '対外向け: 応募者・選抜者';
+                } else {
+                    recipientInfo.textContent = '対内向け: 正会員';
+                }
+            });
+        });
+
+        // Send message
+        function sendMessage() {
+            const title = titleInput.value.trim();
+            const body = bodyInput.value.trim();
+            const target = document.querySelector('input[name="target"]:checked').value;
+            const sendTime = dateTimeInput.value;
+
+            if (!sendTime) {
+                alert('送信日時を指定してください。');
+                return;
+            }
+
+            const sendDateTimeObj = new Date(sendTime);
+            if (!validateDateTime(sendDateTimeObj)) {
+                alert('指定された日時は配信可能時間外です。\n\n・平日の 09:30 〜 20:30 の間のみ配信可能です。\n・土日祝日は配信できません。');
+                return;
+            }
+
+            if (!title || !body) {
+                alert('タイトルと本文を入力してください。');
+                return;
+            }
+
+            const targetText = target === 'external' ? '対外向け（応募者・選抜者）' : '対内向け（正会員）';
+            const formattedTime = sendTime.replace('T', ' ');
+
+            if (confirm(`${targetText}へのメッセージ承認依頼を出しますか？\n\n送信予定日時: ${formattedTime}\nタイトル: ${title}\n\n承認後は送信待ちリストに入ります。`)) {
+                alert('メッセージの承認依頼を完了しました！\n管理者の承認をお待ちください。');
+                // Here you would actually send the message via LINE Messaging API
+                titleInput.value = '';
+                bodyInput.value = '';
+                setDefaultDateTime();
+                previewTitle.textContent = 'タイトルがここに表示されます';
+                previewBody.textContent = '本文がここに表示されます';
+                titleCount.textContent = '0';
+                bodyCount.textContent = '0';
+            }
+        }
+    </script>
+</body>
+
+</html>

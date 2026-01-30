@@ -3,12 +3,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const successMessage = document.getElementById('successMessage');
     const inputs = form.querySelectorAll('input, select, textarea');
 
+    // Conditional Visibility for "Other" in Referral
+    const referralSelect = document.getElementById('referral');
+    const referralOtherGroup = document.getElementById('referral-other-group');
+    const referralOtherInput = document.getElementById('referral-other');
+
+    if (referralSelect && referralOtherGroup) {
+        referralSelect.addEventListener('change', () => {
+            if (referralSelect.value === 'other') {
+                referralOtherGroup.style.display = 'block';
+                referralOtherInput.required = true;
+                // Trigger focus for animation consistency
+                setTimeout(() => referralOtherInput.focus(), 100);
+            } else {
+                referralOtherGroup.style.display = 'none';
+                referralOtherInput.required = false;
+                referralOtherInput.value = '';
+            }
+        });
+    }
+
     // Add float label effect or shadow on focus for better interactivity
     inputs.forEach(input => {
         input.addEventListener('focus', () => {
             input.parentElement.closest('.form-group').classList.add('focused');
         });
-        
+
         input.addEventListener('blur', () => {
             if (input.value === '') {
                 input.parentElement.closest('.form-group').classList.remove('focused');
@@ -43,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Simulate API call
             const submitBtn = form.querySelector('.submit-button');
             const originalContent = submitBtn.innerHTML;
-            
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span>送信中...</span><div class="spinner"></div>';
             submitBtn.style.opacity = '0.7';
@@ -53,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Show success animation
             successMessage.style.display = 'flex';
-            
+
             // Log form data for demo
             const formData = new FormData(form);
             console.log('Form Submitted successfully:', Object.fromEntries(formData));

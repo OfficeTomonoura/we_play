@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Play 管理ポータル</title>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* iframe用のスタイル */
+        #contentFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+
+        .main-content {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="#dashboard" class="nav-item" data-page="dashboard">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="#applicants" class="nav-item" data-page="applicants">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="#selected" class="nav-item" data-page="selected">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="#members" class="nav-item" data-page="members">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="#statistics" class="nav-item" data-page="statistics">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="#line" class="nav-item" data-page="line">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="#meeting/board/06" class="submenu-item level-3"
+                                    data-page="meeting-details">第06回理事予定者会議</a>
+                                <a href="#meeting/board/07" class="submenu-item level-3"
+                                    data-page="meeting-details">第07回理事予定者会議</a>
+                                <a href="#meeting/board/special" class="submenu-item level-3"
+                                    data-page="meeting-details">臨時理事会</a>
+                                <a href="#meeting/board/01" class="submenu-item level-3"
+                                    data-page="meeting-details">第01回理事会</a>
+                                <a href="#meeting/board/02" class="submenu-item level-3"
+                                    data-page="meeting-details">第02回理事会</a>
+                                <a href="#meeting/board/03" class="submenu-item level-3"
+                                    data-page="meeting-details">第03回理事会</a>
+                                <a href="#meeting/board/04" class="submenu-item level-3"
+                                    data-page="meeting-details">第04回理事会</a>
+                                <a href="#meeting/board/05" class="submenu-item level-3"
+                                    data-page="meeting-details">第05回理事会</a>
+                                <a href="#meeting/board/06-2" class="submenu-item level-3"
+                                    data-page="meeting-details">第06回理事会</a>
+                                <a href="#meeting/board/07-2" class="submenu-item level-3"
+                                    data-page="meeting-details">第07回理事会</a>
+                                <a href="#meeting/board/08" class="submenu-item level-3"
+                                    data-page="meeting-details">第08回理事会</a>
+                                <a href="#meeting/board/09" class="submenu-item level-3"
+                                    data-page="meeting-details">第09回理事会</a>
+                                <a href="#meeting/board/10" class="submenu-item level-3"
+                                    data-page="meeting-details">第10回理事会</a>
+                                <a href="#meeting/board/11" class="submenu-item level-3"
+                                    data-page="meeting-details">第11回理事会</a>
+                                <a href="#meeting/board/12" class="submenu-item level-3"
+                                    data-page="meeting-details">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="#meeting/executive/01" class="submenu-item level-3"
+                                    data-page="meeting-details">第01回常任理事会</a>
+                                <a href="#meeting/executive/02" class="submenu-item level-3"
+                                    data-page="meeting-details">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#manual" class="nav-item" data-page="manual">
+                    <i data-lucide="book-open"></i> <span>マニュアル</span>
+                </a>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#settings" class="nav-item" data-page="settings">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item" target="_blank">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <!-- iframe for content -->
+            <iframe id="contentFrame" src="pages/dashboard.html"></iframe>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // ルーティング管理
+        const contentFrame = document.getElementById('contentFrame');
+        const navItems = document.querySelectorAll('.nav-item[data-page], .submenu-item[data-page]');
+
+        // ページマッピング
+        const pageMap = {
+            'dashboard': 'pages/dashboard.html',
+            'applicants': 'pages/applicants.html',
+            'selected': 'pages/selected.html',
+            'members': 'pages/members.html',
+            'statistics': 'pages/statistics.html',
+            'line': 'pages/line.html',
+            'meeting-details': 'meeting-details.html',
+            'manual': 'pages/manual.html',
+            'settings': 'pages/settings.html'
+        };
+
+        // ナビゲーション関数
+        function navigateTo(page) {
+            const url = pageMap[page] || 'pages/dashboard.html';
+            contentFrame.src = url;
+
+            // アクティブ状態の更新
+            navItems.forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`[data-page="${page}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+
+            // URLハッシュの更新
+            window.location.hash = page;
+        }
+
+        // ナビゲーションアイテムのクリックイベント
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = item.getAttribute('data-page');
+                if (page) {
+                    navigateTo(page);
+                }
+            });
+        });
+
+        // 初期ページの読み込み（URLハッシュから）
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1);
+            const page = hash || 'dashboard';
+            navigateTo(page);
+        });
+
+        // ブラウザの戻る/進むボタンに対応
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1);
+            const page = hash || 'dashboard';
+            navigateTo(page);
+        });
+
+        // iframe内からのナビゲーション（グローバル関数として公開）
+        window.navigateTo = navigateTo;
+    </script>
+</body>
+
+</html>

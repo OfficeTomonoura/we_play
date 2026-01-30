@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>協力者一覧 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .data-table tbody tr {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="applicants.html" class="nav-item">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="selected.html" class="nav-item">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="collaborators.html" class="nav-item active">
+                    <i data-lucide="heart"></i> <span>協力者一覧</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="line.html" class="nav-item">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MANUAL Section -->
+                <div class="nav-section">MANUAL</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <i data-lucide="book-open"></i> <span>マニュアル</span>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="database.html" class="submenu-item">データベース設計</a>
+                    </div>
+                </div>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>協力者一覧</h1>
+                    <p>外部協力者・パートナー企業の情報を管理します。行をクリックすると詳細を表示します。</p>
+                </div>
+
+                <!-- Filters area -->
+                <div class="filters-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <div class="filter-group">
+                        <select class="admin-select">
+                            <option value="">すべてのカテゴリー</option>
+                            <option value="filming">撮影・映像</option>
+                            <option value="venue">会場提供</option>
+                            <option value="instructor">講師</option>
+                            <option value="sponsorship">協賛</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select class="admin-select">
+                            <option value="20">20件表示</option>
+                            <option value="50">50件表示</option>
+                            <option value="100">100件表示</option>
+                        </select>
+                    </div>
+                    <button class="export-btn"
+                        style="margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1.2rem; border-radius: 12px; cursor: pointer;">
+                        <i data-lucide="download"></i> エクスポート
+                    </button>
+                </div>
+
+                <!-- Collaborators Table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>会社名</th>
+                                <th>担当者</th>
+                                <th>電話番号</th>
+                                <th>メールアドレス</th>
+                                <th>協力カテゴリー</th>
+                                <th style="text-align: right;">アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            <tr>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">ふくやま
+                                            しゅっぱん</span>
+                                        <span class="name">福山出版株式会社</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">さとう
+                                            けんじ</span>
+                                        <span class="name">佐藤 健二</span>
+                                    </div>
+                                </td>
+                                <td>084-921-XXXX</td>
+                                <td>satou@fukuyama-pub.co.jp</td>
+                                <td>
+                                    <span class="status-badge"
+                                        style="background: rgba(0, 242, 255, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 255, 0.3);">広報協力</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">-</span>
+                                        <span class="name">フリーランス</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">いとう
+                                            きょうこ</span>
+                                        <span class="name">伊藤 恭子</span>
+                                    </div>
+                                </td>
+                                <td>090-XXXX-YYYY</td>
+                                <td>k.ito@example.com</td>
+                                <td>
+                                    <span class="status-badge"
+                                        style="background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);">ワークショップ講師</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">びんご
+                                            すたじお</span>
+                                        <span class="name">備後スタジオ</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="furigana"
+                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">たかはし
+                                            ひろし</span>
+                                        <span class="name">高橋 浩</span>
+                                    </div>
+                                </td>
+                                <td>084-933-ZZZZ</td>
+                                <td>info@bingo-studio.jp</td>
+                                <td>
+                                    <span class="status-badge"
+                                        style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">撮影・編集</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-footer"
+                        style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+                        <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
+                            全 3 件中 1 - 3 件を表示
+                        </div>
+                        <div class="pagination" style="display: flex; gap: 0.5rem;">
+                            <button class="page-btn active"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary); cursor: pointer;">1</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

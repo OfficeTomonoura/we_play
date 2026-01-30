@@ -1,9 +1,23 @@
 // Chart Initialization
 document.addEventListener('DOMContentLoaded', () => {
-    initTrendChart();
-    initReferralChart();
+    // 各機能の初期化（要素が存在する場合のみ実行）
+    if (document.getElementById('registrationTrend')) initTrendChart();
+    if (document.getElementById('referralSource')) initReferralChart();
+
     initLogout();
+    initSidebarAccordion();
 });
+
+function initSidebarAccordion() {
+    const toggles = document.querySelectorAll('.nav-item-toggle');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const submenu = toggle.nextElementSibling;
+            toggle.classList.toggle('open');
+            submenu.classList.toggle('open');
+        });
+    });
+}
 
 function initLogout() {
     const logoutBtn = document.querySelector('.logout-btn');
@@ -19,28 +33,32 @@ function initLogout() {
 function initTrendChart() {
     const ctx = document.getElementById('registrationTrend').getContext('2d');
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: ['1/23', '1/24', '1/25', '1/26', '1/27', '1/28', '1/29'],
             datasets: [{
-                label: '応募数',
-                data: [2, 5, 3, 8, 12, 10, 15],
+                label: '累計応募人数',
+                data: [2, 7, 10, 18, 30, 40, 55],
+                backgroundColor: 'rgba(0, 242, 255, 0.6)',
                 borderColor: '#00f2ff',
-                backgroundColor: 'rgba(0, 242, 255, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-                pointBackgroundColor: '#00f2ff',
-                pointBorderWidth: 0,
-                pointRadius: 4,
-                pointHoverRadius: 6
+                borderWidth: 2,
+                borderRadius: 4,
+                hoverBackgroundColor: 'rgba(0, 242, 255, 0.8)',
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#00f2ff',
+                    bodyColor: '#fff',
+                    padding: 10,
+                    cornerRadius: 8,
+                    displayColors: false
+                }
             },
             scales: {
                 y: {

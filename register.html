@@ -41,6 +41,16 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="name-kana">
+                        <i data-lucide="user"></i> お名前（ふりがな）
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name-kana" name="name-kana" placeholder="やまだ たろう" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="school">
                         <i data-lucide="graduation-cap"></i> 学校名
                     </label>
@@ -128,8 +138,20 @@
                             <option value="friend">友達から聞いた</option>
                             <option value="poster">ポスターを見た</option>
                             <option value="family">家族から聞いた</option>
+                            <option value="other">その他</option>
                         </select>
                         <i data-lucide="chevron-down" class="select-icon"></i>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group" id="referral-other-group" style="display: none;">
+                    <label for="referral-other">
+                        <i data-lucide="edit-3"></i> その他の理由
+                    </label>
+                    <div class="input-wrapper">
+                        <textarea id="referral-other" name="referral-other" rows="2"
+                            placeholder="具体的にご記入ください"></textarea>
                         <span class="focus-border"></span>
                     </div>
                 </div>

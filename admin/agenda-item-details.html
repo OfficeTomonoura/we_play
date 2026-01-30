@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>議案詳細 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .detail-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .sub-section {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="applicants.html" class="nav-item">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="selected.html" class="nav-item">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="book-open"></i> <span>マニュアル</span>
+                </a>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div style="display: flex; align-items: center; gap: 2rem;">
+                    <div class="header-title"
+                        style="display: flex; align-items: center; gap: 1rem; border-right: 1px solid var(--glass-border); padding-right: 2rem;">
+                        <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                        <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                            未来人財育成委員会 事業ポータル</h1>
+                    </div>
+                    <div class="header-breadcrumb"
+                        style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-dim); font-size: 0.9rem;">
+                        <a href="meeting-details.html"
+                            style="color: var(--text-dim); text-decoration: none;">第01回理事会</a>
+                        <i data-lucide="chevron-right" style="width: 14px;"></i>
+                        <span style="color: var(--text-main);">議案詳細</span>
+                    </div>
+                </div>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 1.5rem; margin-left: auto;">
+                    <div class="notifications" style="position: relative; color: var(--text-dim); cursor: pointer;">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"
+                            style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%;"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin"
+                            style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--secondary);">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="detail-card">
+                    <div style="margin-bottom: 2rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <span
+                                style="background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.4rem 1.2rem; border-radius: 50px; font-weight: 800; font-size: 0.9rem; letter-spacing: 2px; border: 1px solid var(--primary);">協議</span>
+                            <span style="color: var(--text-dim); font-size: 0.9rem;">作成日時: 2025/11/24</span>
+                        </div>
+                        <h1
+                            style="font-size: 2rem; font-weight: 800; color: #fff; line-height: 1.4; margin-bottom: 3rem;">
+                            ともに学び、ともに挑む人財の育成の推進<br>年間事業計画(案)について
+                        </h1>
+
+                        <!-- 1. 事業要綱 -->
+                        <section style="margin-bottom: 3.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                                <div style="width: 4px; height: 24px; background: var(--primary); border-radius: 2px;">
+                                </div>
+                                <h2 style="font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px;">事業要綱
+                                </h2>
+                            </div>
+                            <div
+                                style="background: rgba(255, 255, 255, 0.02); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); display: grid; gap: 2.5rem;">
+
+                                <!-- 1-1. 事業実施に至る背景 -->
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        事業実施に至る背景</label>
+                                    <p style="color: var(--text-main); line-height: 1.8; margin-bottom: 1.5rem;">
+                                        青少年には地域の人々との協働を通じて協調性と主体性を身に付ける場が必要ですが、その力を得るための学びの機会が不足しています。
+                                    </p>
+                                    <div
+                                        style="background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                                        <div
+                                            style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--text-dim); font-size: 0.8rem; font-weight: 700;">
+                                            <i data-lucide="link" style="width: 14px;"></i>
+                                            <span>参考資料 (PDF)</span>
+                                        </div>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                                            <a href="../assets/docs/agendas/02-01K-1125K/evidence_seitositumonnsi.pdf"
+                                                target="_blank" class="ref-link"
+                                                style="display: flex; align-items: center; gap: 0.6rem; background: rgba(0, 242, 255, 0.05); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; border: 1px solid rgba(0, 242, 255, 0.2); transition: all 0.2s;">
+                                                <i data-lucide="file-text" style="width: 14px;"></i>
+                                                <span>県教委による高校生へのアンケート結果</span>
+                                            </a>
+                                            <a href="../assets/docs/agendas/02-01K-1125K/bibouroku_kennkyoui.pdf"
+                                                target="_blank" class="ref-link"
+                                                style="display: flex; align-items: center; gap: 0.6rem; background: rgba(0, 242, 255, 0.05); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; border: 1px solid rgba(0, 242, 255, 0.2); transition: all 0.2s;">
+                                                <i data-lucide="file-text" style="width: 14px;"></i>
+                                                <span>備忘録①</span>
+                                            </a>
+                                            <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_chukyoshin.pdf"
+                                                target="_blank" class="ref-link"
+                                                style="display: flex; align-items: center; gap: 0.6rem; background: rgba(0, 242, 255, 0.05); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; border: 1px solid rgba(0, 242, 255, 0.2); transition: all 0.2s;">
+                                                <i data-lucide="file-text" style="width: 14px;"></i>
+                                                <span>中教審答弁</span>
+                                            </a>
+                                            <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_kennkyoui.pdf"
+                                                target="_blank" class="ref-link"
+                                                style="display: flex; align-items: center; gap: 0.6rem; background: rgba(0, 242, 255, 0.05); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; border: 1px solid rgba(0, 242, 255, 0.2); transition: all 0.2s;">
+                                                <i data-lucide="file-text" style="width: 14px;"></i>
+                                                <span>県教委方針</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 1-2. 事業の対象者 -->
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        事業の対象者</label>
+                                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <span
+                                                style="color: var(--text-dim); font-size: 0.8rem; width: 80px;">対外対象者</span>
+                                            <span style="color: var(--text-main); font-weight: 600;">福山市内の高校生</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <span
+                                                style="color: var(--text-dim); font-size: 0.8rem; width: 80px;">対内対象者</span>
+                                            <span style="color: var(--text-main); font-weight: 600;">正会員</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 1-3. 事業目的（対外） -->
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        事業目的（対外）</label>
+                                    <p style="color: var(--text-main); font-weight: 600; line-height: 1.6;">
+                                        協調性と主体性を兼ね備えた人財になること。</p>
+                                </div>
+
+                                <!-- 1-4. 事業目的（対内） -->
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        事業目的（対内）</label>
+                                    <p style="color: var(--text-main); font-weight: 600; line-height: 1.6;">
+                                        青少年の挑戦を応援する運動を推進できること。</p>
+                                </div>
+
+                                <!-- 1-5. ビジョンのゴールとターゲット番号及びその説明 -->
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: 1px;">■
+                                        ビジョンのゴールとターゲット番号及びその説明</label>
+                                    <div style="display: grid; gap: 2rem;">
+                                        <!-- Item 1 -->
+                                        <div
+                                            style="display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="width: 50px; height: 50px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <span
+                                                    style="font-size: 0.6rem; color: var(--primary); font-weight: 800; line-height: 1;">GOAL</span>
+                                                <span
+                                                    style="font-size: 1.4rem; color: #fff; font-weight: 800; line-height: 1;">7</span>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    住みやすい暮らしやすい福山</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: var(--primary); font-weight: 700;">ターゲット
+                                                        5:</span> 福山に長く住みたい、 戻ってきたいと思えるように幅広い世代が住みやすい環境を構築する。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    青少年の挑戦を応援する文化を地域へ拡げます。</div>
+                                            </div>
+                                        </div>
+                                        <!-- Item 2 -->
+                                        <div
+                                            style="display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="width: 50px; height: 50px; background: rgba(112, 0, 255, 0.1); border: 1px solid var(--secondary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <span
+                                                    style="font-size: 0.6rem; color: var(--secondary); font-weight: 800; line-height: 1;">GOAL</span>
+                                                <span
+                                                    style="font-size: 1.4rem; color: #fff; font-weight: 800; line-height: 1;">10</span>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    まちに寄り添う多様な人財</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: var(--secondary); font-weight: 700;">ターゲット
+                                                        4:</span> 子どもたちの可能性を見出し、 自信に満ちた人財を育成する。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    主体的に学び挑戦できる人財を育成します。</div>
+                                            </div>
+                                        </div>
+                                        <!-- Item 3 -->
+                                        <div
+                                            style="display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="width: 50px; height: 50px; background: rgba(112, 0, 255, 0.1); border: 1px solid var(--secondary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <span
+                                                    style="font-size: 0.6rem; color: var(--secondary); font-weight: 800; line-height: 1;">GOAL</span>
+                                                <span
+                                                    style="font-size: 1.4rem; color: #fff; font-weight: 800; line-height: 1;">10</span>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    まちに寄り添う多様な人財</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: var(--secondary); font-weight: 700;">ターゲット
+                                                        5:</span> 誰もが住み暮らしやすいまちにするため、 グローバル社会に適応出来、
+                                                    多様性を受け入れることの出来る人財を育成する。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    他者と協働することで、多様性を受容できる人財を育成します。</div>
+                                            </div>
+                                        </div>
+                                        <!-- Item 4 -->
+                                        <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                            <div
+                                                style="width: 50px; height: 50px; background: rgba(255, 107, 0, 0.1); border: 1px solid #FF6B00; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <span
+                                                    style="font-size: 0.6rem; color: #FF6B00; font-weight: 800; line-height: 1;">GOAL</span>
+                                                <span
+                                                    style="font-size: 1.4rem; color: #fff; font-weight: 800; line-height: 1;">11</span>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    地域を超えた課題解決が出来る人財</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: #FF6B00; font-weight: 700;">ターゲット 5:</span> 備後 /
+                                                    瀬戸内圏域の子どもたちが将来的なリーダーとなることが出来るように教育する。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    地域の人々と協働することで、主体的に学び挑戦できる人財を育成します。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 1-6. SDGsのゴールとターゲット番号及びその説明 -->
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: 1px;">■
+                                        SDGsのゴールとターゲット番号及びその説明</label>
+                                    <div style="display: grid; gap: 2rem;">
+                                        <!-- SDGs 1 -->
+                                        <div
+                                            style="display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="width: 50px; height: 50px; background: #C5192D; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; font-weight: 800; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(197, 25, 45, 0.3);">
+                                                4</div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    質の高い教育をみんなに</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: #C5192D; font-weight: 700;">ターゲット 4.1:</span>
+                                                    2030年までに、全ての子供が男女の区別なく、適切かつ効果的な学習成果をもたらす、無償かつ公正で質の高い初等教育及び中等教育を修了できるようにする。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    協働を通じて主体的に学び挑戦できる力を育みます。</div>
+                                            </div>
+                                        </div>
+                                        <!-- SDGs 2 -->
+                                        <div
+                                            style="display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="width: 50px; height: 50px; background: #C5192D; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; font-weight: 800; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(197, 25, 45, 0.3);">
+                                                4</div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    質の高い教育をみんなに</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: #C5192D; font-weight: 700;">ターゲット 4.4:</span>
+                                                    2030年までに、技術的・職業的スキルなど、雇用、働きがいのある人間らしい仕事及び起業に必要な技能を備えた若者と成人の割合を大幅に増加させる。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    地域の人々と協働することで、キャリア教育を推進します。</div>
+                                            </div>
+                                        </div>
+                                        <!-- SDGs 3 -->
+                                        <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                            <div
+                                                style="width: 50px; height: 50px; background: #C5192D; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; font-weight: 800; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(197, 25, 45, 0.3);">
+                                                4</div>
+                                            <div style="flex: 1;">
+                                                <div
+                                                    style="font-weight: 800; color: #fff; margin-bottom: 0.4rem; font-size: 1rem;">
+                                                    質の高い教育をみんなに</div>
+                                                <div
+                                                    style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                                    <span style="color: #C5192D; font-weight: 700;">ターゲット 4.7:</span>
+                                                    2030年までに、持続可能な開発のための教育及び持続可能なライフスタイル、人権、男女の平等、平和及び非暴力的文化の推進、グローバル・シチズンシップ、文化多様性と文化の持続可能な開発への貢献の理解の教育を通して、全ての学習者が、持続可能な開発を促進するために必要な知識及び技能を習得できるようにする。
+                                                </div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                                                    他者と協働することで、非暴力主義や多様性の尊重を学びます。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2. 事業概要 -->
+                        <section style="margin-bottom: 3.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                                <div style="width: 4px; height: 24px; background: var(--primary); border-radius: 2px;">
+                                </div>
+                                <h2 style="font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px;">事業概要
+                                </h2>
+                            </div>
+                            <div
+                                style="background: rgba(255, 255, 255, 0.02); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); display: grid; gap: 2.5rem;">
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        実施日時</label>
+                                    <p style="color: var(--text-main); font-weight: 600;">2026年01月01日から2026年12月31日</p>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        実施場所・会場</label>
+                                    <div
+                                        style="display: grid; gap: 1.5rem; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                        <div>
+                                            <div
+                                                style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: 1px;">
+                                                【4月度例会行事】</div>
+                                            <div style="color: var(--text-main); font-size: 0.9rem;">日時：2026年4月3日(金) /
+                                                場所：福山ニューキャッスルホテル</div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: 1px;">
+                                                【リーダーシップ育成事業の実施】</div>
+                                            <div style="margin-left: 0.5rem; display: grid; gap: 0.8rem;">
+                                                <div
+                                                    style="font-size: 0.9rem; color: var(--text-main); border-left: 2px solid rgba(255,255,255,0.1); padding-left: 0.8rem;">
+                                                    <span style="color: var(--text-dim);">＜募集＞</span> 日時：2026年3月から5月上旬の間
+                                                    / 場所：福山市内全高校
+                                                    <a href="../assets/docs/agendas/02-01K-1125K/koko_ichiran.pdf"
+                                                        target="_blank"
+                                                        style="display: inline-flex; align-items: center; gap: 0.3rem; margin-left: 0.5rem; color: var(--primary); text-decoration: none; font-size: 0.8rem;">
+                                                        <i data-lucide="file-text" style="width: 12px;"></i> 福山市内高校リスト
+                                                    </a>
+                                                </div>
+                                                <div
+                                                    style="font-size: 0.9rem; color: var(--text-main); border-left: 2px solid rgba(255,255,255,0.1); padding-left: 0.8rem;">
+                                                    <span style="color: var(--text-dim);">＜事業実施＞</span>
+                                                    日時：2026年5月下旬から10月の間 / 場所：福山市内
+                                                </div>
+                                                <div
+                                                    style="font-size: 0.9rem; color: var(--text-main); border-left: 2px solid rgba(255,255,255,0.1); padding-left: 0.8rem;">
+                                                    <span style="color: var(--text-dim);">＜中間発表会＞</span> 日時：2026年7月中に実施
+                                                    / 場所：福山市内
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: 1px;">
+                                                【集大成事業】</div>
+                                            <div style="color: var(--text-main); font-size: 0.9rem;">日時：2026年10月中に実施 /
+                                                場所：福山市内</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        参加員数計画並びに参加推進方法</label>
+                                    <div style="display: grid; gap: 2rem;">
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="color: #fff; font-weight: 800; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i data-lucide="users" style="width: 16px; color: var(--primary);"></i>
+                                                <span>【参加員数計画】</span>
+                                            </div>
+                                            <div
+                                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                                                <div style="font-size: 0.85rem;">
+                                                    <div
+                                                        style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                                                        ● 4月度例会行事</div>
+                                                    <div style="color: var(--text-main);">メンバー: 77名 / 仮入会者: 35名</div>
+                                                </div>
+                                                <div style="font-size: 0.85rem;">
+                                                    <div
+                                                        style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                                                        ● リーダーシップ育成事業</div>
+                                                    <div style="color: var(--text-main);">メンバー: 77名 / 新入会員: 25名 / 高校生:
+                                                        20名 / 市民: 20名</div>
+                                                </div>
+                                                <div style="font-size: 0.85rem;">
+                                                    <div
+                                                        style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                                                        ● 集大成事業</div>
+                                                    <div style="color: var(--text-main);">メンバー: 77名 / 新入会員: 25名 / 高校生:
+                                                        20名 / 家族: 40名 / 市民: 40名</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                            <div
+                                                style="color: #fff; font-weight: 800; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i data-lucide="megaphone"
+                                                    style="width: 16px; color: var(--primary);"></i>
+                                                <span>【参加推進・メディア推進方法】</span>
+                                            </div>
+                                            <div style="display: grid; gap: 1.5rem;">
+                                                <div style="font-size: 0.85rem;">
+                                                    <div
+                                                        style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                                                        ● 正会員・関係者への推進</div>
+                                                    <p style="color: var(--text-main); line-height: 1.6;">
+                                                        発信文書、例会内案内、メルマガ/SNS、委員会訪問などを通じて参画を呼びかけます。高校生へはチラシ送付や学校キャラバンを実施します。
+                                                    </p>
+                                                </div>
+                                                <div style="font-size: 0.85rem;">
+                                                    <div
+                                                        style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                                                        ● メディア推進</div>
+                                                    <p style="color: var(--text-main); line-height: 1.6;">
+                                                        集大成事業に対しプレスリリースを発行。適宜メディア28社に取材依頼を行います。</p>
+                                                    <a href="../assets/docs/agendas/02-01K-1125K/kisyakurabu.pdf"
+                                                        target="_blank"
+                                                        style="display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.5rem; color: var(--primary); text-decoration: none;">
+                                                        <i data-lucide="file-text" style="width: 12px;"></i> プレスリスト
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        予算総額</label>
+                                    <p style="color: var(--text-main); font-weight: 800; font-size: 1.1rem;">￥0-</p>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        外部協力者・協力種別</label>
+                                    <p style="color: var(--text-main); line-height: 1.6;">
+                                        広島県教育委員会、福山市教育委員会、福山市内高等学校、福山市内企業、諸団体など</p>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                    <div class="sub-section">
+                                        <label
+                                            style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 1px;">■
+                                            パートナーの参加の可否</label>
+                                        <span
+                                            style="background: rgba(0, 255, 127, 0.1); color: #00FF7F; padding: 0.4rem 1.2rem; border-radius: 50px; font-weight: 800; font-size: 0.8rem; border: 1px solid #00FF7F;">可</span>
+                                    </div>
+                                    <div class="sub-section">
+                                        <label
+                                            style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 1px;">■
+                                            子どもの事業への参加の可否</label>
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <span
+                                                style="background: rgba(0, 255, 127, 0.1); color: #00FF7F; padding: 0.4rem 1.2rem; border-radius: 50px; font-weight: 800; font-size: 0.8rem; border: 1px solid #00FF7F;">可</span>
+                                            <span style="color: var(--text-dim); font-size: 0.8rem;">（小学生以上）</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                    <div class="sub-section">
+                                        <label
+                                            style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 1px;">■
+                                            引用著作物の有無</label>
+                                        <p style="color: var(--text-dim);">無</p>
+                                    </div>
+                                    <div class="sub-section">
+                                        <label
+                                            style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 1px;">■
+                                            対外配布資料の有無</label>
+                                        <p style="color: var(--text-main); font-weight: 600;">有 <span
+                                                style="font-size: 0.8rem; font-weight: 400; color: var(--text-dim);">（各議案で明記します。）</span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        実施組織</label>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                                        <span
+                                            style="background: rgba(0, 242, 255, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 255, 0.3); padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600;">We
+                                            Play 未来人財育成委員会メンバー</span>
+                                        <span
+                                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-main);">We
+                                            Work 未来創造委員会（協力サポート）</span>
+                                        <span
+                                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-main);">We
+                                            Grow アカデミー委員会（事業参加）</span>
+                                        <span
+                                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-main);">We
+                                            Go 渉外委員会（事業参加）</span>
+                                        <span
+                                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-main);">We
+                                            Connect 広報委員会（事業参加）</span>
+                                        <span
+                                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-main);">We
+                                            Believe 総務・セクレタリー委員会（事業参加）</span>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: 1px;">■
+                                        事業内容（目的達成のための手法説明）</label>
+                                    <div
+                                        style="display: grid; gap: 2.5rem; padding-left: 1rem; border-left: 2px solid rgba(255,255,255,0.05);">
+                                        <div>
+                                            <div
+                                                style="color: #fff; font-weight: 800; font-size: 1rem; margin-bottom: 0.8rem;">
+                                                ＜テーマ＞ 地域で育む協働の絆</div>
+                                            <p style="color: var(--text-main); line-height: 1.8; font-size: 0.95rem;">
+                                                年間を通し、協働を通じて主体的に学び挑戦できる人財の育成を推進します。4月度例会行事から始まり、リーダーシップ育成事業での高校生との協働、そして集大成事業での成果発表へと繋げます。
+                                            </p>
+                                            <div style="display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem;">
+                                                <a href="../assets/docs/agendas/02-01K-1125K/gairyakuzu.pdf"
+                                                    target="_blank" class="ref-link"
+                                                    style="font-size: 0.8rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;"><i
+                                                        data-lucide="file-text" style="width: 12px;"></i> 運動概略図</a>
+                                                <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_chukyoshin.pdf"
+                                                    target="_blank" class="ref-link"
+                                                    style="font-size: 0.8rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;"><i
+                                                        data-lucide="file-text" style="width: 12px;"></i> 中教審答弁</a>
+                                                <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_kennkyoui.pdf"
+                                                    target="_blank" class="ref-link"
+                                                    style="font-size: 0.8rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;"><i
+                                                        data-lucide="file-text" style="width: 12px;"></i> 県教委方針</a>
+                                                <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_PLP.pdf"
+                                                    target="_blank" class="ref-link"
+                                                    style="font-size: 0.8rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;"><i
+                                                        data-lucide="file-text" style="width: 12px;"></i> 日本JC・PLP運動</a>
+                                                <a href="../assets/docs/agendas/02-01K-1125K/evidence_seitositumonnsi.pdf"
+                                                    target="_blank" class="ref-link"
+                                                    style="font-size: 0.8rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;"><i
+                                                        data-lucide="file-text" style="width: 12px;"></i> アンケート結果</a>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div
+                                                style="color: #fff; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.8rem;">
+                                                ＜指標：KPI＞</div>
+                                            <div style="font-size: 0.9rem; color: var(--text-main);">
+                                                ● リーダーシップ育成事業：2校以上の生徒参加、2つ以上の協力団体参画<br>
+                                                ● 集大成事業：高校生の出席率80％以上
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div
+                                                style="color: #fff; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.8rem;">
+                                                ＜検証方法＞</div>
+                                            <div style="display: grid; gap: 0.8rem;">
+                                                <div
+                                                    style="font-size: 0.85rem; color: var(--text-main); background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px;">
+                                                    高校生・正会員への後追いアンケートにて、目的達成を感じた割合が80％以上であることを目標とします。
+                                                    <div style="margin-top: 0.5rem; display: flex; gap: 0.8rem;">
+                                                        <a href="../assets/docs/agendas/02-01K-1125K/anke-to_seito.pdf"
+                                                            target="_blank"
+                                                            style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.3rem;"><i
+                                                                data-lucide="file-text" style="width: 12px;"></i>
+                                                            アンケート(案)生徒</a>
+                                                        <a href="../assets/docs/agendas/02-01K-1125K/anke-to_member.pdf"
+                                                            target="_blank"
+                                                            style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.3rem;"><i
+                                                                data-lucide="file-text" style="width: 12px;"></i>
+                                                            アンケート(案)メンバー</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div
+                                                style="color: #fff; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.8rem;">
+                                                ＜実施までの主なスケジュール＞</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.6;">
+                                                01月19日 第1回理事会(協議) / 02月18日 第2回理事会(審議)<br>
+                                                04月03日 4月度例会行事 / 05月下旬～10月 リーダーシップ育成事業<br>
+                                                07月上旬 中間発表会 / 10月下旬 集大成事業
+                                            </div>
+                                            <a href="../assets/docs/agendas/02-01K-1125K/syuhou_an.pdf" target="_blank"
+                                                style="display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.8rem; color: var(--primary); text-decoration: none; font-size: 0.85rem;">
+                                                <i data-lucide="file-text" style="width: 14px;"></i> 次年度の手法(案)を確認する
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        前年度からの引継ぎ事項</label>
+                                    <div
+                                        style="display: flex; align-items: flex-start; gap: 1rem; background: rgba(255, 107, 0, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 107, 0, 0.2);">
+                                        <div style="flex: 1;">
+                                            <div
+                                                style="color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.4rem;">
+                                                引用議案名：未来を想いまちに誇りを持つ青少年育成運動の推進</div>
+                                            <div style="color: var(--text-dim); font-size: 0.8rem;">議案番号：02-01F-1224S
+                                            </div>
+                                        </div>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/hikitugi.pdf" target="_blank"
+                                            style="background: #FF6B00; color: #fff; padding: 0.6rem 1.2rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                                            <i data-lucide="file-text" style="width: 16px;"></i> 対応資料を確認
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        本年の工夫と期待される効果</label>
+                                    <p style="color: var(--text-main); line-height: 1.8; font-size: 0.95rem;">
+                                        青少年が普段関わらない他校の生徒や地域の大人がともに取り組む「協働」を取り入れます。これにより、多様性の尊重、当事者意識の獲得、地元への帰属意識向上などの効果が期待されます。
+                                    </p>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        公益性に関わる事項</label>
+                                    <div style="font-size: 0.9rem; color: var(--text-main); line-height: 1.6;">
+                                        1. 児童又は青少年の健全の育成を目的とする事業<br>
+                                        2. 地域社会の健全な発展を目的とする事業
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        依頼事項</label>
+                                    <div
+                                        style="display: grid; gap: 0.8rem; font-size: 0.9rem; color: var(--text-main);">
+                                        <div style="display: flex; gap: 0.5rem;"><span
+                                                style="color: var(--primary);">①</span> 広報委員会へのHP掲載・SNS発信の依頼。</div>
+                                        <div style="display: flex; gap: 0.5rem;"><span
+                                                style="color: var(--primary);">②</span> 全メンバーへの事業参画・動員協力の依頼。</div>
+                                    </div>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        討議・協議・審議のポイント</label>
+                                    <p style="color: var(--text-main); font-weight: 600;">背景・目的について。次年度の手法(案)について。</p>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        前回の上程よりブラッシュアップした点</label>
+                                    <div
+                                        style="display: grid; gap: 1.2rem; background: rgba(0, 242, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(0, 242, 255, 0.1);">
+                                        <div style="font-size: 0.9rem; line-height: 1.6;">
+                                            <div
+                                                style="font-weight: 800; color: var(--primary); margin-bottom: 0.4rem;">
+                                                ● エビデンスの追加</div>
+                                            <div style="color: var(--text-main);">
+                                                背景を裏付ける各種統計資料（県教委の調査等）へのリンクを追加し、論理的根拠を強化しました。</div>
+                                        </div>
+                                        <div style="font-size: 0.9rem;">
+                                            <div
+                                                style="font-weight: 800; color: var(--primary); margin-bottom: 0.4rem;">
+                                                ● スケジュールの詳細化</div>
+                                            <div style="color: var(--text-main);">キャラバンの日程追加、第0回委員会での手法(案)を反映しました。</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- 3. 審議対象資料・参考資料一覧 -->
+                        <section style="margin-bottom: 3.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                                <div style="width: 4px; height: 24px; background: var(--primary); border-radius: 2px;">
+                                </div>
+                                <h2 style="font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px;">
+                                    審議対象資料・参考資料一覧</h2>
+                            </div>
+                            <div
+                                style="background: rgba(255, 255, 255, 0.02); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); display: grid; gap: 2rem;">
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        審議対象資料</label>
+                                    <p style="color: var(--text-dim); font-size: 0.9rem;">なし</p>
+                                </div>
+
+                                <div class="sub-section">
+                                    <label
+                                        style="display: block; color: var(--primary); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 1px;">■
+                                        参考資料</label>
+                                    <div
+                                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                                        <!-- Important General Documents -->
+                                        <a href="../assets/docs/agendas/02-01K-1125K/jigyokeikaku.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">事業計画</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/jigyoframe_v11.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">年間事業フレーム</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/23.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">公益目的事業23項</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/sdgs.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">SDGs</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/2022-2026jcifukuyama_miraibijon.pdf"
+                                            target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">ビジョン</span>
+                                        </a>
+
+                                        <!-- Evidence Documents -->
+                                        <a href="../assets/docs/agendas/02-01K-1125K/evidence_seitositumonnsi.pdf"
+                                            target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span
+                                                style="color: var(--text-main); font-size: 0.85rem;">県教委による高校生へのアンケート結果</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/bibouroku_kennkyoui.pdf"
+                                            target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">備忘録①</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_chukyoshin.pdf"
+                                            target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">中教審答弁</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_kennkyoui.pdf"
+                                            target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">県教委方針</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/koko_ichiran.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">福山市内高校リスト</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/kisyakurabu.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">プレスリスト</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/gairyakuzu.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">運動概略図</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/kyoudou_PLP.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">日本JC・PLP運動</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/anke-to_seito.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">アンケート(案)生徒</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/anke-to_member.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span
+                                                style="color: var(--text-main); font-size: 0.85rem;">アンケート(案)メンバー</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/syuhou_an.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span style="color: var(--text-main); font-size: 0.85rem;">次年度の手法(案)</span>
+                                        </a>
+                                        <a href="../assets/docs/agendas/02-01K-1125K/hikitugi.pdf" target="_blank"
+                                            style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                            <i data-lucide="file-text" style="color: var(--primary); width: 20px;"></i>
+                                            <span
+                                                style="color: var(--text-main); font-size: 0.85rem;">前年度からの引継ぎ資料</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 4. 前回までの流れ -->
+                        <section style="margin-bottom: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 2rem;">
+                                <div style="width: 4px; height: 24px; background: var(--primary); border-radius: 2px;">
+                                </div>
+                                <h2 style="font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px;">
+                                    前回までの流れ</h2>
+                            </div>
+                            <div
+                                style="position: relative; padding-left: 2rem; border-left: 2px solid rgba(255, 255, 255, 0.1); margin-left: 0.8rem;">
+                                <!-- 11/17 Meeting -->
+                                <div style="position: relative; margin-bottom: 4rem;">
+                                    <div
+                                        style="position: absolute; left: calc(-2rem - 6px); top: 0; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary);">
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                        <span
+                                            style="color: var(--primary); font-weight: 800; font-family: 'Outfit';">2025.11.17</span>
+                                        <span
+                                            style="background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.2rem 0.8rem; border-radius: 4px; font-size: 0.75rem; font-weight: 800;">協議</span>
+                                        <h3 style="color: #fff; font-size: 1.1rem; font-weight: 700;">第09回常任予定者理事会</h3>
+                                    </div>
+
+                                    <div style="display: grid; gap: 1.5rem;">
+                                        <!-- Opinion 1 -->
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem;">
+                                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                                <div
+                                                    style="flex-shrink: 0; width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.8rem; font-weight: 800;">
+                                                    意見</div>
+                                                <div>
+                                                    <div
+                                                        style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.3rem;">
+                                                        東副理事長</div>
+                                                    <div
+                                                        style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6;">
+                                                        背景のエビデンスを示してください。</div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style="margin-left: 3rem; padding: 1rem; background: rgba(0, 242, 255, 0.03); border-left: 2px solid var(--primary); border-radius: 0 8px 8px 0;">
+                                                <div
+                                                    style="color: var(--primary); font-size: 0.75rem; font-weight: 800; margin-bottom: 0.5rem;">
+                                                    【対応】</div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.85rem; line-height: 1.6;">
+                                                    エビデンス資料を添付しました。<br>
+                                                    <span style="color: var(--text-dim); font-size: 0.8rem;">(cf.
+                                                        県教委による高校生へのアンケート結果、備忘録①、中教審答弁、県教委方針)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Opinion 2 -->
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem;">
+                                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                                <div
+                                                    style="flex-shrink: 0; width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.8rem; font-weight: 800;">
+                                                    意見</div>
+                                                <div>
+                                                    <div
+                                                        style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.3rem;">
+                                                        矢野専務理事</div>
+                                                    <div
+                                                        style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6;">
+                                                        背景を精査してください。</div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style="margin-left: 3rem; padding: 1rem; background: rgba(0, 242, 255, 0.03); border-left: 2px solid var(--primary); border-radius: 0 8px 8px 0;">
+                                                <div
+                                                    style="color: var(--primary); font-size: 0.75rem; font-weight: 800; margin-bottom: 0.5rem;">
+                                                    【対応：文言の修正】</div>
+                                                <div style="display: grid; gap: 0.8rem;">
+                                                    <div
+                                                        style="font-size: 0.8rem; color: var(--text-dim); background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: 4px;">
+                                                        <span
+                                                            style="display: block; font-weight: 800; margin-bottom: 0.2rem; color: #ff6b6b;">[修正前]</span>
+                                                        変化の激しい現代社会を生きる上で、青少年には自ら課題を見出し解決できる力が不可欠ですが、十分に身に付いていません。その力を育むのに必要な協働的な学びの機会が求められています。
+                                                    </div>
+                                                    <div
+                                                        style="font-size: 0.8rem; color: var(--text-main); background: rgba(0, 242, 255, 0.05); padding: 0.6rem; border-radius: 4px; border: 1px solid rgba(0, 242, 255, 0.1);">
+                                                        <span
+                                                            style="display: block; font-weight: 800; margin-bottom: 0.2rem; color: var(--primary);">[修正後]</span>
+                                                        変化の激しい現代社会を生きる上で、青少年には他者と協調しながら自ら課題を見出し解決できる力が不可欠ですが、十分に身に付いていません。その力を得るための学びの機会が求められています。
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Opinion 3 -->
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem;">
+                                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                                <div
+                                                    style="flex-shrink: 0; width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.8rem; font-weight: 800;">
+                                                    意見</div>
+                                                <div>
+                                                    <div
+                                                        style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.3rem;">
+                                                        池口常任理事</div>
+                                                    <div
+                                                        style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6;">
+                                                        はじめからキャラバンをしてください。</div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style="margin-left: 3rem; padding: 1rem; background: rgba(0, 242, 255, 0.03); border-left: 2px solid var(--primary); border-radius: 0 8px 8px 0;">
+                                                <div
+                                                    style="color: var(--primary); font-size: 0.75rem; font-weight: 800; margin-bottom: 0.5rem;">
+                                                    【対応】</div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.85rem; line-height: 1.6;">
+                                                    参加者募集のキャラバンをスケジュールに追加しました。</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Opinion 4 -->
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem;">
+                                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                                <div
+                                                    style="flex-shrink: 0; width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.8rem; font-weight: 800;">
+                                                    意見</div>
+                                                <div>
+                                                    <div
+                                                        style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.3rem;">
+                                                        東副理事長</div>
+                                                    <div
+                                                        style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6;">
+                                                        例会行事の実施場所を精査してください。</div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style="margin-left: 3rem; padding: 1rem; background: rgba(0, 242, 255, 0.03); border-left: 2px solid var(--primary); border-radius: 0 8px 8px 0;">
+                                                <div
+                                                    style="color: var(--primary); font-size: 0.75rem; font-weight: 800; margin-bottom: 0.5rem;">
+                                                    【対応】</div>
+                                                <div
+                                                    style="color: var(--text-main); font-size: 0.85rem; line-height: 1.6;">
+                                                    実施場所を福山ニューキャッスルホテルに修正しました。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 10/29 Meeting -->
+                                <div style="position: relative;">
+                                    <div
+                                        style="position: absolute; left: calc(-2rem - 6px); top: 0; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary);">
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                        <span
+                                            style="color: var(--primary); font-weight: 800; font-family: 'Outfit';">2025.10.29</span>
+                                        <span
+                                            style="background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.2rem 0.8rem; border-radius: 4px; font-size: 0.75rem; font-weight: 800;">協議</span>
+                                        <h3 style="color: #fff; font-size: 1.1rem; font-weight: 700;">第09回正副理事長予定者会議
+                                        </h3>
+                                    </div>
+
+                                    <div style="display: grid; gap: 1.5rem;">
+                                        <div
+                                            style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem;">
+                                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                                <div
+                                                    style="flex-shrink: 0; width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.8rem; font-weight: 800;">
+                                                    意見</div>
+                                                <div>
+                                                    <div
+                                                        style="color: var(--primary); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.3rem;">
+                                                        矢野専務理事</div>
+                                                    <div
+                                                        style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6;">
+                                                        背景が理事長所信・副理事長所信と異なります。</div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style="margin-left: 3rem; padding: 1rem; background: rgba(0, 242, 255, 0.03); border-left: 2px solid var(--primary); border-radius: 0 8px 8px 0;">
+                                                <div
+                                                    style="color: var(--primary); font-size: 0.75rem; font-weight: 800; margin-bottom: 0.5rem;">
+                                                    【対応：背景の修正】</div>
+                                                <div style="display: grid; gap: 0.8rem;">
+                                                    <div
+                                                        style="font-size: 0.8rem; color: var(--text-dim); background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: 4px;">
+                                                        <span
+                                                            style="display: block; font-weight: 800; margin-bottom: 0.2rem; color: #ff6b6b;">[修正前]</span>
+                                                        子どもたちは、VUCA時代を生きる上で不可欠な「主体的な学び」を充分体現できていません。「主体的な学び」を実践するために必要な、学校外の人々や団体と連携した協働的な学びの場が不足していることは問題です。
+                                                    </div>
+                                                    <div
+                                                        style="font-size: 0.8rem; color: var(--text-main); background: rgba(0, 242, 255, 0.05); padding: 0.6rem; border-radius: 4px; border: 1px solid rgba(0, 242, 255, 0.1);">
+                                                        <span
+                                                            style="display: block; font-weight: 800; margin-bottom: 0.2rem; color: var(--primary);">[修正後]</span>
+                                                        福山市では若い世代の人口流出が大きな問題となっています。青少年の地域社会に対する帰属意識を高める必要があります。
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

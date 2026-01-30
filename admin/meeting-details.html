@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会議詳細 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="applicants.html" class="nav-item">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="selected.html" class="nav-item">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="book-open"></i> <span>マニュアル</span>
+                </a>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div style="display: flex; align-items: center; gap: 2rem;">
+                    <div class="header-title"
+                        style="display: flex; align-items: center; gap: 1rem; border-right: 1px solid var(--glass-border); padding-right: 2rem;">
+                        <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                        <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                            未来人財育成委員会 事業ポータル</h1>
+                    </div>
+                    <div class="header-breadcrumb"
+                        style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-dim); font-size: 0.9rem;">
+                        <span>議案</span>
+                        <i data-lucide="chevron-right" style="width: 14px;"></i>
+                        <span>理事会</span>
+                        <i data-lucide="chevron-right" style="width: 14px;"></i>
+                        <span style="color: var(--text-main);">第01回理事会</span>
+                    </div>
+                </div>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 1.5rem; margin-left: auto;">
+                    <div class="notifications">
+                        <i data-lucide="bell" style="color: var(--text-dim); cursor: pointer;"></i>
+                        <span class="badge"
+                            style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%;"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin"
+                            style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--secondary);">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="meeting-header"
+                    style="margin: 2rem 0; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h1
+                            style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff, var(--text-dim)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                            第01回理事会</h1>
+                        <div style="display: flex; gap: 1.5rem; color: var(--text-dim); font-size: 0.95rem;">
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="calendar"
+                                    style="width: 16px;"></i> 2026年2月10日(火)</span>
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="clock"
+                                    style="width: 16px;"></i> 19:00 - 21:00</span>
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="map-pin"
+                                    style="width: 16px;"></i> 商工会議所 4F 会議室</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="export-btn"
+                            style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1.2rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="download" style="width: 18px;"></i> 資料一括ダウンロード
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Agenda Cards Grid -->
+                <div class="agendas-grid" style="display: grid; gap: 1.5rem; margin-top: 2rem;">
+
+                    <!-- Agenda Item 1: 協議 -->
+                    <a href="agenda-item-details.html" class="agenda-card"
+                        style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; display: flex; gap: 2.5rem; transition: all 0.3s ease; position: relative; overflow: hidden; text-decoration: none; color: inherit; cursor: pointer;">
+
+                        <!-- Protocol Status Badge (Left) -->
+                        <div class="agenda-status-box"
+                            style="min-width: 100px; height: 100px; background: rgba(0, 242, 255, 0.1); border: 2px solid var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                            <span style="font-size: 1.8rem; font-weight: 800; letter-spacing: 2px;">協議</span>
+                        </div>
+
+                        <div class="agenda-content" style="flex: 1;">
+                            <h3
+                                style="font-size: 1.4rem; font-weight: 800; margin-bottom: 2rem; line-height: 1.4; color: #fff; border-left: 4px solid var(--primary); padding-left: 1.5rem;">
+                                ともに学び、ともに挑む人財の育成の推進<br>年間事業計画(案)について
+                            </h3>
+
+                            <!-- Info Grid -->
+                            <div
+                                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; background: rgba(255, 255, 255, 0.02); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05);">
+
+                                <div class="info-group">
+                                    <label
+                                        style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">担当
+                                        / 委員会名</label>
+                                    <p style="font-size: 0.95rem; font-weight: 600; color: #fff;">Weからはじまる未来創造室</p>
+                                    <p style="font-size: 0.85rem; color: var(--primary);">We Play 未来人財育成委員会</p>
+                                </div>
+
+                                <div class="info-group">
+                                    <label
+                                        style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">担当役員
+                                        / 確認日</label>
+                                    <p style="font-size: 0.9rem; font-weight: 600;">Weからはじまる未来創造室 室長</p>
+                                    <p style="font-size: 0.95rem; color: #fff;">中尾 朋宏 <span
+                                            style="margin-left: 0.8rem; color: var(--text-dim); font-size: 0.75rem;">📅
+                                            2025/11/24</span></p>
+                                </div>
+
+                                <div class="info-group">
+                                    <label
+                                        style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">委員長名
+                                        / 確認日</label>
+                                    <p style="font-size: 0.9rem; font-weight: 600;">We Play 未来人財育成委員会 委員長</p>
+                                    <p style="font-size: 0.95rem; color: #fff;">菅田 直人 <span
+                                            style="margin-left: 0.8rem; color: var(--text-dim); font-size: 0.75rem;">📅
+                                            2025/11/24</span></p>
+                                </div>
+
+                                <div class="info-group">
+                                    <label
+                                        style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">文書作成者
+                                        / 作成日時</label>
+                                    <p style="font-size: 0.9rem; font-weight: 600;">We Play 未来人財育成委員会 委員長</p>
+                                    <p style="font-size: 0.95rem; color: #fff;">菅田 直人 <span
+                                            style="margin-left: 0.8rem; color: var(--text-dim); font-size: 0.75rem;">🕒
+                                            2025/11/24</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </a>
+
+                    <!-- Agenda Item 2: 審議 (Sample) -->
+                    <div class="agenda-card"
+                        style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; display: flex; gap: 2.5rem; transition: all 0.3s ease; opacity: 0.8;">
+                        <div class="agenda-status-box"
+                            style="min-width: 100px; height: 100px; background: rgba(112, 0, 255, 0.1); border: 2px solid var(--secondary); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--secondary);">
+                            <span style="font-size: 1.8rem; font-weight: 800; letter-spacing: 2px;">審議</span>
+                        </div>
+                        <div class="agenda-content" style="flex: 1; display: flex; align-items: center;">
+                            <p style="color: var(--text-dim); font-style: italic;">次の議案は準備中、または非公開です。</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

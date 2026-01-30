@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Play Admin - データベース設計</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .table-definition {
+            margin-bottom: 3rem;
+        }
+
+        .table-definition h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .table-definition h2 i {
+            color: var(--primary);
+        }
+
+        .table-definition p {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .data-table th {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .column-type {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- MAIN Section -->
+                <div class="nav-section">MAIN</div>
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span>
+                </a>
+                <a href="applicants.html" class="nav-item">
+                    <i data-lucide="users"></i> <span>応募者一覧</span>
+                </a>
+                <a href="selected.html" class="nav-item">
+                    <i data-lucide="user-check"></i> <span>選抜者</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="briefcase"></i> <span>参加者（正会員）</span>
+                </a>
+                <a href="collaborators.html" class="nav-item">
+                    <i data-lucide="heart"></i> <span>協力者一覧</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
+                </a>
+                <a href="line.html" class="nav-item">
+                    <i data-lucide="message-circle"></i> <span>LINE公式運用</span>
+                </a>
+
+                <!-- DOCUMENTS Section -->
+                <div class="nav-section">DOCUMENTS</div>
+                <div class="nav-item-container">
+                    <div class="nav-item nav-item-toggle">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="file-text"></i> <span>議案</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu">
+                        <!-- 2段目: 理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事予定者会議</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">臨時理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第03回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第04回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第05回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第06回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第07回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第08回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第09回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第10回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第11回理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第12回理事会</a>
+                            </div>
+                        </div>
+                        <!-- 2段目: 常任理事会 -->
+                        <div class="nav-item-container">
+                            <div class="nav-item nav-item-toggle level-2">
+                                <span>常任理事会</span>
+                                <i data-lucide="chevron-right" class="toggle-icon"></i>
+                            </div>
+                            <div class="nav-submenu">
+                                <a href="meeting-details.html" class="submenu-item level-3">第01回常任理事会</a>
+                                <a href="meeting-details.html" class="submenu-item level-3">第02回常任理事会</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MANUAL Section -->
+                <div class="nav-section">MANUAL</div>
+                <div class="nav-item-container active">
+                    <div class="nav-item nav-item-toggle open">
+                        <i data-lucide="book-open"></i> <span>マニュアル</span>
+                        <i data-lucide="chevron-right" class="toggle-icon"></i>
+                    </div>
+                    <div class="nav-submenu open">
+                        <a href="database.html" class="submenu-item active">データベース設計</a>
+                        <a href="manual_liff.html" class="submenu-item">LINE連携・LIFF実装</a>
+                    </div>
+                </div>
+
+                <!-- SYSTEM Section -->
+                <div class="nav-section">SYSTEM</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>設定</span>
+                </a>
+
+                <!-- OTHERS Section -->
+                <div class="nav-section">OTHERS</div>
+                <a href="../register.html" class="nav-item">
+                    <i data-lucide="external-link"></i> <span>応募フォームを表示</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>データベース設計</h1>
+                    <p>システムの主要なテーブル構成とデータ定義を管理します。</p>
+                </div>
+
+                <!-- Collaborators Table -->
+                <section class="table-definition">
+                    <h2><i data-lucide="table-2"></i> 協力者 (collaborators)</h2>
+                    <p>事業に協力していただく企業や個人の情報を管理します。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>論理名</th>
+                                    <th>物理名 (列名)</th>
+                                    <th>データ型</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>プライマリキー</td>
+                                </tr>
+                                <tr>
+                                    <td>会社名</td>
+                                    <td>company_name</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>会社名ふりがな</td>
+                                    <td>company_kana</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>担当者名</td>
+                                    <td>contact_name</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>担当者ふりがな</td>
+                                    <td>contact_kana</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>電話番号</td>
+                                    <td>phone</td>
+                                    <td><span class="column-type">VARCHAR(20)</span></td>
+                                    <td>ハイフンあり</td>
+                                </tr>
+                                <tr>
+                                    <td>メールアドレス</td>
+                                    <td>email</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td>一意制約</td>
+                                </tr>
+                                <tr>
+                                    <td>協力カテゴリー</td>
+                                    <td>category</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>広報協力, 講師など</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Members Table -->
+                <section class="table-definition">
+                    <h2><i data-lucide="table-2"></i> 正会員 (members)</h2>
+                    <p>福山JC正会員（サポーター・コーディネーター等）の情報を管理します。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>論理名</th>
+                                    <th>物理名 (列名)</th>
+                                    <th>データ型</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>プライマリキー</td>
+                                </tr>
+                                <tr>
+                                    <td>氏名</td>
+                                    <td>full_name</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>ふりがな</td>
+                                    <td>full_kana</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>出身高校</td>
+                                    <td>high_school</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td>元データ: email項目の直下に表示</td>
+                                </tr>
+                                <tr>
+                                    <td>主たる所属</td>
+                                    <td>organization</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td>未来人財育成委員会など</td>
+                                </tr>
+                                <tr>
+                                    <td>役職</td>
+                                    <td>position</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>委員長, 副委員長など</td>
+                                </tr>
+                                <tr>
+                                    <td>事業役割</td>
+                                    <td>project_role</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>事業責任者, サポーターなど</td>
+                                </tr>
+                                <tr>
+                                    <td>スタッフ判定</td>
+                                    <td>is_staff</td>
+                                    <td><span class="column-type">BOOLEAN</span></td>
+                                    <td>委員会スタッフ等の判定に使用</td>
+                                </tr>
+                                <tr>
+                                    <td>LINE承認権限</td>
+                                    <td>can_approve_line</td>
+                                    <td><span class="column-type">BOOLEAN</span></td>
+                                    <td>LINEメッセージを承認できる権限</td>
+                                </tr>
+                                <tr>
+                                    <td>LINE USER ID</td>
+                                    <td>line_user_id</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td>Messaging APIでのマルチキャスト配信に使用</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Applicants Table -->
+                <section class="table-definition">
+                    <h2><i data-lucide="table-2"></i> 応募者 (applicants)</h2>
+                    <p>外部公募による中高生応募者の情報を管理します。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>論理名</th>
+                                    <th>物理名 (列名)</th>
+                                    <th>データ型</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>プライマリキー</td>
+                                </tr>
+                                <tr>
+                                    <td>氏名</td>
+                                    <td>full_name</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>ふりがな</td>
+                                    <td>full_kana</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>学校名</td>
+                                    <td>school_name</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>学年</td>
+                                    <td>grade</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>希望役割1</td>
+                                    <td>desired_role_1</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>第1希望（監督, 演者など）</td>
+                                </tr>
+                                <tr>
+                                    <td>希望役割2</td>
+                                    <td>desired_role_2</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>第2希望</td>
+                                </tr>
+                                <tr>
+                                    <td>希望役割3</td>
+                                    <td>desired_role_3</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>第3希望</td>
+                                </tr>
+                                <tr>
+                                    <td>決定役職</td>
+                                    <td>assigned_role</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>選抜時に確定した最終役職</td>
+                                </tr>
+                                <tr>
+                                    <td>認知経路</td>
+                                    <td>referral_source</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td>SNS, チラシ, 知人の紹介など</td>
+                                </tr>
+                                <tr>
+                                    <td>認知経路のその他</td>
+                                    <td>referral_source_other</td>
+                                    <td><span class="column-type">TEXT</span></td>
+                                    <td>認知経路で「その他」を選択した場合の詳細</td>
+                                </tr>
+                                <tr>
+                                    <td>要望・メッセージ</td>
+                                    <td>message</td>
+                                    <td><span class="column-type">TEXT</span></td>
+                                    <td>応募時の自由記述メッセージ</td>
+                                </tr>
+                                <tr>
+                                    <td>状態</td>
+                                    <td>status</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td>新規, 確認済み, 選抜済など</td>
+                                </tr>
+                                <tr>
+                                    <td>LINE USER ID</td>
+                                    <td>line_user_id</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td>Messaging APIでのマルチキャスト配信に使用</td>
+                                </tr>
+                                <tr>
+                                    <td>応募日時</td>
+                                    <td>applied_at</td>
+                                    <td><span class="column-type">TIMESTAMP</span></td>
+                                    <td>申し込みが完了した日時</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- LINE Messages Table -->
+                <section class="table-definition">
+                    <h2><i data-lucide="table-2"></i> LINEメッセージ (line_messages)</h2>
+                    <p>公式LINEから配信されるメッセージの履歴と承認ステータスを管理します。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>論理名</th>
+                                    <th>物理名 (列名)</th>
+                                    <th>データ型</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>プライマリキー</td>
+                                </tr>
+                                <tr>
+                                    <td>配信対象</td>
+                                    <td>target_type</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td>external (対外), internal (対内)</td>
+                                </tr>
+                                <tr>
+                                    <td>タイトル</td>
+                                    <td>title</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td>管理用タイトル</td>
+                                </tr>
+                                <tr>
+                                    <td>本文</td>
+                                    <td>message_body</td>
+                                    <td><span class="column-type">TEXT</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>配信予定日時</td>
+                                    <td>scheduled_at</td>
+                                    <td><span class="column-type">TIMESTAMP</span></td>
+                                    <td>平日 09:30-20:30 のみ許可</td>
+                                </tr>
+                                <tr>
+                                    <td>作成者ID</td>
+                                    <td>created_by</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>メッセージ作成者のユーザーID</td>
+                                </tr>
+                                <tr>
+                                    <td>承認者ID</td>
+                                    <td>approved_by</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>承認作業を行ったユーザーID</td>
+                                </tr>
+                                <tr>
+                                    <td>承認日時</td>
+                                    <td>approved_at</td>
+                                    <td><span class="column-type">TIMESTAMP</span></td>
+                                    <td>承認が完了した日時</td>
+                                </tr>
+                                <tr>
+                                    <td>承認ステータス</td>
+                                    <td>status</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td>pending (承認待ち), scheduled (送信待ち), sent (送信済み), rejected (却下)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- LINE Received Messages Table -->
+                <section class="table-definition">
+                    <h2><i data-lucide="table-2"></i> LINE受信メッセージ (line_received_messages)</h2>
+                    <p>ユーザーからLINE公式アカウントに送信されたメッセージを管理します。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>論理名</th>
+                                    <th>物理名 (列名)</th>
+                                    <th>データ型</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>プライマリキー</td>
+                                </tr>
+                                <tr>
+                                    <td>LINE USER ID</td>
+                                    <td>line_user_id</td>
+                                    <td><span class="column-type">VARCHAR(50)</span></td>
+                                    <td>送信者のLINEユーザーID</td>
+                                </tr>
+                                <tr>
+                                    <td>メッセージ内容</td>
+                                    <td>message_text</td>
+                                    <td><span class="column-type">TEXT</span></td>
+                                    <td>受信したテキスト</td>
+                                </tr>
+                                <tr>
+                                    <td>受信日時</td>
+                                    <td>received_at</td>
+                                    <td><span class="column-type">TIMESTAMP</span></td>
+                                    <td>メッセージ受信日時</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
