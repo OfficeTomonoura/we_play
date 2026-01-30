@@ -30,6 +30,10 @@
             </header>
 
             <form id="registrationForm" class="registration-form" novalidate>
+                <!-- Hidden fields for LINE ID Linkage -->
+                <input type="hidden" id="line_user_id" name="line_user_id" value="">
+                <input type="hidden" id="line_display_name" name="line_display_name" value="">
+                <input type="hidden" id="line_picture_url" name="line_picture_url" value="">
                 <div class="form-group">
                     <label for="name">
                         <i data-lucide="user"></i> お名前
@@ -232,10 +236,48 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="assets/js/supabase-client.js"></script>
     <script src="assets/js/form.js"></script>
     <script>
         lucide.createIcons();
+
+        // LIFF Initialization
+        document.addEventListener('DOMContentLoaded', async () => {
+            const liffId = "2009015373-QGkjtgDJ";
+            try {
+                await liff.init({ liffId: liffId });
+
+                // Check environment
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+
+                if (liff.isLoggedIn()) {
+                    setLiffData();
+                } else if (!isLocal) {
+                    // Force login if in production (HTTPS)
+                    // liff.login(); // Auto-login disabled for now to allow viewing form without LINE
+                }
+            } catch (err) {
+                console.warn('LIFF Initialization failed:', err);
+            }
+        });
+
+        async function setLiffData() {
+            try {
+                const profile = await liff.getProfile();
+                const userIdField = document.getElementById('line_user_id');
+                const nameField = document.getElementById('line_display_name');
+                const picField = document.getElementById('line_picture_url');
+
+                if (userIdField) userIdField.value = profile.userId;
+                if (nameField) nameField.value = profile.displayName;
+                if (picField) picField.value = profile.pictureUrl;
+
+                console.log('LIFF User Linked:', profile.userId);
+            } catch (err) {
+                console.error('Error getting profile:', err);
+            }
+        }
     </script>
 </body>
 

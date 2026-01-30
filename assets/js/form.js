@@ -135,6 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     phone: formData.get('phone'),
                     message: formData.get('message'),
                     status: '新規',
+                    // LINE Linkage
+                    line_user_id: formData.get('line_user_id') || null,
+                    line_display_name: formData.get('line_display_name') || null,
+                    line_picture_url: formData.get('line_picture_url') || null,
                 };
 
                 // 2. Insert into 'applicants' and get ID

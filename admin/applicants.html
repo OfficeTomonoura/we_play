@@ -270,6 +270,12 @@
                                     style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">電話番号</label>
                                 <p id="modalPhone" style="font-weight: 400;"></p>
                             </div>
+                            <div style="margin-top: 0.8rem;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem;">LINE連携</label>
+                                <p id="modalLineId"
+                                    style="font-weight: 400; font-family: monospace; font-size: 0.8rem;"></p>
+                            </div>
                         </div>
                     </div>
 
@@ -450,6 +456,20 @@
             setText('modalGender', data.gender || '-');
             setText('modalEmail', data.email || (data.line_user_id ? 'LINE連携済み' : '-'));
             setText('modalPhone', data.phone || '-');
+
+            const lineEl = document.getElementById('modalLineId');
+            if (lineEl) {
+                if (data.line_user_id) {
+                    lineEl.textContent = data.line_user_id;
+                    lineEl.style.color = '#00b900'; // LINE Green
+                    lineEl.style.fontWeight = '700';
+                } else {
+                    lineEl.textContent = '未連携';
+                    lineEl.style.color = 'var(--text-dim)';
+                    lineEl.style.fontWeight = '400';
+                }
+            }
+
             setText('modalSchoolGrade', (data.school_name || '') + ' / ' + (data.grade || ''));
             setText('modalDate', '応募日: ' + dateStr);
 
