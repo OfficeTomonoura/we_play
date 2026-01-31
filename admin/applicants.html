@@ -56,24 +56,21 @@
                 <!-- Filters area -->
                 <div class="filters-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
                     <div class="filter-group">
-                        <select class="admin-select">
+                        <select id="roleFilter" class="admin-select">
                             <option value="">すべての希望役職</option>
-                            <option value="director">監督</option>
-                            <option value="actor">演者</option>
-                            <option value="props">小道具</option>
-                            <option value="producer">プロデューサー</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <select class="admin-select">
+                        <select id="statusFilter" class="admin-select">
                             <option value="">すべてのステータス</option>
-                            <option value="new">新規</option>
-                            <option value="reviewed">確認済み</option>
-                            <option value="pending">保留</option>
+                            <option value="新規">新規</option>
+                            <option value="確認済み">確認済み</option>
+                            <option value="採用">採用</option>
+                            <option value="不採用">不採用</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <select class="admin-select">
+                        <select id="limitFilter" class="admin-select">
                             <option value="20">20件表示</option>
                             <option value="50">50件表示</option>
                             <option value="100">100件表示</option>
@@ -353,14 +350,30 @@
 
         async function fetchApplicants() {
             try {
-                // Show loading state if needed
-                const tbody = document.getElementById('applicantsTableBody');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+                const roleId = document.getElementById('roleFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const limit = parseInt(document.getElementById('limitFilter').value) || 20;
 
-                const { data, error } = await window.supabaseClient
+                // Show loading state
+                const tbody = document.getElementById('applicantsTableBody');
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+
+                let query = window.supabaseClient
                     .from('applicants')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), ref:master_referral_source!referral_source_id(name)');
+
+                if (roleId) {
+                    // Filter if ANY of the desired roles matches
+                    query = query.or(`desired_role_1_id.eq.${roleId},desired_role_2_id.eq.${roleId},desired_role_3_id.eq.${roleId}`);
+                }
+
+                if (status) {
+                    query = query.eq('status', status);
+                }
+
+                const { data, error } = await query
+                    .order('created_at', { ascending: false })
+                    .limit(limit);
 
                 if (error) throw error;
 
@@ -405,9 +418,9 @@
                     </td>
                     <td>${item.grade || '-'}</td>
                     <td>${item.gender || '-'}</td>
-                    <td>${formatRole(item.desired_role_1)}</td>
-                    <td style="color: var(--text-dim);">${formatRole(item.desired_role_2)}</td>
-                    <td style="color: var(--text-dim);">${formatRole(item.desired_role_3)}</td>
+                    <td>${item.r1?.name || '-'}</td>
+                    <td style="color: var(--text-dim);">${item.r2?.name || '-'}</td>
+                    <td style="color: var(--text-dim);">${item.r3?.name || '-'}</td>
                     <td>${dateStr}</td>
                     <td><span class="status-badge ${statusClass}">${item.status || '新規'}</span></td>
                     <td style="text-align: right;">
@@ -431,15 +444,7 @@
 
         let currentApplicantId = null;
 
-        function formatRole(roleKey) {
-            const roleMap = {
-                'director': '監督',
-                'actor': '演者',
-                'props': '小道具',
-                'producer': 'プロデューサー'
-            };
-            return roleMap[roleKey] || roleKey || '-';
-        }
+
 
         async function openDetails(data) {
             currentApplicantId = data.id;
@@ -473,23 +478,14 @@
             setText('modalSchoolGrade', (data.school_name || '') + ' / ' + (data.grade || ''));
             setText('modalDate', '応募日: ' + dateStr);
 
-            const referralMap = {
-                'teacher': '学校の先生',
-                'advisor': '部活動の顧問',
-                'friend': '友人・知人',
-                'poster': 'ポスター・チラシ',
-                'family': '家族',
-                'sns': 'SNS (Instagram/X)',
-                'other': 'その他'
-            };
-            let referralText = referralMap[data.referral_source] || data.referral_source || '-';
+            let referralText = data.ref?.name || '-';
             setText('modalReferral', referralText);
             setText('modalReferralOther', data.referral_source_other || '');
             setText('modalMessage', data.message || '（メッセージなし）');
 
-            setText('role1', formatRole(data.desired_role_1));
-            setText('role2', formatRole(data.desired_role_2));
-            setText('role3', formatRole(data.desired_role_3));
+            setText('role1', data.r1?.name || '-');
+            setText('role2', data.r2?.name || '-');
+            setText('role3', data.r3?.name || '-');
 
             const modal = document.getElementById('detailModal');
             modal.style.display = 'flex';
@@ -504,9 +500,9 @@
             if (assignedSelect) {
                 assignedSelect.innerHTML = '<option value="">読み込み中...</option>';
                 const { data: roles, error } = await window.supabaseClient
-                    .from('roles')
-                    .select('id, name, code')
-                    .order('code'); // or name
+                    .from('master_role')
+                    .select('id, name')
+                    .order('sort_order', { ascending: true });
 
                 if (!error && roles) {
                     assignedSelect.innerHTML = '<option value="">未定</option>';
@@ -518,13 +514,8 @@
                     });
 
                     // Set selected value
-                    // Prefer assigned_role_id if exists, else try to match assigned_role text
                     if (data.assigned_role_id) {
                         assignedSelect.value = data.assigned_role_id;
-                    } else if (data.assigned_role) {
-                        // Fallback matching
-                        const match = roles.find(r => r.name === data.assigned_role || r.code === data.assigned_role);
-                        if (match) assignedSelect.value = match.id;
                     }
                 } else {
                     assignedSelect.innerHTML = '<option value="">読み込みエラー</option>';
@@ -555,7 +546,6 @@
                     .update({
                         status: status,
                         assigned_role_id: assignedRoleId,
-                        assigned_role: assignedRoleId ? assignedRoleName : null, // syncing legacy text column
                         updated_at: new Date()
                     })
                     .eq('id', currentApplicantId);
@@ -587,8 +577,37 @@
             if (e.target === this) closeModal();
         });
 
+        async function initFilters() {
+            // Populate Role Filter
+            const roleFilter = document.getElementById('roleFilter');
+            if (roleFilter) {
+                const { data: roles, error } = await window.supabaseClient
+                    .from('master_role')
+                    .select('id, name')
+                    .order('sort_order', { ascending: true });
+
+                if (!error && roles) {
+                    roles.forEach(role => {
+                        const opt = document.createElement('option');
+                        opt.value = role.id;
+                        opt.textContent = role.name;
+                        roleFilter.appendChild(opt);
+                    });
+                }
+            }
+
+            // Bind change events
+            ['roleFilter', 'statusFilter', 'limitFilter'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', fetchApplicants);
+            });
+        }
+
         // Load data on page load
-        document.addEventListener('DOMContentLoaded', fetchApplicants);
+        document.addEventListener('DOMContentLoaded', () => {
+            initFilters();
+            fetchApplicants();
+        });
     </script>
 </body>
 

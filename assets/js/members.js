@@ -20,10 +20,14 @@ async function fetchMembers() {
     tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-dim);">読み込み中...</td></tr>';
 
     try {
-        console.log('Fetching members...');
         const { data: members, error } = await window.supabaseClient
             .from('members')
-            .select('*')
+            .select(`
+                *,
+                master_organization (name),
+                master_position (name),
+                master_project_role (name)
+            `)
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -31,7 +35,6 @@ async function fetchMembers() {
             throw error;
         }
 
-        console.log('Fetched members:', members);
         renderMembers(members);
 
     } catch (err) {
@@ -54,11 +57,16 @@ function renderMembers(members) {
     members.forEach(member => {
         const tr = document.createElement('tr');
 
+        // Helper to get name safely
+        const orgName = member.master_organization?.name || '';
+        const posName = member.master_position?.name || '';
+        const roleName = member.master_project_role?.name || '';
+
         // Badge Logic
         let badgeStyle = '';
-        if (member.project_role === '事業責任者') {
+        if (roleName === '事業責任者') {
             badgeStyle = 'background: rgba(0, 242, 255, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 255, 0.3);';
-        } else if (member.project_role === 'コーディネーター') {
+        } else if (roleName === 'コーディネーター') {
             badgeStyle = 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);';
         } else {
             // Default (Supporter etc.)
@@ -77,13 +85,13 @@ function renderMembers(members) {
             </td>
             <td>
                 <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                    <span style="color: var(--text-main);">${escapeHtml(member.organization || '')}</span>
-                    <span style="font-size: 0.85rem; color: var(--text-dim);">${escapeHtml(member.position || '')}</span>
+                    <span style="color: var(--text-main);">${escapeHtml(orgName)}</span>
+                    <span style="font-size: 0.85rem; color: var(--text-dim);">${escapeHtml(posName)}</span>
                 </div>
             </td>
             <td>
                 <span class="status-badge" style="${badgeStyle}">
-                    ${escapeHtml(member.project_role || '')}
+                    ${escapeHtml(roleName)}
                 </span>
             </td>
             <td style="text-align: right;">

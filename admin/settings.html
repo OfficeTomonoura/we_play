@@ -117,6 +117,71 @@
         .log-entry.error {
             color: #ff4b4b;
         }
+
+        .tabs-nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 2rem;
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 1rem 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: white;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -126,12 +191,16 @@
         <div id="app-sidebar"></div>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <header class="top-header">
+        <main class="main-content" style="padding: 0; overflow-y: auto;">
+            <header class="top-header" style="position: static; background: transparent; padding: 1.5rem 2rem;">
                 <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
                     <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
                     <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">システム設定</h1>
                 </div>
+                <!-- Profile section removed from here to simplify sticky header, or keep it if needed. 
+                     If we want tabs to be sticky *under* standard header, structure is different.
+                     Request said "Tab is user registration / master data". 
+                     For simplicity, I will put tabs inside the main content flow but make them sticky. -->
                 <div class="user-profile">
                     <div class="notifications">
                         <i data-lucide="bell"></i>
@@ -143,79 +212,179 @@
                 </div>
             </header>
 
-            <div class="content-wrapper">
-                <!-- Individual Registration Card -->
-                <div class="settings-card">
-                    <h3><i data-lucide="user-plus"></i> ユーザー個別登録</h3>
-                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                        ユーザーを1件ずつ手動で登録します。
-                    </p>
-                    <form id="individualForm" style="display: grid; gap: 1rem; max-width: 500px;">
-                        <input type="email" id="ind_email" placeholder="メールアドレス (必須)" class="input-field" required
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
-                        <input type="text" id="ind_password" placeholder="初期パスワード (必須 - 6文字以上)" class="input-field"
-                            required
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
-                        <input type="text" id="ind_name" placeholder="氏名 (任意)" class="input-field"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
-                        <button type="submit" class="btn-upload" style="justify-content: center; margin-top: 0.5rem;">
-                            <i data-lucide="plus"></i> 登録
-                        </button>
-                    </form>
-                    <div id="indLog" class="log-console"></div>
-                </div>
+            <!-- Sticky Tabs -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('user-registration')">ユーザー登録</button>
+                <button class="tab-btn" onclick="switchTab('master-data')">マスターデータ設定</button>
+            </div>
 
-                <!-- CSV Import Card -->
-                <div class="settings-card">
-                    <h3><i data-lucide="users"></i> ユーザー一括登録 (CSVインポート)</h3>
-                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                        CSVファイルをアップロードして、Supabase Authenticationにユーザーを一括登録します。<br>
-                        CSVの形式: <code>email,password,full_name</code> (ヘッダー必須)
-                    </p>
-
-                    <div class="file-drop-zone" id="dropZone">
-                        <i data-lucide="upload-cloud"
-                            style="width: 48px; height: 48px; color: var(--primary); margin-bottom: 0.5rem;"></i>
-                        <p>ここにCSVファイルをドラッグ＆ドロップ</p>
-                        <p style="font-size: 0.8rem;">またはクリックしてファイルを選択</p>
-                        <input type="file" id="csvFile" accept=".csv" style="display: none;">
+            <div class="content-wrapper" style="padding: 2rem;">
+                <!-- Tab: User Registration -->
+                <div id="user-registration" class="tab-content active">
+                    <!-- Individual Registration Card -->
+                    <div class="settings-card">
+                        <h3><i data-lucide="user-plus"></i> ユーザー個別登録</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                            ユーザーを1件ずつ手動で登録します。
+                        </p>
+                        <form id="individualForm" style="display: grid; gap: 1rem; max-width: 500px;">
+                            <input type="email" id="ind_email" placeholder="メールアドレス (必須)" class="input-field" required
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+                            <input type="text" id="ind_password" placeholder="初期パスワード (必須 - 6文字以上)" class="input-field"
+                                required
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+                            <input type="text" id="ind_name" placeholder="氏名 (任意)" class="input-field"
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+                            <button type="submit" class="btn-upload"
+                                style="justify-content: center; margin-top: 0.5rem;">
+                                <i data-lucide="plus"></i> 登録
+                            </button>
+                        </form>
+                        <div id="indLog" class="log-console"></div>
                     </div>
 
-                    <div id="csvPreview">
-                        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 0.5rem;">プレビュー (最初の5件)</h4>
-                        <table class="preview-table">
-                            <thead>
-                                <tr>
-                                    <th>Email</th>
-                                    <th>Password</th>
-                                    <th>Full Name</th>
-                                </tr>
-                            </thead>
-                            <tbody id="previewBody"></tbody>
-                        </table>
-                        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
-                            合計: <span id="totalCount" style="color: white; font-weight: bold;">0</span> 件
+                    <!-- CSV Import Card -->
+                    <div class="settings-card">
+                        <h3><i data-lucide="users"></i> ユーザー一括登録 (CSVインポート)</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                            CSVファイルをアップロードして、Supabase Authenticationにユーザーを一括登録します。<br>
+                            CSVの形式: <code>email,password,full_name</code> (ヘッダー必須)
+                        </p>
+
+                        <div class="file-drop-zone" id="dropZone">
+                            <i data-lucide="upload-cloud"
+                                style="width: 48px; height: 48px; color: var(--primary); margin-bottom: 0.5rem;"></i>
+                            <p>ここにCSVファイルをドラッグ＆ドロップ</p>
+                            <p style="font-size: 0.8rem;">またはクリックしてファイルを選択</p>
+                            <input type="file" id="csvFile" accept=".csv" style="display: none;">
                         </div>
 
-                        <button id="executeImportBtn" class="btn-upload">
-                            <i data-lucide="play"></i> インポート実行
-                        </button>
-                    </div>
+                        <div id="csvPreview">
+                            <h4 style="color: white; font-size: 0.95rem; margin-bottom: 0.5rem;">プレビュー (最初の5件)</h4>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Password</th>
+                                        <th>Full Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="previewBody"></tbody>
+                            </table>
+                            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
+                                合計: <span id="totalCount" style="color: white; font-weight: bold;">0</span> 件
+                            </div>
 
-                    <div id="importLog" class="log-console"></div>
+                            <button id="executeImportBtn" class="btn-upload">
+                                <i data-lucide="play"></i> インポート実行
+                            </button>
+                        </div>
+
+                        <div id="importLog" class="log-console"></div>
+                    </div>
+                </div>
+
+                <!-- Tab: Master Data Settings -->
+                <div id="master-data" class="tab-content">
+                    <div class="settings-card">
+                        <h3><i data-lucide="database"></i> マスターデータ設定</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                            選択したマスターテーブルのデータを追加・編集・削除します。
+                        </p>
+
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+                            <select id="masterTableSelect"
+                                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.6rem 1rem; border-radius: 6px; outline: none;">
+                                <option value="master_organization">所属マスター (master_organization)</option>
+                                <option value="master_position">役職マスター (master_position)</option>
+                                <option value="master_project_role">事業役割マスター (master_project_role)</option>
+                                <option value="master_role">参加者役割マスター (master_role)</option>
+                                <option value="master_referral_source">認知経路マスター (master_referral_source)</option>
+                            </select>
+
+                            <button id="addMasterBtn" onclick="masterManager.openAddModal()"
+                                style="background: var(--primary); border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                                <i data-lucide="plus" style="vertical-align: middle; width: 16px; height: 16px;"></i>
+                                新規追加
+                            </button>
+                        </div>
+
+                        <div id="masterListContainer">
+                            <!-- List will be rendered here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Edit Modal -->
+    <div id="masterModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: #1a1a1a; padding: 2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); width: 90%; max-width: 400px;">
+            <h3 id="modalTitle" style="color: white; margin-bottom: 1.5rem;">編集</h3>
+
+            <div style="margin-bottom: 1rem;">
+                <label
+                    style="display: block; color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0.5rem;">名称</label>
+                <input type="text" id="masterNameInput" class="input-field"
+                    style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0.5rem;">表示順
+                    (数値)</label>
+                <input type="number" id="masterSortInput" class="input-field"
+                    style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button id="cancelMasterBtn"
+                    style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-dim); padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer;">キャンセル</button>
+                <button id="saveMasterBtn"
+                    style="background: var(--primary); border: none; padding: 0.6rem 1.2rem; border-radius: 6px; color: black; font-weight: bold; cursor: pointer;">保存</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../assets/js/supabase-client.js"></script>
+    <script src="../assets/js/master-data.js"></script>
     <script src="components.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script>
         lucide.createIcons();
         document.addEventListener('DOMContentLoaded', initCsvImport);
         document.addEventListener('DOMContentLoaded', initIndividualRegister);
+
+        // Initialize Master Data Manager
+        let masterManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            masterManager = new MasterDataManager('masterListContainer', 'masterModal');
+
+            // Initial Load (Organization)
+            masterManager.loadTable('master_organization');
+
+            // Handle Select Change
+            document.getElementById('masterTableSelect').addEventListener('change', (e) => {
+                masterManager.loadTable(e.target.value);
+            });
+        });
+
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            // Show selected
+            document.getElementById(tabId).classList.add('active');
+
+            // Activate button
+            const buttons = document.querySelectorAll('.tab-btn');
+            if (tabId === 'user-registration') buttons[0].classList.add('active');
+            if (tabId === 'master-data') buttons[1].classList.add('active');
+        }
 
         function initIndividualRegister() {
             const form = document.getElementById('individualForm');

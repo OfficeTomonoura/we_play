@@ -83,14 +83,9 @@
                 <div class="form-group">
                     <label for="organization">主たる所属 <span style="color:var(--primary)">*</span></label>
                     <div class="input-wrapper">
-                        <select id="organization" name="organization" required
+                        <select id="organization" name="organization_id" required
                             style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
-                            <option value="" style="color: black;">選択してください</option>
-                            <option value="未来人財育成委員会" style="color: black;">未来人財育成委員会</option>
-                            <option value="広報渉外委員会" style="color: black;">広報渉外委員会</option>
-                            <option value="会員交流委員会" style="color: black;">会員交流委員会</option>
-                            <option value="理事会" style="color: black;">理事会</option>
-                            <option value="その他" style="color: black;">その他</option>
+                            <option value="" style="color: black;">読み込み中...</option>
                         </select>
                         <span class="focus-border"></span>
                         <i data-lucide="chevron-down"
@@ -102,20 +97,21 @@
                     <div class="form-group">
                         <label for="position">委員会役職 <span style="color:var(--primary)">*</span></label>
                         <div class="input-wrapper">
-                            <input type="text" id="position" name="position" placeholder="委員長、委員など" required>
+                            <select id="position" name="position_id" required
+                                style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                                <option value="" style="color: black;">読み込み中...</option>
+                            </select>
                             <span class="focus-border"></span>
+                            <i data-lucide="chevron-down"
+                                style="position: absolute; right: 1rem; top: 1rem; color: var(--text-dim); pointer-events: none;"></i>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="projectRole">本事業の役割 <span style="color:var(--primary)">*</span></label>
                         <div class="input-wrapper">
-                            <select id="projectRole" name="project_role" required
+                            <select id="projectRole" name="project_role_id" required
                                 style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
-                                <option value="" style="color: black;">選択してください</option>
-                                <option value="事業責任者" style="color: black;">事業責任者</option>
-                                <option value="サポーター" style="color: black;">サポーター</option>
-                                <option value="コーディネーター" style="color: black;">コーディネーター</option>
-                                <option value="アドバイザー" style="color: black;">アドバイザー</option>
+                                <option value="" style="color: black;">読み込み中...</option>
                             </select>
                             <span class="focus-border"></span>
                             <i data-lucide="chevron-down"
@@ -146,6 +142,9 @@
         document.addEventListener('DOMContentLoaded', async () => {
             if (!window.supabaseClient) return;
 
+            // Load Master Data
+            await loadMasterData();
+
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             if (!session) {
                 window.location.href = 'login.html';
@@ -164,6 +163,38 @@
                 window.location.href = 'index.html';
             }
         });
+
+        async function loadMasterData() {
+            try {
+                // Fetch basic masters
+                const [orgRes, posRes, roleRes] = await Promise.all([
+                    window.supabaseClient.from('master_organization').select('*').order('sort_order'),
+                    window.supabaseClient.from('master_position').select('*').order('sort_order'),
+                    window.supabaseClient.from('master_project_role').select('*').order('sort_order')
+                ]);
+
+                populateSelect('organization', orgRes.data || []);
+                populateSelect('position', posRes.data || []);
+                populateSelect('projectRole', roleRes.data || []);
+
+            } catch (err) {
+                console.error('Master data load error:', err);
+                alert('マスターデータの読み込みに失敗しました。');
+            }
+        }
+
+        function populateSelect(id, items) {
+            const select = document.getElementById(id);
+            if (!select) return;
+            select.innerHTML = '<option value="" style="color: black;">選択してください</option>';
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.textContent = item.name;
+                opt.style.color = 'black';
+                select.appendChild(opt);
+            });
+        }
 
         // Handle Form Submit
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
@@ -185,9 +216,12 @@
                     full_name: document.getElementById('fullName').value,
                     full_kana: document.getElementById('fullKana').value,
                     high_school: document.getElementById('highSchool').value,
-                    organization: document.getElementById('organization').value,
-                    position: document.getElementById('position').value,
-                    project_role: document.getElementById('projectRole').value,
+
+                    // Use IDs from select
+                    organization_id: document.getElementById('organization').value,
+                    position_id: document.getElementById('position').value,
+                    project_role_id: document.getElementById('projectRole').value,
+
                     // Default values
                     is_staff: true,
                     can_approve_line: false

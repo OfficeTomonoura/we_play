@@ -141,12 +141,7 @@
 
         let currentApplicantData = null;
 
-        const roleMap = {
-            'director': '監督',
-            'actor': '演者',
-            'props': '小道具',
-            'producer': 'プロデューサー'
-        };
+
 
         // LIFF Initialization for LP
         document.addEventListener('DOMContentLoaded', async () => {
@@ -235,7 +230,7 @@
             try {
                 const { data, error } = await window.supabaseClient
                     .from('applicants')
-                    .select('*')
+                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name)')
                     .eq('line_user_id', userId)
                     .maybeSingle();
 
@@ -279,9 +274,9 @@
             if (!container || !currentApplicantData) return;
 
             const d = currentApplicantData;
-            const role1 = roleMap[d.desired_role_1] || d.desired_role_1 || '-';
-            const role2 = roleMap[d.desired_role_2] || null;
-            const role3 = roleMap[d.desired_role_3] || null;
+            const role1 = d.r1?.name || '-';
+            const role2 = d.r2?.name || null;
+            const role3 = d.r3?.name || null;
 
             // Format roles
             let rolesHtml = `<div>1. ${role1}</div>`;

@@ -236,13 +236,17 @@
 
             try {
                 // Fetch applicants with status '採用' (Hired/Selected)
+                // Also join master_role to get the name of the assigned role
                 const { data, error } = await window.supabaseClient
                     .from('applicants')
-                    .select('*')
+                    .select('*, arm:master_role!assigned_role_id(name)')
                     .eq('status', '採用')
                     .order('created_at', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Supabase query error:', error);
+                    throw error;
+                }
 
                 tbody.innerHTML = '';
 
@@ -255,15 +259,15 @@
                     const tr = document.createElement('tr');
 
                     // Role Badge Style
-                    const roleName = item.assigned_role || '未定';
+                    const roleName = item.arm?.name || '未定';
                     let roleStyle = 'background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3);';
-                    if (roleName.includes('監督') || roleName.includes('director')) {
+                    if (roleName.includes('監督')) {
                         roleStyle = 'background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);';
-                    } else if (roleName.includes('演者') || roleName.includes('actor')) {
+                    } else if (roleName.includes('演者')) {
                         roleStyle = 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);';
-                    } else if (roleName.includes('プロデューサー') || roleName.includes('producer')) {
+                    } else if (roleName.includes('プロデューサー')) {
                         roleStyle = 'background: rgba(255, 234, 0, 0.1); color: #ffea00; border: 1px solid rgba(255, 234, 0, 0.3);';
-                    } else if (roleName.includes('小道具') || roleName.includes('props')) {
+                    } else if (roleName.includes('小道具')) {
                         roleStyle = 'background: rgba(0, 255, 122, 0.1); color: #00ff7a; border: 1px solid rgba(0, 255, 122, 0.3);';
                     }
 
@@ -303,7 +307,8 @@
 
             } catch (err) {
                 console.error('Error fetching selected applicants:', err);
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: red;">データの取得に失敗しました。</td></tr>';
+                const msg = err.message || '不明なエラー';
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #ff007a;">データの取得に失敗しました。<br><small>${msg}</small></td></tr>`;
             }
         }
     </script>

@@ -94,7 +94,9 @@ function renderSidebar() {
                 <div class="nav-section">MANUAL</div>
                 <div class="nav-item-container">
                     <div class="nav-item nav-item-toggle">
-                        <i data-lucide="book-open"></i> <span>マニュアル</span>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i data-lucide="book-open"></i> <span>マニュアル</span>
+                        </div>
                         <i data-lucide="chevron-right" class="toggle-icon"></i>
                     </div>
                     <div class="nav-submenu">

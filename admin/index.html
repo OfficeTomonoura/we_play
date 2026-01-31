@@ -55,9 +55,8 @@
                             </div>
                             <div class="stat-info">
                                 <span class="label">総応募数</span>
-                                <span class="count">24</span>
+                                <span id="stat-total" class="count">-</span>
                             </div>
-                            <div class="stat-trend positive">+12%</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon" style="--color: #7000ff;">
@@ -65,7 +64,7 @@
                             </div>
                             <div class="stat-info">
                                 <span class="label">監督希望</span>
-                                <span class="count">8</span>
+                                <span id="stat-director" class="count">-</span>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -74,7 +73,7 @@
                             </div>
                             <div class="stat-info">
                                 <span class="label">演者希望</span>
-                                <span class="count">12</span>
+                                <span id="stat-actor" class="count">-</span>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -83,7 +82,7 @@
                             </div>
                             <div class="stat-info">
                                 <span class="label">小道具希望</span>
-                                <span class="count">4</span>
+                                <span id="stat-props" class="count">-</span>
                             </div>
                         </div>
                     </div>
@@ -132,46 +131,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="user-meta">
-                                            <span class="name">山田 太郎</span>
-                                            <span class="email">yamada@example.com</span>
-                                        </div>
-                                    </td>
-                                    <td>福山中学校 / 2年生</td>
-                                    <td>監督</td>
-                                    <td>2026/01/29</td>
-                                    <td><span class="status-badge new">新規</span></td>
-                                    <td><button class="action-btn"><i data-lucide="more-horizontal"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="user-meta">
-                                            <span class="name">佐藤 花子</span>
-                                            <span class="email">sato@example.com</span>
-                                        </div>
-                                    </td>
-                                    <td>福山高校 / 1年生</td>
-                                    <td>演者</td>
-                                    <td>2026/01/28</td>
-                                    <td><span class="status-badge reviewed">確認済み</span></td>
-                                    <td><button class="action-btn"><i data-lucide="more-horizontal"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="user-meta">
-                                            <span class="name">田中 一郎</span>
-                                            <span class="email">tanaka@example.com</span>
-                                        </div>
-                                    </td>
-                                    <td>備後中学校 / 3年生</td>
-                                    <td>プロデューサー</td>
-                                    <td>2026/01/27</td>
-                                    <td><span class="status-badge new">新規</span></td>
-                                    <td><button class="action-btn"><i data-lucide="more-horizontal"></i></button></td>
-                                </tr>
+                            <!-- Dynamic Content -->
                             </tbody>
                         </table>
                     </div>
@@ -186,6 +146,197 @@
     <script src="../assets/js/admin.js"></script>
     <script>
         lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', fetchDashboardData);
+
+        async function fetchDashboardData() {
+            if (!window.supabaseClient) return;
+
+            try {
+                // 1. Get Totals
+                const { count: totalCount, error: totalErr } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*', { count: 'exact', head: true });
+
+                if (!totalErr) document.getElementById('stat-total').textContent = totalCount;
+
+                // 2. Get Role-Specific counts (Basic check for now)
+                const { data: roles } = await window.supabaseClient.from('master_role').select('id, name');
+
+                if (roles) {
+                    for (const role of roles) {
+                        const { count, error } = await window.supabaseClient
+                            .from('applicants')
+                            .select('*', { count: 'exact', head: true })
+                            .or(`desired_role_1_id.eq.${role.id},desired_role_2_id.eq.${role.id},desired_role_3_id.eq.${role.id}`);
+
+                        if (role.name.includes('監督')) document.getElementById('stat-director').textContent = count;
+                        if (role.name.includes('演者')) document.getElementById('stat-actor').textContent = count;
+                        if (role.name.includes('小道具')) document.getElementById('stat-props').textContent = count;
+                    }
+                }
+
+                // 3. Get Recent Applicants
+                const { data: applicants, error: appErr } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*, r1:master_role!desired_role_1_id(name)')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                const tbody = document.querySelector('.data-table tbody');
+                if (!appErr && applicants && applicants.length > 0) {
+                    tbody.innerHTML = '';
+                    applicants.forEach(item => {
+                        const date = new Date(item.created_at).toLocaleDateString();
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>
+                                <div class="user-meta">
+                                    <span class="name">${item.full_name}</span>
+                                    <span class="email">${item.email || '-'}</span>
+                                </div>
+                            </td>
+                            <td>${item.school_name || '-'} / ${item.grade || ''}</td>
+                            <td>${item.r1?.name || '-'}</td>
+                            <td>${date}</td>
+                            <td><span class="status-badge ${item.status === '新規' ? 'new' : ''}">${item.status}</span></td>
+                            <td><button class="action-btn" onclick="location.href='applicants.html?id=${item.id}'"><i data-lucide="more-horizontal"></i></button></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                    lucide.createIcons();
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-dim);">応募データがありません</td></tr>';
+                }
+
+                // 4. Trend Chart (Aggregation by day)
+                initTrendChart();
+
+                // 5. Referral Chart
+                initReferralChart();
+
+            } catch (err) {
+                console.error('Dashboard Error:', err);
+            }
+        }
+
+        async function initReferralChart() {
+            const ctx = document.getElementById('referralSource');
+            if (!ctx) return;
+
+            const { data: sources } = await window.supabaseClient.from('master_referral_source').select('id, name');
+            if (!sources) return;
+
+            const labels = [];
+            const counts = [];
+            const colors = ['#00f2ff', '#7000ff', '#ff007a', '#ffea00', '#00ff7a', '#ffae00', '#6366f1'];
+
+            for (const source of sources) {
+                const { count } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('referral_source_id', source.id);
+
+                if (count > 0) {
+                    labels.push(source.name);
+                    counts.push(count);
+                }
+            }
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#fff',
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        async function initTrendChart() {
+            const ctx = document.getElementById('registrationTrend');
+            if (!ctx) return;
+
+            // Simple aggregation for the last 7 days
+            const labels = [];
+            const counts = [];
+
+            // Generate labels for last 7 days
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push((date.getMonth() + 1) + '/' + date.getDate());
+
+                const dateStr = date.toISOString().split('T')[0];
+
+                // Cumulative: count all records up to the end of this day
+                const { count } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*', { count: 'exact', head: true })
+                    .lte('created_at', dateStr + 'T23:59:59');
+
+                counts.push(count || 0);
+            }
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '累計応募数',
+                        data: counts,
+                        backgroundColor: 'rgba(0, 242, 255, 0.4)',
+                        borderColor: '#00f2ff',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: 'rgba(255,255,255,0.5)' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: 'rgba(255,255,255,0.5)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: '#00f2ff',
+                            bodyColor: '#fff',
+                            padding: 10,
+                            displayColors: false
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 

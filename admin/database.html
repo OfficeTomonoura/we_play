@@ -146,6 +146,24 @@
                                     <td><span class="column-type">VARCHAR(100)</span></td>
                                     <td>広報協力, 講師など</td>
                                 </tr>
+                                <tr>
+                                    <td>備考</td>
+                                    <td>notes</td>
+                                    <td><span class="column-type">TEXT</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>登録日</td>
+                                    <td>created_at</td>
+                                    <td><span class="column-type">TIMESTAMP</span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>更新日</td>
+                                    <td>updated_at</td>
+                                    <td><span class="column-type">TIMESTAMP</span></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -173,6 +191,18 @@
                                     <td>プライマリキー</td>
                                 </tr>
                                 <tr>
+                                    <td>Auth User ID</td>
+                                    <td>auth_user_id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>Supabase Auth (auth.users) との紐付け</td>
+                                </tr>
+                                <tr>
+                                    <td>メールアドレス</td>
+                                    <td>email</td>
+                                    <td><span class="column-type">VARCHAR(255)</span></td>
+                                    <td>auth.usersのemailと同期（NOT NULL）</td>
+                                </tr>
+                                <tr>
                                     <td>氏名</td>
                                     <td>full_name</td>
                                     <td><span class="column-type">VARCHAR(255)</span></td>
@@ -191,22 +221,23 @@
                                     <td>元データ: email項目の直下に表示</td>
                                 </tr>
                                 <tr>
-                                    <td>主たる所属</td>
-                                    <td>organization</td>
-                                    <td><span class="column-type">VARCHAR(255)</span></td>
-                                    <td>未来人財育成委員会など</td>
+                                <tr>
+                                    <td>所属ID</td>
+                                    <td>organization_id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>FK: master_organization.id</td>
                                 </tr>
                                 <tr>
-                                    <td>役職</td>
-                                    <td>position</td>
-                                    <td><span class="column-type">VARCHAR(100)</span></td>
-                                    <td>委員長, 副委員長など</td>
+                                    <td>役職ID</td>
+                                    <td>position_id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>FK: master_position.id</td>
                                 </tr>
                                 <tr>
-                                    <td>事業役割</td>
-                                    <td>project_role</td>
-                                    <td><span class="column-type">VARCHAR(100)</span></td>
-                                    <td>事業責任者, サポーターなど</td>
+                                    <td>役割ID</td>
+                                    <td>project_role_id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>FK: master_project_role.id</td>
                                 </tr>
                                 <tr>
                                     <td>スタッフ判定</td>
@@ -231,10 +262,8 @@
                     </div>
                 </section>
 
-                <!-- Applicants Table -->
-                <section class="table-definition">
-                    <h2><i data-lucide="table-2"></i> 応募者 (applicants)</h2>
-                    <p>外部公募による中高生応募者の情報を管理します。</p>
+                <section id="master-organization" class="table-definition">
+                    <h2><i data-lucide="database"></i> 所属マスター (master_organization)</h2>
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
@@ -250,101 +279,27 @@
                                     <td>ID</td>
                                     <td>id</td>
                                     <td><span class="column-type">UUID</span></td>
-                                    <td>プライマリキー</td>
+                                    <td>PK</td>
                                 </tr>
                                 <tr>
-                                    <td>氏名</td>
-                                    <td>full_name</td>
+                                    <td>名称</td>
+                                    <td>name</td>
                                     <td><span class="column-type">VARCHAR(255)</span></td>
-                                    <td></td>
+                                    <td>未来人財育成委員会, 広報渉外委員会など</td>
                                 </tr>
                                 <tr>
-                                    <td>ふりがな</td>
-                                    <td>full_kana</td>
-                                    <td><span class="column-type">VARCHAR(255)</span></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>学校名</td>
-                                    <td>school_name</td>
-                                    <td><span class="column-type">VARCHAR(255)</span></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>学年</td>
-                                    <td>grade</td>
-                                    <td><span class="column-type">VARCHAR(50)</span></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>希望役割1</td>
-                                    <td>desired_role_1</td>
-                                    <td><span class="column-type">VARCHAR(100)</span></td>
-                                    <td>第1希望（監督, 演者など）</td>
-                                </tr>
-                                <tr>
-                                    <td>希望役割2</td>
-                                    <td>desired_role_2</td>
-                                    <td><span class="column-type">VARCHAR(100)</span></td>
-                                    <td>第2希望</td>
-                                </tr>
-                                <tr>
-                                    <td>希望役割3</td>
-                                    <td>desired_role_3</td>
-                                    <td><span class="column-type">VARCHAR(100)</span></td>
-                                    <td>第3希望</td>
-                                </tr>
-                                <tr>
-                                    <td>決定役職</td>
-                                    <td>assigned_role</td>
-                                    <td><span class="column-type">VARCHAR(100)</span></td>
-                                    <td>選抜時に確定した最終役職</td>
-                                </tr>
-                                <tr>
-                                    <td>認知経路</td>
-                                    <td>referral_source</td>
-                                    <td><span class="column-type">VARCHAR(255)</span></td>
-                                    <td>SNS, チラシ, 知人の紹介など</td>
-                                </tr>
-                                <tr>
-                                    <td>認知経路のその他</td>
-                                    <td>referral_source_other</td>
-                                    <td><span class="column-type">TEXT</span></td>
-                                    <td>認知経路で「その他」を選択した場合の詳細</td>
-                                </tr>
-                                <tr>
-                                    <td>要望・メッセージ</td>
-                                    <td>message</td>
-                                    <td><span class="column-type">TEXT</span></td>
-                                    <td>応募時の自由記述メッセージ</td>
-                                </tr>
-                                <tr>
-                                    <td>状態</td>
-                                    <td>status</td>
-                                    <td><span class="column-type">VARCHAR(50)</span></td>
-                                    <td>新規, 確認済み, 選抜済など</td>
-                                </tr>
-                                <tr>
-                                    <td>LINE USER ID</td>
-                                    <td>line_user_id</td>
-                                    <td><span class="column-type">VARCHAR(50)</span></td>
-                                    <td>Messaging APIでのマルチキャスト配信に使用</td>
-                                </tr>
-                                <tr>
-                                    <td>応募日時</td>
-                                    <td>applied_at</td>
-                                    <td><span class="column-type">TIMESTAMP</span></td>
-                                    <td>申し込みが完了した日時</td>
+                                    <td>順序</td>
+                                    <td>sort_order</td>
+                                    <td><span class="column-type">INTEGER</span></td>
+                                    <td>表示順</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                <!-- LINE Messages Table -->
-                <section class="table-definition">
-                    <h2><i data-lucide="table-2"></i> LINEメッセージ (line_messages)</h2>
-                    <p>公式LINEから配信されるメッセージの履歴と承認ステータスを管理します。</p>
+                <section id="master-position" class="table-definition">
+                    <h2><i data-lucide="database"></i> 役職マスター (master_position)</h2>
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
@@ -360,65 +315,27 @@
                                     <td>ID</td>
                                     <td>id</td>
                                     <td><span class="column-type">UUID</span></td>
-                                    <td>プライマリキー</td>
+                                    <td>PK</td>
                                 </tr>
                                 <tr>
-                                    <td>配信対象</td>
-                                    <td>target_type</td>
-                                    <td><span class="column-type">VARCHAR(50)</span></td>
-                                    <td>external (対外), internal (対内)</td>
+                                    <td>名称</td>
+                                    <td>name</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>委員長, 副委員長, 委員など</td>
                                 </tr>
                                 <tr>
-                                    <td>タイトル</td>
-                                    <td>title</td>
-                                    <td><span class="column-type">VARCHAR(255)</span></td>
-                                    <td>管理用タイトル</td>
-                                </tr>
-                                <tr>
-                                    <td>本文</td>
-                                    <td>message_body</td>
-                                    <td><span class="column-type">TEXT</span></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>配信予定日時</td>
-                                    <td>scheduled_at</td>
-                                    <td><span class="column-type">TIMESTAMP</span></td>
-                                    <td>平日 09:30-20:30 のみ許可</td>
-                                </tr>
-                                <tr>
-                                    <td>作成者ID</td>
-                                    <td>created_by</td>
-                                    <td><span class="column-type">UUID</span></td>
-                                    <td>メッセージ作成者のユーザーID</td>
-                                </tr>
-                                <tr>
-                                    <td>承認者ID</td>
-                                    <td>approved_by</td>
-                                    <td><span class="column-type">UUID</span></td>
-                                    <td>承認作業を行ったユーザーID</td>
-                                </tr>
-                                <tr>
-                                    <td>承認日時</td>
-                                    <td>approved_at</td>
-                                    <td><span class="column-type">TIMESTAMP</span></td>
-                                    <td>承認が完了した日時</td>
-                                </tr>
-                                <tr>
-                                    <td>承認ステータス</td>
-                                    <td>status</td>
-                                    <td><span class="column-type">VARCHAR(50)</span></td>
-                                    <td>pending (承認待ち), scheduled (送信待ち), sent (送信済み), rejected (却下)</td>
+                                    <td>順序</td>
+                                    <td>sort_order</td>
+                                    <td><span class="column-type">INTEGER</span></td>
+                                    <td>表示順</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                <!-- LINE Received Messages Table -->
-                <section class="table-definition">
-                    <h2><i data-lucide="table-2"></i> LINE受信メッセージ (line_received_messages)</h2>
-                    <p>ユーザーからLINE公式アカウントに送信されたメッセージを管理します。</p>
+                <section id="master-project-role" class="table-definition">
+                    <h2><i data-lucide="database"></i> 事業役割マスター (master_project_role)</h2>
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
@@ -434,30 +351,340 @@
                                     <td>ID</td>
                                     <td>id</td>
                                     <td><span class="column-type">UUID</span></td>
-                                    <td>プライマリキー</td>
+                                    <td>PK</td>
                                 </tr>
                                 <tr>
-                                    <td>LINE USER ID</td>
-                                    <td>line_user_id</td>
-                                    <td><span class="column-type">VARCHAR(50)</span></td>
-                                    <td>送信者のLINEユーザーID</td>
+                                    <td>名称</td>
+                                    <td>name</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>事業責任者, コーディネーター, サポーターなど</td>
                                 </tr>
                                 <tr>
-                                    <td>メッセージ内容</td>
-                                    <td>message_text</td>
-                                    <td><span class="column-type">TEXT</span></td>
-                                    <td>受信したテキスト</td>
-                                </tr>
-                                <tr>
-                                    <td>受信日時</td>
-                                    <td>received_at</td>
-                                    <td><span class="column-type">TIMESTAMP</span></td>
-                                    <td>メッセージ受信日時</td>
+                                    <td>順序</td>
+                                    <td>sort_order</td>
+                                    <td><span class="column-type">INTEGER</span></td>
+                                    <td>表示順</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
+
+                <section id="master-role" class="table-definition">
+                    <h2><i data-lucide="database"></i> 参加者役割マスター (master_role)</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>論理名</th>
+                                    <th>物理名 (列名)</th>
+                                    <th>データ型</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>id</td>
+                                    <td><span class="column-type">UUID</span></td>
+                                    <td>PK</td>
+                                </tr>
+                                <tr>
+                                    <td>名称</td>
+                                    <td>name</td>
+                                    <td><span class="column-type">VARCHAR(100)</span></td>
+                                    <td>監督, 脚本, 演者など</td>
+                                </tr>
+                                <tr>
+                                    <td>順序</td>
+                                    <td>sort_order</td>
+                                    <td><span class="column-type">INTEGER</span></td>
+                                    <td>表示順</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <section id="master-referral" class="table-definition">
+                        <h2><i data-lucide="database"></i> 認知経路マスター (master_referral_source)</h2>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>論理名</th>
+                                        <th>物理名 (列名)</th>
+                                        <th>データ型</th>
+                                        <th>備考</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>PK</td>
+                                    </tr>
+                                    <tr>
+                                        <td>名称</td>
+                                        <td>name</td>
+                                        <td><span class="column-type">VARCHAR(100)</span></td>
+                                        <td>学校の先生, ポスターなど</td>
+                                    </tr>
+                                    <tr>
+                                        <td>順序</td>
+                                        <td>sort_order</td>
+                                        <td><span class="column-type">INTEGER</span></td>
+                                        <td>表示順</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Applicants Table -->
+                    <section class="table-definition">
+                        <h2><i data-lucide="table-2"></i> 応募者 (applicants)</h2>
+                        <p>外部公募による中高生応募者の情報を管理します。</p>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>論理名</th>
+                                        <th>物理名 (列名)</th>
+                                        <th>データ型</th>
+                                        <th>備考</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>PK</td>
+                                    </tr>
+                                    <tr>
+                                        <td>氏名</td>
+                                        <td>full_name</td>
+                                        <td><span class="column-type">VARCHAR(255)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ふりがな</td>
+                                        <td>full_kana</td>
+                                        <td><span class="column-type">VARCHAR(255)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>性別</td>
+                                        <td>gender</td>
+                                        <td><span class="column-type">VARCHAR(20)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>学校名</td>
+                                        <td>school_name</td>
+                                        <td><span class="column-type">VARCHAR(255)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>学年</td>
+                                        <td>grade</td>
+                                        <td><span class="column-type">VARCHAR(50)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>希望役割1ID</td>
+                                        <td>desired_role_1_id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>FK: master_role.id</td>
+                                    </tr>
+                                    <tr>
+                                        <td>希望役割2ID</td>
+                                        <td>desired_role_2_id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>FK: master_role.id</td>
+                                    </tr>
+                                    <tr>
+                                        <td>希望役割3ID</td>
+                                        <td>desired_role_3_id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>FK: master_role.id</td>
+                                    </tr>
+                                    <tr>
+                                        <td>決定役割ID</td>
+                                        <td>assigned_role_id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>FK: master_role.id</td>
+                                    </tr>
+                                    <tr>
+                                        <td>認知経路ID</td>
+                                        <td>referral_source_id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>FK: master_referral_source.id</td>
+                                    </tr>
+                                    <tr>
+                                        <td>認知経路のその他</td>
+                                        <td>referral_source_other</td>
+                                        <td><span class="column-type">TEXT</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>メールアドレス</td>
+                                        <td>email</td>
+                                        <td><span class="column-type">VARCHAR(255)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>電話番号</td>
+                                        <td>phone</td>
+                                        <td><span class="column-type">VARCHAR(20)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>要望・メッセージ</td>
+                                        <td>message</td>
+                                        <td><span class="column-type">TEXT</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>状態</td>
+                                        <td>status</td>
+                                        <td><span class="column-type">VARCHAR(50)</span></td>
+                                        <td>新規, 確認済み, 選抜済など</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LINE USER ID</td>
+                                        <td>line_user_id</td>
+                                        <td><span class="column-type">VARCHAR(255)</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>応募日時</td>
+                                        <td>created_at</td>
+                                        <td><span class="column-type">TIMESTAMP</span></td>
+                                        <td>申し込みが完了した日時</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- LINE Messages Table -->
+                    <section class="table-definition">
+                        <h2><i data-lucide="table-2"></i> LINEメッセージ (line_messages)</h2>
+                        <p>公式LINEから配信されるメッセージの履歴と承認ステータスを管理します。</p>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>論理名</th>
+                                        <th>物理名 (列名)</th>
+                                        <th>データ型</th>
+                                        <th>備考</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>プライマリキー</td>
+                                    </tr>
+                                    <tr>
+                                        <td>配信対象</td>
+                                        <td>target_type</td>
+                                        <td><span class="column-type">VARCHAR(50)</span></td>
+                                        <td>external (対外), internal (対内)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>タイトル</td>
+                                        <td>title</td>
+                                        <td><span class="column-type">VARCHAR(255)</span></td>
+                                        <td>管理用タイトル</td>
+                                    </tr>
+                                    <tr>
+                                        <td>本文</td>
+                                        <td>message_body</td>
+                                        <td><span class="column-type">TEXT</span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>配信予定日時</td>
+                                        <td>scheduled_at</td>
+                                        <td><span class="column-type">TIMESTAMP</span></td>
+                                        <td>平日 09:30-20:30 のみ許可</td>
+                                    </tr>
+                                    <tr>
+                                        <td>作成者ID</td>
+                                        <td>created_by</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>メッセージ作成者のユーザーID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>承認者ID</td>
+                                        <td>approved_by</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>承認作業を行ったユーザーID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>承認日時</td>
+                                        <td>approved_at</td>
+                                        <td><span class="column-type">TIMESTAMP</span></td>
+                                        <td>承認が完了した日時</td>
+                                    </tr>
+                                    <tr>
+                                        <td>承認ステータス</td>
+                                        <td>status</td>
+                                        <td><span class="column-type">VARCHAR(50)</span></td>
+                                        <td>pending (承認待ち), scheduled (送信待ち), sent (送信済み), rejected (却下)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- LINE Received Messages Table -->
+                    <section class="table-definition">
+                        <h2><i data-lucide="table-2"></i> LINE受信メッセージ (line_received_messages)</h2>
+                        <p>ユーザーからLINE公式アカウントに送信されたメッセージを管理します。</p>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>論理名</th>
+                                        <th>物理名 (列名)</th>
+                                        <th>データ型</th>
+                                        <th>備考</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>id</td>
+                                        <td><span class="column-type">UUID</span></td>
+                                        <td>プライマリキー</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LINE USER ID</td>
+                                        <td>line_user_id</td>
+                                        <td><span class="column-type">VARCHAR(50)</span></td>
+                                        <td>送信者のLINEユーザーID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>メッセージ内容</td>
+                                        <td>message_text</td>
+                                        <td><span class="column-type">TEXT</span></td>
+                                        <td>受信したテキスト</td>
+                                    </tr>
+                                    <tr>
+                                        <td>受信日時</td>
+                                        <td>received_at</td>
+                                        <td><span class="column-type">TIMESTAMP</span></td>
+                                        <td>メッセージ受信日時</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
             </div>
         </main>
     </div>

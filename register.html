@@ -39,7 +39,7 @@
                         <i data-lucide="user"></i> お名前
                     </label>
                     <div class="input-wrapper">
-                        <input type="text" id="name" name="name" placeholder="山田 太郎" required>
+                        <input type="text" id="name" name="applicant_name" placeholder="山田 太郎" required>
                         <span class="focus-border"></span>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         <i data-lucide="user"></i> お名前（ふりがな）
                     </label>
                     <div class="input-wrapper">
-                        <input type="text" id="name-kana" name="name-kana" placeholder="やまだ たろう" required>
+                        <input type="text" id="name-kana" name="applicant_kana" placeholder="やまだ たろう" required>
                         <span class="focus-border"></span>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                         <i data-lucide="graduation-cap"></i> 学校名
                     </label>
                     <div class="input-wrapper">
-                        <input type="text" id="school" name="school" placeholder="〇〇中学校 / 〇〇高校" required>
+                        <input type="text" id="school" name="school_name" placeholder="〇〇中学校 / 〇〇高校" required>
                         <span class="focus-border"></span>
                     </div>
                 </div>
@@ -101,12 +101,8 @@
                         <i data-lucide="star"></i> 第1希望役職
                     </label>
                     <div class="input-wrapper">
-                        <select id="role-1" name="role-1" required>
-                            <option value="" disabled selected>選択してください</option>
-                            <option value="director">監督</option>
-                            <option value="actor">演者</option>
-                            <option value="props">小道具</option>
-                            <option value="producer">プロデューサー</option>
+                        <select id="role-1" name="role-1" class="role-select" required>
+                            <option value="" disabled selected>読み込み中...</option>
                         </select>
                         <i data-lucide="chevron-down" class="select-icon"></i>
                         <span class="focus-border"></span>
@@ -118,12 +114,8 @@
                         <i data-lucide="star"></i> 第2希望役職
                     </label>
                     <div class="input-wrapper">
-                        <select id="role-2" name="role-2" required>
-                            <option value="" disabled selected>選択してください</option>
-                            <option value="director">監督</option>
-                            <option value="actor">演者</option>
-                            <option value="props">小道具</option>
-                            <option value="producer">プロデューサー</option>
+                        <select id="role-2" name="role-2" class="role-select" required>
+                            <option value="" disabled selected>読み込み中...</option>
                         </select>
                         <i data-lucide="chevron-down" class="select-icon"></i>
                         <span class="focus-border"></span>
@@ -135,12 +127,8 @@
                         <i data-lucide="star"></i> 第3希望役職
                     </label>
                     <div class="input-wrapper">
-                        <select id="role-3" name="role-3" required>
-                            <option value="" disabled selected>選択してください</option>
-                            <option value="director">監督</option>
-                            <option value="actor">演者</option>
-                            <option value="props">小道具</option>
-                            <option value="producer">プロデューサー</option>
+                        <select id="role-3" name="role-3" class="role-select" required>
+                            <option value="" disabled selected>読み込み中...</option>
                         </select>
                         <i data-lucide="chevron-down" class="select-icon"></i>
                         <span class="focus-border"></span>
@@ -152,15 +140,8 @@
                         <i data-lucide="megaphone"></i> 何で知ったか
                     </label>
                     <div class="input-wrapper">
-                        <select id="referral" name="referral" required>
-                            <option value="" disabled selected>選択してください</option>
-                            <option value="teacher">学校の先生</option>
-                            <option value="advisor">部活動の顧問</option>
-                            <option value="friend">友人・知人</option>
-                            <option value="poster">ポスター・チラシ</option>
-                            <option value="family">家族</option>
-                            <option value="sns">SNS (Instagram/X)</option>
-                            <option value="other">その他</option>
+                        <select id="referral" name="referral" class="referral-select" required>
+                            <option value="" disabled selected>読み込み中...</option>
                         </select>
                         <i data-lucide="chevron-down" class="select-icon"></i>
                         <span class="focus-border"></span>
@@ -257,10 +238,73 @@
                     // Force login if in production (HTTPS)
                     liff.login();
                 }
+
+                // Load Master Data
+                loadMasterData();
             } catch (err) {
                 console.warn('LIFF Initialization failed:', err);
             }
         });
+
+        async function loadMasterData() {
+            if (!window.supabaseClient) return;
+            try {
+                // Load Roles
+                const { data: roles, error: roleError } = await window.supabaseClient
+                    .from('master_role')
+                    .select('id, name')
+                    .order('sort_order', { ascending: true });
+
+                if (roleError) throw roleError;
+
+                const roleSelects = document.querySelectorAll('.role-select');
+                roleSelects.forEach(select => {
+                    let html = '<option value="" disabled selected>選択してください</option>';
+                    roles.forEach(role => {
+                        html += `<option value="${role.id}">${role.name}</option>`;
+                    });
+                    select.innerHTML = html;
+                });
+
+                // Load Referral Sources
+                const { data: referrals, error: refError } = await window.supabaseClient
+                    .from('master_referral_source')
+                    .select('id, name')
+                    .order('sort_order', { ascending: true });
+
+                if (refError) throw refError;
+
+                const refSelect = document.getElementById('referral');
+                if (refSelect) {
+                    let html = '<option value="" disabled selected>選択してください</option>';
+                    referrals.forEach(ref => {
+                        html += `<option value="${ref.id}" data-name="${ref.name}">${ref.name}</option>`;
+                    });
+                    refSelect.innerHTML = html;
+
+                    // Re-bind the "Other" logic since the elements are now dynamic
+                    refSelect.addEventListener('change', () => {
+                        const selectedOption = refSelect.options[refSelect.selectedIndex];
+                        const referralOtherGroup = document.getElementById('referral-other-group');
+                        const referralOtherInput = document.getElementById('referral-other');
+
+                        if (selectedOption && selectedOption.getAttribute('data-name') === 'その他') {
+                            if (referralOtherGroup) referralOtherGroup.style.display = 'block';
+                            if (referralOtherInput) referralOtherInput.required = true;
+                        } else {
+                            if (referralOtherGroup) referralOtherGroup.style.display = 'none';
+                            if (referralOtherInput) {
+                                referralOtherInput.required = false;
+                                referralOtherInput.value = '';
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Failed to load master data:', err);
+                alert('マスタデータの読み込みに失敗しました。');
+            }
+        }
 
         async function setLiffData() {
             try {

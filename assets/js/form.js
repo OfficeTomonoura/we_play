@@ -3,35 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const successMessage = document.getElementById('successMessage');
     const inputs = form.querySelectorAll('input, select, textarea');
 
-    // Conditional Visibility for "Other" in Referral
-    const referralSelect = document.getElementById('referral');
-    const referralOtherGroup = document.getElementById('referral-other-group');
-    const referralOtherInput = document.getElementById('referral-other');
-
-    if (referralSelect && referralOtherGroup) {
-        referralSelect.addEventListener('change', () => {
-            if (referralSelect.value === 'other') {
-                referralOtherGroup.style.display = 'block';
-                referralOtherInput.required = true;
-                // Trigger focus for animation consistency
-                setTimeout(() => referralOtherInput.focus(), 100);
-            } else {
-                referralOtherGroup.style.display = 'none';
-                referralOtherInput.required = false;
-                referralOtherInput.value = '';
-            }
-        });
-    }
-
     // Add float label effect or shadow on focus for better interactivity
     inputs.forEach(input => {
         input.addEventListener('focus', () => {
-            input.parentElement.closest('.form-group').classList.add('focused');
+            const group = input.parentElement.closest('.form-group');
+            if (group) group.classList.add('focused');
         });
 
         input.addEventListener('blur', () => {
             if (input.value === '') {
-                input.parentElement.closest('.form-group').classList.remove('focused');
+                const group = input.parentElement.closest('.form-group');
+                if (group) group.classList.remove('focused');
             }
         });
     });
@@ -56,16 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const privacyCheckbox = form.querySelector('input[name="privacy"]');
         if (!privacyCheckbox || !privacyCheckbox.checked) {
             isValid = false;
-            if (privacyCheckbox) {
-                // 親ラベルの色を変えるなどのエラー表示
-                privacyCheckbox.closest('.custom-checkbox').style.color = '#ff4b4b';
-            }
-        } else {
-            privacyCheckbox.closest('.custom-checkbox').style.color = '';
+            // Additional privacy error handling could go here
         }
 
         if (isValid) {
-            const submitBtn = form.querySelector('.submit-button');
+            const submitBtn = form.querySelector('button[type="submit"]');
             const originalContent = submitBtn.innerHTML;
 
             submitBtn.disabled = true;
@@ -75,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // Get Form Data
                 const formData = new FormData(form);
+
+                // Formatted Values
                 const gradeVal = formData.get('grade');
                 let formattedGrade = gradeVal;
                 if (gradeVal && !gradeVal.includes('年生')) {
@@ -88,48 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 const genderVal = formData.get('gender');
 
-                // 1. Get roles and referral_sources to map
-                const [rolesResponse, referralsResponse] = await Promise.all([
-                    window.supabaseClient.from('roles').select('id, code'),
-                    window.supabaseClient.from('referral_sources').select('id, name')
-                ]);
-
-                if (rolesResponse.error) throw rolesResponse.error;
-
-                const roleMap = {};
-                rolesResponse.data.forEach(r => roleMap[r.code] = r.id);
-
-                const referralMap = {};
-                if (referralsResponse.data) {
-                    referralsResponse.data.forEach(r => referralMap[r.name] = r.id);
-                }
-
-                const referralCodeToName = {
-                    'teacher': '学校の先生',
-                    'advisor': '部活動の顧問',
-                    'friend': '友人・知人',
-                    'poster': 'ポスター・チラシ',
-                    'family': '家族',
-                    'sns': 'SNS (Instagram/X)',
-                    'other': 'その他'
-                };
-
-                const referralVal = formData.get('referral');
-                const dbName = referralCodeToName[referralVal] || referralVal;
-                let referralSourceId = referralMap[dbName] || null;
-
+                // 1. Prepare data for 'applicants' table
                 const data = {
-                    full_name: formData.get('name'),
-                    full_kana: formData.get('name-kana'),
+                    full_name: formData.get('applicant_name'),
+                    full_kana: formData.get('applicant_kana'),
                     gender: genderMap[genderVal] || genderVal,
-                    school_name: formData.get('school'),
+                    school_name: formData.get('school_name'),
                     grade: formattedGrade,
-                    // Legacy columns support
-                    desired_role_1: formData.get('role-1'),
-                    desired_role_2: formData.get('role-2'),
-                    desired_role_3: formData.get('role-3'),
-                    referral_source: referralVal,
-                    referral_source_id: referralSourceId,
+                    desired_role_1_id: formData.get('role-1'),
+                    desired_role_2_id: formData.get('role-2'),
+                    desired_role_3_id: formData.get('role-3'),
+                    referral_source_id: formData.get('referral'),
                     referral_source_other: formData.get('referral-other'),
                     email: formData.get('email'),
                     phone: formData.get('phone'),
@@ -137,51 +85,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     status: '新規',
                     // LINE Linkage
                     line_user_id: formData.get('line_user_id') || null,
-                    line_display_name: formData.get('line_display_name') || null,
-                    line_picture_url: formData.get('line_picture_url') || null,
                 };
 
-                // 2. Insert into 'applicants' and get ID
+                // 2. Insert into 'applicants'
                 const { data: insertedApplicant, error: insertError } = await window.supabaseClient
                     .from('applicants')
                     .insert([data])
-                    .select()
+                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), ref:master_referral_source!referral_source_id(name)')
                     .single();
 
                 if (insertError) throw insertError;
 
-                const newApplicantId = insertedApplicant.id;
-
-                // 3. Insert role preferences
-                const preferences = [];
-                const role1 = formData.get('role-1');
-                const role2 = formData.get('role-2');
-                const role3 = formData.get('role-3');
-
-                if (role1 && roleMap[role1]) preferences.push({ applicant_id: newApplicantId, role_id: roleMap[role1], preference_rank: 1 });
-                if (role2 && roleMap[role2]) preferences.push({ applicant_id: newApplicantId, role_id: roleMap[role2], preference_rank: 2 });
-                if (role3 && roleMap[role3]) preferences.push({ applicant_id: newApplicantId, role_id: roleMap[role3], preference_rank: 3 });
-
-                if (preferences.length > 0) {
-                    const { error: prefError } = await window.supabaseClient
-                        .from('applicant_role_preferences')
-                        .insert(preferences);
-
-                    if (prefError) console.error('Error inserting preferences:', prefError); // Non-fatal?
-                }
-
-                // 4. Send LINE Notify (via Edge Function)
+                // 3. Send LINE Notify (via Edge Function)
                 try {
-                    const { error: notifyError } = await window.supabaseClient.functions.invoke('notify-applicant', {
+                    await window.supabaseClient.functions.invoke('notify-applicant', {
                         body: {
                             record: insertedApplicant,
-                            roles: [role1, role2, role3].filter(Boolean)
+                            // Pass names for legacy/simple notification if needed, or IDs
+                            roles: [insertedApplicant.r1?.name, insertedApplicant.r2?.name, insertedApplicant.r3?.name].filter(Boolean),
+                            referral: insertedApplicant.ref?.name
                         }
                     });
-                    if (notifyError) console.error('LINE Notify Error:', notifyError);
                 } catch (notifyErr) {
-                    // Suppress error so user sees success message
-                    console.warn('Failed to invoke notify function:', notifyErr);
+                    console.warn('Notification failed, but registration succeeded:', notifyErr);
                 }
 
                 // Show success animation
