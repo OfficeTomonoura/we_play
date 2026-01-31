@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム設定 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .settings-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-drop-zone:hover,
+        .file-drop-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        .file-drop-zone p {
+            color: var(--text-dim);
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .btn-upload {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-upload:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #csvPreview {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .preview-table th,
+        .preview-table td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            text-align: left;
+            color: var(--text-dim);
+        }
+
+        .preview-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .log-console {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .log-entry.success {
+            color: #00b900;
+        }
+
+        .log-entry.error {
+            color: #ff4b4b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div id="app-sidebar"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">システム設定</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Individual Registration Card -->
+                <div class="settings-card">
+                    <h3><i data-lucide="user-plus"></i> ユーザー個別登録</h3>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        ユーザーを1件ずつ手動で登録します。
+                    </p>
+                    <form id="individualForm" style="display: grid; gap: 1rem; max-width: 500px;">
+                        <input type="email" id="ind_email" placeholder="メールアドレス (必須)" class="input-field" required
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+                        <input type="text" id="ind_password" placeholder="初期パスワード (必須 - 6文字以上)" class="input-field"
+                            required
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+                        <input type="text" id="ind_name" placeholder="氏名 (任意)" class="input-field"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 6px; color: white;">
+                        <button type="submit" class="btn-upload" style="justify-content: center; margin-top: 0.5rem;">
+                            <i data-lucide="plus"></i> 登録
+                        </button>
+                    </form>
+                    <div id="indLog" class="log-console"></div>
+                </div>
+
+                <!-- CSV Import Card -->
+                <div class="settings-card">
+                    <h3><i data-lucide="users"></i> ユーザー一括登録 (CSVインポート)</h3>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        CSVファイルをアップロードして、Supabase Authenticationにユーザーを一括登録します。<br>
+                        CSVの形式: <code>email,password,full_name</code> (ヘッダー必須)
+                    </p>
+
+                    <div class="file-drop-zone" id="dropZone">
+                        <i data-lucide="upload-cloud"
+                            style="width: 48px; height: 48px; color: var(--primary); margin-bottom: 0.5rem;"></i>
+                        <p>ここにCSVファイルをドラッグ＆ドロップ</p>
+                        <p style="font-size: 0.8rem;">またはクリックしてファイルを選択</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                    </div>
+
+                    <div id="csvPreview">
+                        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 0.5rem;">プレビュー (最初の5件)</h4>
+                        <table class="preview-table">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>Full Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewBody"></tbody>
+                        </table>
+                        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
+                            合計: <span id="totalCount" style="color: white; font-weight: bold;">0</span> 件
+                        </div>
+
+                        <button id="executeImportBtn" class="btn-upload">
+                            <i data-lucide="play"></i> インポート実行
+                        </button>
+                    </div>
+
+                    <div id="importLog" class="log-console"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
+    <script src="components.js"></script>
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', initCsvImport);
+        document.addEventListener('DOMContentLoaded', initIndividualRegister);
+
+        function initIndividualRegister() {
+            const form = document.getElementById('individualForm');
+            const logConsole = document.getElementById('indLog');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('ind_email').value;
+                const password = document.getElementById('ind_password').value;
+                const name = document.getElementById('ind_name').value;
+                const btn = form.querySelector('button');
+
+                if (password.length < 6) {
+                    alert('パスワードは6文字以上で入力してください。');
+                    return;
+                }
+
+                if (!confirm(`${email} を登録しますか？`)) return;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader"></i> 処理中...';
+                lucide.createIcons();
+                logConsole.style.display = 'block';
+                logConsole.innerHTML = '';
+
+                try {
+                    // Re-use the bulk import function with a single user array
+                    const { data, error } = await window.supabaseClient.functions.invoke('import-users', {
+                        body: {
+                            users: [{
+                                email: email,
+                                password: password,
+                                full_name: name
+                            }]
+                        }
+                    });
+
+                    if (error) {
+                        logResult('エラー: ' + error.message, false);
+                    } else if (data) {
+                        // Check for function-level error
+                        if (data.error) {
+                            logResult('サーバーエラー: ' + data.error, false);
+                        } else if (data.results) {
+                            const res = data.results[0];
+                            if (res.error) {
+                                logResult(`失敗: ${res.error}`, false);
+                            } else {
+                                logResult(`成功: ${res.email} (ID: ${res.id})`, true);
+                                form.reset();
+                            }
+                        } else {
+                            logResult('予期しないレスポンス形式です。', false);
+                        }
+                    } else {
+                        logResult('データが返されませんでした。', false);
+                    }
+
+                } catch (err) {
+                    logResult('通信エラー: ' + err.message, false);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="plus"></i> 登録';
+                    lucide.createIcons();
+                }
+            });
+
+            function logResult(msg, isSuccess) {
+                const div = document.createElement('div');
+                div.className = `log-entry ${isSuccess ? 'success' : 'error'}`;
+                div.textContent = msg;
+                logConsole.appendChild(div);
+            }
+        }
+        function initCsvImport() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('csvFile');
+            const previewSection = document.getElementById('csvPreview');
+            const executeBtn = document.getElementById('executeImportBtn');
+
+            let parsedData = [];
+
+            // Drag & Drop
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                const file = files[0];
+                if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+                    alert('CSVファイルのみアップロード可能です。');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const text = e.target.result;
+                    parseCSV(text);
+                };
+                reader.readAsText(file);
+            }
+
+            function parseCSV(text) {
+                const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
+                if (lines.length < 2) {
+                    alert('データが含まれていません。');
+                    return;
+                }
+
+                // Headers check
+                const headers = lines[0].split(',').map(h => h.trim());
+                // Simple validation
+                if (!headers.includes('email') || !headers.includes('password')) {
+                    alert('CSVヘッダーに "email" と "password" が必要です。');
+                    return;
+                }
+
+                parsedData = [];
+                const previewBody = document.getElementById('previewBody');
+                previewBody.innerHTML = '';
+
+                // Parse content
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',').map(c => c.trim());
+                    // Skip if empty line? Already filtered.
+                    // Map to object based on headers index
+                    const row = {};
+                    headers.forEach((h, idx) => row[h] = cols[idx]);
+                    parsedData.push(row);
+
+                    // Add to preview (max 5)
+                    if (i <= 5) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.email || ''}</td>
+                            <td>${row.password ? '********' : ''}</td>
+                            <td>${row.full_name || ''}</td>
+                        `;
+                        previewBody.appendChild(tr);
+                    }
+                }
+
+                document.getElementById('totalCount').textContent = parsedData.length;
+                previewSection.style.display = 'block';
+                document.getElementById('importLog').style.display = 'none';
+            }
+
+            executeBtn.addEventListener('click', async () => {
+                if (parsedData.length === 0) return;
+                if (!confirm(`${parsedData.length} 件のユーザーを一括登録します。よろしいですか？`)) return;
+
+                const logConsole = document.getElementById('importLog');
+                logConsole.style.display = 'block';
+                logConsole.innerHTML = '<div>開始しています...</div>';
+                executeBtn.disabled = true;
+
+                // Call Cloud Function (Edge Function) ideally, or direct loop if allowed?
+                // Client-side loop poses security risk if we expose service_role key.
+                // We MUST rely on an backend endpoint. Assuming 'import-users' function exists.
+                // If not, we cannot do it securely on client side because 'signUp' logs in the user, clearing admin session.
+                // Admin API requires service_role key.
+
+                try {
+                    const { data, error } = await window.supabaseClient.functions.invoke('import-users', {
+                        body: { users: parsedData }
+                    });
+
+                    if (error) {
+                        logError(`Function Error: ${error.message}`);
+                        // Fallback attempt? No, client cannot create other users easily without logging them in.
+                    } else {
+                        // Process results from bulk response
+                        // Example response: { results: [{ email: '...', status: 'created' }, ...] }
+                        if (data && data.results) {
+                            data.results.forEach(r => {
+                                if (r.error) {
+                                    logError(`${r.email}: 失敗 - ${r.error}`);
+                                } else {
+                                    logSuccess(`${r.email}: 成功 (${r.id})`);
+                                }
+                            });
+                            logSuccess('=== 完了 ===');
+                        } else {
+                            logError('予期しないレスポンス形式です。');
+                        }
+                    }
+                } catch (err) {
+                    logError(`通信エラー: ${err.message}`);
+                } finally {
+                    executeBtn.disabled = false;
+                }
+            });
+
+            function logSuccess(msg) {
+                const div = document.createElement('div');
+                div.className = 'log-entry success';
+                div.textContent = msg;
+                document.getElementById('importLog').appendChild(div);
+            }
+            function logError(msg) {
+                const div = document.createElement('div');
+                div.className = 'log-entry error';
+                div.textContent = msg;
+                document.getElementById('importLog').appendChild(div);
+            }
+        }
+    </script>
+</body>
+
+</html>

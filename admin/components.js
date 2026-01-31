@@ -106,7 +106,7 @@ function renderSidebar() {
 
                 <!-- SYSTEM Section -->
                 <div class="nav-section">SYSTEM</div>
-                <a href="#" class="nav-item">
+                <a href="settings.html" class="nav-item" data-page="settings.html">
                     <i data-lucide="settings"></i> <span>設定</span>
                 </a>
 
