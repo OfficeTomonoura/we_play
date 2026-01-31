@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../assets/css/admin.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 </head>
 
 <body>
@@ -48,7 +49,7 @@
                             <h2 style="font-size: 1.2rem; font-weight: 700; color: #fff;">応募状況</h2>
                         </div>
                     </div>
-                    <div class="stats-grid">
+                    <div class="stats-grid" id="roles-stats-container">
                         <div class="stat-card">
                             <div class="stat-icon" style="--color: #00f2ff;">
                                 <i data-lucide="user-plus"></i>
@@ -58,33 +59,7 @@
                                 <span id="stat-total" class="count">-</span>
                             </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon" style="--color: #7000ff;">
-                                <i data-lucide="clapperboard"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="label">監督希望</span>
-                                <span id="stat-director" class="count">-</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon" style="--color: #ff007a;">
-                                <i data-lucide="theater"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="label">演者希望</span>
-                                <span id="stat-actor" class="count">-</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon" style="--color: #ffea00;">
-                                <i data-lucide="wrench"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="label">小道具希望</span>
-                                <span id="stat-props" class="count">-</span>
-                            </div>
-                        </div>
+                        <!-- Dynamic Role Stats will be inserted here -->
                     </div>
                 </section>
 
@@ -131,7 +106,8 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <!-- Dynamic Content -->
+                            <tbody>
+                                <!-- Dynamic Content -->
                             </tbody>
                         </table>
                     </div>
@@ -159,53 +135,75 @@
 
                 if (!totalErr) document.getElementById('stat-total').textContent = totalCount;
 
-                // 2. Get Role-Specific counts (Basic check for now)
-                const { data: roles } = await window.supabaseClient.from('master_role').select('id, name');
+                // 2. Get Dynamic Role counts
+                const { data: roles } = await window.supabaseClient.from('master_role').select('id, name').order('sort_order');
+                const rolesContainer = document.getElementById('roles-stats-container');
 
-                if (roles) {
-                    for (const role of roles) {
-                        const { count, error } = await window.supabaseClient
+                if (roles && rolesContainer) {
+                    // Define some vibrant colors to rotate through
+                    const colors = ['#7000ff', '#ff007a', '#ffea00', '#00ff7a', '#ffae00', '#6366f1'];
+
+                    for (let i = 0; i < roles.length; i++) {
+                        const role = roles[i];
+                        const { count } = await window.supabaseClient
                             .from('applicants')
                             .select('*', { count: 'exact', head: true })
-                            .or(`desired_role_1_id.eq.${role.id},desired_role_2_id.eq.${role.id},desired_role_3_id.eq.${role.id}`);
+                            .eq('desired_role_1_id', role.id); // Counting only 1st preference for clarity on dashboard
 
-                        if (role.name.includes('監督')) document.getElementById('stat-director').textContent = count;
-                        if (role.name.includes('演者')) document.getElementById('stat-actor').textContent = count;
-                        if (role.name.includes('小道具')) document.getElementById('stat-props').textContent = count;
+                        const color = colors[i % colors.length];
+                        const statCard = document.createElement('div');
+                        statCard.className = 'stat-card';
+                        statCard.innerHTML = `
+                            <div class="stat-icon" style="--color: ${color};">
+                                <i data-lucide="user"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="label">${role.name}希望</span>
+                                <span class="count">${count || 0}</span>
+                            </div>
+                        `;
+                        rolesContainer.appendChild(statCard);
                     }
                 }
 
-                // 3. Get Recent Applicants
+                // 3. Get Recent Applicants (新規ステータスまたは2日以内の応募をすべて表示)
+                const twoDaysAgo = new Date();
+                twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+                const twoDaysAgoISO = twoDaysAgo.toISOString();
+
                 const { data: applicants, error: appErr } = await window.supabaseClient
                     .from('applicants')
                     .select('*, r1:master_role!desired_role_1_id(name)')
-                    .order('created_at', { ascending: false })
-                    .limit(5);
+                    .or(`status.eq.新規,created_at.gte.${twoDaysAgoISO}`)
+                    .order('created_at', { ascending: false });
 
                 const tbody = document.querySelector('.data-table tbody');
-                if (!appErr && applicants && applicants.length > 0) {
-                    tbody.innerHTML = '';
-                    applicants.forEach(item => {
-                        const date = new Date(item.created_at).toLocaleDateString();
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>
-                                <div class="user-meta">
-                                    <span class="name">${item.full_name}</span>
-                                    <span class="email">${item.email || '-'}</span>
-                                </div>
-                            </td>
-                            <td>${item.school_name || '-'} / ${item.grade || ''}</td>
-                            <td>${item.r1?.name || '-'}</td>
-                            <td>${date}</td>
-                            <td><span class="status-badge ${item.status === '新規' ? 'new' : ''}">${item.status}</span></td>
-                            <td><button class="action-btn" onclick="location.href='applicants.html?id=${item.id}'"><i data-lucide="more-horizontal"></i></button></td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                    lucide.createIcons();
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-dim);">応募データがありません</td></tr>';
+                if (tbody) {
+                    if (!appErr && applicants && applicants.length > 0) {
+                        tbody.innerHTML = '';
+                        applicants.forEach(item => {
+                            const date = new Date(item.created_at).toLocaleDateString();
+                            const isNew = item.status === '新規';
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>
+                                    <div class="user-meta">
+                                        <span class="name">${item.full_name}</span>
+                                        <span class="email">${item.email || '-'}</span>
+                                    </div>
+                                </td>
+                                <td>${item.school_name || '-'} / ${item.grade || ''}</td>
+                                <td>${item.r1?.name || '-'}</td>
+                                <td>${date}</td>
+                                <td><span class="status-badge ${isNew ? 'new' : item.status === '選抜済' ? 'selected' : ''}">${item.status}</span></td>
+                                <td><button class="action-btn" onclick="location.href='applicants.html?id=${item.id}'"><i data-lucide="more-horizontal"></i></button></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                        if (window.lucide) window.lucide.createIcons();
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-dim);">対応が必要な応募はありません</td></tr>';
+                    }
                 }
 
                 // 4. Trend Chart (Aggregation by day)
@@ -242,7 +240,7 @@
                 }
             }
 
-            new Chart(ctx, {
+            const referralChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: labels,
@@ -250,24 +248,80 @@
                         data: counts,
                         backgroundColor: colors.slice(0, labels.length),
                         borderWidth: 0,
-                        hoverOffset: 10
+                        hoverOffset: 12
                     }]
                 },
+                plugins: [{
+                    id: 'custom-labels-and-lines',
+                    afterDraw: (chart) => {
+                        const { ctx } = chart;
+                        ctx.save();
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach((element, index) => {
+                                const { x, y, startAngle, endAngle, outerRadius } = element;
+                                const midAngle = startAngle + (endAngle - startAngle) / 2;
+                                const label = chart.data.labels[index];
+
+                                // 線を開始する座標
+                                const startX = x + Math.cos(midAngle) * outerRadius;
+                                const startY = y + Math.sin(midAngle) * outerRadius;
+
+                                // 屈折点
+                                const line1X = x + Math.cos(midAngle) * (outerRadius + 20);
+                                const line1Y = y + Math.sin(midAngle) * (outerRadius + 20);
+
+                                // 終点
+                                const isRight = Math.cos(midAngle) > 0;
+                                const line2X = line1X + (isRight ? 15 : -15);
+                                const line2Y = line1Y;
+
+                                // 線を描画
+                                ctx.beginPath();
+                                ctx.strokeStyle = dataset.backgroundColor[index];
+                                ctx.lineWidth = 1.6;
+                                ctx.moveTo(startX, startY);
+                                ctx.lineTo(line1X, line1Y);
+                                ctx.lineTo(line2X, line2Y);
+                                ctx.stroke();
+
+                                // 文字列を描画（改行対応）
+                                ctx.fillStyle = '#fff';
+                                ctx.font = 'bold 11px "Outfit", "Noto Sans JP", sans-serif';
+                                ctx.textAlign = isRight ? 'left' : 'right';
+                                ctx.textBaseline = 'middle';
+
+                                // ( ) が含まれる場合は改行
+                                const lines = label.includes('(') ? label.split(/(?=\()/) : [label];
+                                const lineHeight = 13;
+                                const textX = line2X + (isRight ? 8 : -8);
+
+                                lines.forEach((lineText, index) => {
+                                    const yOffset = (index - (lines.length - 1) / 2) * lineHeight;
+                                    ctx.fillText(lineText.trim(), textX, line2Y + yOffset);
+                                });
+                            });
+                        });
+                        ctx.restore();
+                    }
+                }],
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#fff',
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { size: 11 }
-                            }
+                    layout: {
+                        padding: {
+                            left: 75,
+                            right: 75,
+                            top: 25,
+                            bottom: 25
                         }
                     },
-                    cutout: '70%'
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true },
+                        datalabels: { display: false }
+                    },
+                    cutout: '65%'
                 }
             });
         }
@@ -317,7 +371,7 @@
                         y: {
                             beginAtZero: true,
                             grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: 'rgba(255,255,255,0.5)' }
+                            ticks: { color: 'rgba(255,255,255,0.5)', precision: 0, stepSize: 1 }
                         },
                         x: {
                             grid: { display: false },

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統計分析 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <style>
+        .stats-grid-complex {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-card {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s var(--easing);
+        }
+
+        .analysis-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .analysis-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .analysis-card h3 i {
+            color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+
+        .summary-item .label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .summary-item .value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin: 2.5rem 0 1.5rem;
+            padding-left: 1rem;
+            border-left: 4px solid var(--primary);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div id="app-sidebar"></div>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        統計分析ダッシュボード</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner" style="margin-bottom: 2rem;">
+                    <h1>統計分析</h1>
+                    <p>募集データの傾向を多角的に分析し、事業運営の意思決定をサポートします。</p>
+                </div>
+
+                <div class="section-title">全体概況</div>
+                <div class="stats-grid-complex" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="analysis-card summary-stats">
+                        <h3><i data-lucide="users"></i> 人員構成</h3>
+                        <div class="summary-item">
+                            <span class="label">応募者総数</span>
+                            <span id="total-applicants" class="value">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">選抜完了</span>
+                            <span id="selected-count" class="value">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">正会員数</span>
+                            <span id="total-members" class="value">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">協力企業数</span>
+                            <span id="total-collaborators" class="value">-</span>
+                        </div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3><i data-lucide="venn-diagram"></i> 性別比率</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">応募トレンド</div>
+                <div class="analysis-card" style="margin-bottom: 1.5rem;">
+                    <h3><i data-lucide="trending-up"></i> 応募者累計推移</h3>
+                    <div class="chart-wrapper" style="height: 350px;">
+                        <canvas id="cumulativeTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="section-title">応募者属性分析</div>
+                <div class="grid-2col">
+                    <div class="analysis-card">
+                        <h3><i data-lucide="filter"></i> 選抜プロセス（ファンネル）</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="funnelChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3><i data-lucide="bar-chart-2"></i> 学年別詳細分布</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="gradeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2col">
+                    <div class="analysis-card">
+                        <h3><i data-lucide="clapperboard"></i> 第一希望役割の分布</h3>
+                        <div class="chart-wrapper" style="height: 400px;">
+                            <canvas id="roleDistributionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3><i data-lucide="school"></i> 応募の多い学校 (Top 5)</h3>
+                        <div class="chart-wrapper" style="height: 400px;">
+                            <canvas id="schoolChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">組織・運営分析</div>
+                <div class="analysis-card" style="margin-bottom: 1.5rem;">
+                    <h3><i data-lucide="building-2"></i> 委員会別 正会員所属人数</h3>
+                    <div class="chart-wrapper" style="height: 350px;">
+                        <canvas id="committeeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3><i data-lucide="compass"></i> 認知経路の深掘り</h3>
+                    <div class="chart-wrapper" style="height: 500px;">
+                        <canvas id="referralDepthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
+    <script src="components.js"></script>
+    <script src="../assets/js/admin.js"></script>
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!window.supabaseClient) return;
+            await initAnalysis();
+        });
+
+        async function initAnalysis() {
+            try {
+                // Fetch data
+                const { data: applicants, error: appErr } = await window.supabaseClient
+                    .from('applicants')
+                    .select('*, r1:master_role!desired_role_1_id(name), rs:master_referral_source(name)');
+
+                const { data: members } = await window.supabaseClient
+                    .from('members')
+                    .select('*, organization:master_organization(name)');
+
+                const { data: orgs } = await window.supabaseClient
+                    .from('master_organization')
+                    .select('name')
+                    .order('sort_order');
+
+                const { count: collaboratorCount } = await window.supabaseClient
+                    .from('collaborators')
+                    .select('*', { count: 'exact', head: true });
+
+                if (appErr || !applicants) return;
+
+                // Update summary metrics
+                document.getElementById('total-applicants').textContent = applicants.length;
+                document.getElementById('selected-count').textContent = applicants.filter(a => a.status === '選抜済').length;
+                document.getElementById('total-members').textContent = members?.length || 0;
+                document.getElementById('total-collaborators').textContent = collaboratorCount || 0;
+
+                // Render all charts
+                renderTrendChart(applicants);
+                renderGradeChart(applicants);
+                renderGenderChart(applicants);
+                renderFunnelChart(applicants);
+                renderRoleChart(applicants);
+                renderSchoolChart(applicants);
+                renderCommitteeChart(members, orgs);
+                renderReferralChart(applicants);
+
+            } catch (err) {
+                console.error('Analysis Error:', err);
+            }
+        }
+
+        function renderTrendChart(data) {
+            const ctx = document.getElementById('cumulativeTrendChart');
+            const sortedData = [...data].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            const labels = [];
+            const counts = [];
+            let cumulative = 0;
+            const dailyData = {};
+            sortedData.forEach(a => {
+                const date = a.created_at.split('T')[0];
+                dailyData[date] = (dailyData[date] || 0) + 1;
+            });
+            Object.entries(dailyData).forEach(([date, count]) => {
+                cumulative += count;
+                labels.push(date.split('-').slice(1).join('/'));
+                counts.push(cumulative);
+            });
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '累計応募数',
+                        data: counts,
+                        backgroundColor: 'rgba(0, 242, 255, 0.4)',
+                        borderColor: '#00f2ff',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: 'rgba(255,255,255,0.5)', precision: 0, stepSize: 1 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderGradeChart(data) {
+            const ctx = document.getElementById('gradeChart');
+            const counts = {};
+            data.forEach(a => {
+                const g = a.grade || '未設定';
+                counts[g] = (counts[g] || 0) + 1;
+            });
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        label: '人数',
+                        data: Object.values(counts),
+                        backgroundColor: 'rgba(0, 242, 255, 0.5)',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { precision: 0, stepSize: 1 }
+                        },
+                        y: { display: true, ticks: { color: '#fff' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderGenderChart(data) {
+            const ctx = document.getElementById('genderChart');
+            const counts = {};
+            data.forEach(a => {
+                const g = a.gender || '他/未回答';
+                counts[g] = (counts[g] || 0) + 1;
+            });
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: ['#7000ff', '#ff007a', '#00f2ff', '#ffea00'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { color: '#fff' } } },
+                    cutout: '65%'
+                }
+            });
+        }
+
+
+
+        function renderFunnelChart(data) {
+            const ctx = document.getElementById('funnelChart');
+            const stages = {
+                '全応募': data.length,
+                '確認済み': data.filter(a => ['確認済み', '選抜済'].includes(a.status)).length,
+                '選抜済': data.filter(a => a.status === '選抜済').length
+            };
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(stages),
+                    datasets: [{
+                        data: Object.values(stages),
+                        backgroundColor: ['rgba(0,242,255,0.2)', 'rgba(0,242,255,0.5)', 'rgba(0,242,255,0.8)'],
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false, ticks: { precision: 0, stepSize: 1 } },
+                        y: { ticks: { color: '#fff', font: { weight: 'bold' } }, grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderRoleChart(data) {
+            const ctx = document.getElementById('roleDistributionChart');
+            const counts = {};
+            data.forEach(a => {
+                const role = a.r1?.name || '未設定';
+                counts[role] = (counts[role] || 0) + 1;
+            });
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: ['rgba(0,242,255,0.4)', 'rgba(112,0,255,0.4)', 'rgba(255,0,122,0.4)', 'rgba(255,234,0,0.4)', 'rgba(0,255,122,0.4)'],
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { display: false, precision: 0, stepSize: 1 }
+                        }
+                    },
+                    plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }
+                }
+            });
+        }
+
+        function renderSchoolChart(data) {
+            const ctx = document.getElementById('schoolChart');
+            const counts = {};
+            data.forEach(a => { if (a.school_name) counts[a.school_name] = (counts[a.school_name] || 0) + 1; });
+            const top5 = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: top5.map(e => e[0]),
+                    datasets: [{
+                        data: top5.map(e => e[1]),
+                        backgroundColor: 'rgba(112,0,255,0.5)',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: '#fff', font: { size: 10 } } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { precision: 0, stepSize: 1 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderCommitteeChart(members, orgs) {
+            const ctx = document.getElementById('committeeChart');
+            const counts = {};
+            orgs.forEach(o => counts[o.name] = 0);
+            members.forEach(m => { if (m.organization) counts[m.organization.name]++; });
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: 'rgba(0,255,122,0.5)',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: '#fff', font: { size: 10 } } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { precision: 0, stepSize: 1 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderReferralChart(data) {
+            const ctx = document.getElementById('referralDepthChart');
+            const counts = {};
+            data.forEach(a => {
+                const source = a.rs?.name || '不明';
+                counts[source] = (counts[source] || 0) + 1;
+            });
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: ['#00f2ff', '#7000ff', '#ff007a', '#ffea00', '#00ff7a', '#ffae00', '#6366f1'],
+                        hoverOffset: 20
+                    }]
+                },
+                plugins: [{
+                    id: 'custom-labels',
+                    afterDraw: (chart) => {
+                        const { ctx } = chart;
+                        ctx.save();
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach((element, index) => {
+                                const { x, y, startAngle, endAngle, outerRadius } = element;
+                                const midAngle = startAngle + (endAngle - startAngle) / 2;
+                                const label = chart.data.labels[index];
+                                const startX = x + Math.cos(midAngle) * outerRadius;
+                                const startY = y + Math.sin(midAngle) * outerRadius;
+                                const line1X = x + Math.cos(midAngle) * (outerRadius + 25);
+                                const line1Y = y + Math.sin(midAngle) * (outerRadius + 25);
+                                const isRight = Math.cos(midAngle) > 0;
+                                const line2X = line1X + (isRight ? 20 : -20);
+                                const line2Y = line1Y;
+                                ctx.beginPath();
+                                ctx.strokeStyle = dataset.backgroundColor[index];
+                                ctx.lineWidth = 1.6;
+                                ctx.moveTo(startX, startY);
+                                ctx.lineTo(line1X, line1Y);
+                                ctx.lineTo(line2X, line2Y);
+                                ctx.stroke();
+                                ctx.fillStyle = '#fff';
+                                ctx.font = 'bold 11px sans-serif';
+                                ctx.textAlign = isRight ? 'left' : 'right';
+                                ctx.textBaseline = 'middle';
+                                const lines = label.includes('(') ? label.split(/(?=\()/) : [label];
+                                const lineHeight = 14;
+                                const textX = line2X + (isRight ? 8 : -8);
+                                lines.forEach((lineNum, idx) => {
+                                    const yOffset = (idx - (lines.length - 1) / 2) * lineHeight;
+                                    ctx.fillText(lineNum.trim(), textX, line2Y + yOffset);
+                                });
+                            });
+                        });
+                        ctx.restore();
+                    }
+                }],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: 80 },
+                    plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                    cutout: '65%'
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

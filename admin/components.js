@@ -36,7 +36,7 @@ function renderSidebar() {
                 <a href="collaborators.html" class="nav-item" data-page="collaborators.html">
                     <i data-lucide="heart"></i> <span>協力者一覧</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="analysis.html" class="nav-item" data-page="analysis.html">
                     <i data-lucide="bar-chart-3"></i> <span>統計分析</span>
                 </a>
                 <a href="line.html" class="nav-item" data-page="line.html">
