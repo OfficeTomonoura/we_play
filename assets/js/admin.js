@@ -1,23 +1,51 @@
 // Auth Guard: Check if user is logged in
+// Auth Guard: Check if user is logged in
 async function checkAuth() {
-    // login page check is not needed if this script is not loaded in login.html
-    // But safety check:
-    if (window.location.pathname.includes('/login.html')) return;
+    // Pages that don't need auth check (or handle it themselves)
+    const path = window.location.pathname;
+    if (path.includes('/login.html')) return;
 
     if (!window.supabaseClient) {
-        // Wait a bit for client script to load if race condition?
-        // Usually scripts are loaded sequentially.
-        console.warn('Supabase client not validation yet.');
+        console.warn('Supabase client not initialized yet.');
         return;
     }
 
     const { data: { session } } = await window.supabaseClient.auth.getSession();
     if (!session) {
         // No session, redirect to login
-        // Construct relative path to login.html depending on current depth, 
-        // or just assume we are in admin/ folder mostly.
-        // Assuming this script is running in files inside /admin/
+        // Assuming relative path works or we are in admin dir
         window.location.href = 'login.html';
+        return;
+    }
+
+    // Check if user has a Member profile
+    // If we are already on first_login.html, skip this check to avoid infinite loop
+    // But logically first_login.html should redirect to index if ALREADY registered (handled in first_login.html specific script)
+    if (path.includes('/first_login.html')) return;
+
+    // Check members table
+    try {
+        const { data: member, error } = await window.supabaseClient
+            .from('members')
+            .select('id')
+            .eq('auth_user_id', session.user.id)
+            .maybeSingle();
+
+        if (error) {
+            console.error('Member check error:', error);
+            // On error (e.g. network), maybe don't block user? Or safe fail to login?
+            // For now, let's assume if error, we stay (or show error UI).
+            return;
+        }
+
+        if (!member) {
+            // No member record found -> First time login / Not registered
+            // Redirect to first_login.html
+            // Adjust path if needed (if we are in subfolder, etc. admin.js assumes admin context usually)
+            window.location.href = 'first_login.html';
+        }
+    } catch (err) {
+        console.error('Unexpected error checking member status:', err);
     }
 }
 

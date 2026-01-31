@@ -27,7 +27,7 @@
             </div>
             <nav class="nav-links" style="display: flex; align-items: center; gap: 1rem;">
                 <div id="line-user-status" style="display: none;"></div>
-                <a href="admin/login.html" class="btn-login">
+                <a href="admin/login.html" class="btn-login" id="admin-link-btn">
                     <i data-lucide="log-in"></i>
                     <span>管理者ログイン</span>
                 </a>
@@ -150,6 +150,9 @@
 
         // LIFF Initialization for LP
         document.addEventListener('DOMContentLoaded', async () => {
+            // Check Admin Session
+            checkAdminSession();
+
             const liffId = "2009015373-QGkjtgDJ";
             try {
                 await liff.init({ liffId: liffId });
@@ -163,6 +166,27 @@
                 console.warn('LIFF Init failed:', err);
             }
         });
+
+        async function checkAdminSession() {
+            if (!window.supabaseClient) return;
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            console.log('AdminSession Check:', session ? 'Logged In' : 'No Session');
+
+            if (session) {
+                const adminBtn = document.getElementById('admin-link-btn');
+                if (adminBtn) {
+                    adminBtn.href = 'admin/index.html';
+                    adminBtn.innerHTML = `
+                        <i data-lucide="layout-dashboard"></i>
+                        <span>管理ダッシュボード</span>
+                    `;
+                    // Optional: Make it stand out more
+                    adminBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+                    adminBtn.style.borderColor = 'var(--primary)';
+                    lucide.createIcons();
+                }
+            }
+        }
 
         function showLineUser(profile) {
             const container = document.getElementById('line-user-status');
@@ -179,9 +203,14 @@
                 }
 
                 container.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.1); padding: 0.3rem 0.8rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);">
-                        <img src="${profile.pictureUrl}" alt="User" style="width: 24px; height: 24px; border-radius: 50%;">
-                        <span style="font-size: 0.85rem; color: white;">${profile.displayName}</span>
+                    <div style="display: flex; align-items: center; gap: 0.6rem; background: rgba(0, 0, 0, 0.6); padding: 0.4rem 1rem; border-radius: 30px; border: 1px solid rgba(6, 199, 85, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <div style="display: flex; align-items: center; gap: 0.4rem;">
+                            <span style="width: 8px; height: 8px; background-color: #06c755; border-radius: 50%; box-shadow: 0 0 8px rgba(6, 199, 85, 0.8);"></span>
+                            <span style="font-size: 0.7rem; color: #06c755; font-weight: 800; letter-spacing: 0.05em;">LOGIN</span>
+                        </div>
+                        <div style="width: 1px; height: 14px; background: rgba(255,255,255,0.15);"></div>
+                        <img src="${profile.pictureUrl}" alt="User" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);">
+                        <span style="font-size: 0.85rem; color: white; font-weight: 500;">${profile.displayName}</span>
                         ${logoutHtml}
                     </div>
                 `;

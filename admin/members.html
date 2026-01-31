@@ -27,7 +27,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
- <div id="app-sidebar"></div>
+        <div id="app-sidebar"></div>
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-header">
@@ -95,120 +95,16 @@
                                 <th style="text-align: right;">アクション</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Row 1 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">たなか
-                                            けんた</span>
-                                        <span class="name">田中 健太</span>
-                                        <span class="email">福山誠之館高校</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">未来人財育成委員会</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">委員長</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(0, 242, 255, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 255, 0.3);">事業責任者</span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <!-- Row 2 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">すずき
-                                            みさき</span>
-                                        <span class="name">鈴木 美咲</span>
-                                        <span class="email">福山明王台高校</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">未来人財育成委員会</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">副委員長</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);">サポーター</span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <!-- Row 3 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">いとう
-                                            けんいち</span>
-                                        <span class="name">伊藤 健一</span>
-                                        <span class="email">福山工業高校</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">未来人財育成委員会</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">委員</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);">サポーター</span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <!-- Row 4 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">わたなべ
-                                            ゆうき</span>
-                                        <span class="name">渡辺 優希</span>
-                                        <span class="email">福山市立福山高校</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">広報渉外委員会</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">委員</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">コーディネーター</span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
+                        <tbody id="membersTableBody">
+                            <!-- Rows will be populated by members.js -->
                         </tbody>
                     </table>
 
                     <div class="table-footer"
                         style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
                         <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
-                            全 8 件中 1 - 8 件を表示
-                        </div>
-                        <div class="pagination" style="display: flex; gap: 0.5rem;">
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
-                                    data-lucide="chevron-left" style="width: 16px;"></i></button>
-                            <button class="page-btn active"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary); cursor: pointer;">1</button>
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
-                                    data-lucide="chevron-right" style="width: 16px;"></i></button>
+                            <!-- Dynamic count could be improved here later -->
+                            全件表示
                         </div>
                     </div>
                 </div>
@@ -220,6 +116,7 @@
     <script src="../assets/js/supabase-client.js"></script>
     <script src="components.js"></script>
     <script src="../assets/js/admin.js"></script>
+    <script src="../assets/js/members.js"></script>
     <script>
         lucide.createIcons();
     </script>

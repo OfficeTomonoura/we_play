@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初回プロフィール登録 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .login-box {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <section class="form-wrapper login-box">
+            <header class="form-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY ADMIN</span>
+                </div>
+                <h1>Profile Setup</h1>
+                <p class="login-subtitle">
+                    初回ログインありがとうございます。<br>
+                    管理システムを利用するために、メンバー情報を登録してください。
+                </p>
+            </header>
+
+            <form id="profileForm" class="registration-form">
+                <div id="errorMsg"
+                    style="display: none; color: #ff007a; background: rgba(255, 0, 122, 0.1); padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; text-align: center; border: 1px solid rgba(255, 0, 122, 0.2); margin-bottom: 1rem;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">氏名 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="fullName" name="full_name" placeholder="山田 太郎" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullKana">ふりがな <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="fullKana" name="full_kana" placeholder="やまだ たろう" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="highSchool">出身高校</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="highSchool" name="high_school" placeholder="福山○○高校">
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="organization">主たる所属 <span style="color:var(--primary)">*</span></label>
+                    <div class="input-wrapper">
+                        <select id="organization" name="organization" required
+                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                            <option value="" style="color: black;">選択してください</option>
+                            <option value="未来人財育成委員会" style="color: black;">未来人財育成委員会</option>
+                            <option value="広報渉外委員会" style="color: black;">広報渉外委員会</option>
+                            <option value="会員交流委員会" style="color: black;">会員交流委員会</option>
+                            <option value="理事会" style="color: black;">理事会</option>
+                            <option value="その他" style="color: black;">その他</option>
+                        </select>
+                        <span class="focus-border"></span>
+                        <i data-lucide="chevron-down"
+                            style="position: absolute; right: 1rem; top: 1rem; color: var(--text-dim); pointer-events: none;"></i>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="position">委員会役職 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="position" name="position" placeholder="委員長、委員など" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectRole">本事業の役割 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <select id="projectRole" name="project_role" required
+                                style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                                <option value="" style="color: black;">選択してください</option>
+                                <option value="事業責任者" style="color: black;">事業責任者</option>
+                                <option value="サポーター" style="color: black;">サポーター</option>
+                                <option value="コーディネーター" style="color: black;">コーディネーター</option>
+                                <option value="アドバイザー" style="color: black;">アドバイザー</option>
+                            </select>
+                            <span class="focus-border"></span>
+                            <i data-lucide="chevron-down"
+                                style="position: absolute; right: 1rem; top: 1rem; color: var(--text-dim); pointer-events: none;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button" style="margin-top: 1rem;">
+                    <span>登録して開始</span>
+                    <i data-lucide="arrow-right"></i>
+                </button>
+
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="#" onclick="handleLogout()"
+                        style="font-size: 0.8rem; color: var(--text-dim); text-decoration: underline;">アカウントを間違えた場合はログアウト</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Check Auth immediately
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!window.supabaseClient) return;
+
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Check if already registered
+            const { data: member } = await window.supabaseClient
+                .from('members')
+                .select('id')
+                .eq('auth_user_id', session.user.id)
+                .maybeSingle();
+
+            if (member) {
+                // Already registered, redirect to dashboard
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Handle Form Submit
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const errorMsg = document.getElementById('errorMsg');
+
+            errorMsg.style.display = 'none';
+            btn.disabled = true;
+            btn.innerHTML = '<span>登録中...</span>';
+
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) throw new Error('セッションが切れました。再ログインしてください。');
+
+                const formData = {
+                    auth_user_id: session.user.id,
+                    email: session.user.email,
+                    full_name: document.getElementById('fullName').value,
+                    full_kana: document.getElementById('fullKana').value,
+                    high_school: document.getElementById('highSchool').value,
+                    organization: document.getElementById('organization').value,
+                    position: document.getElementById('position').value,
+                    project_role: document.getElementById('projectRole').value,
+                    // Default values
+                    is_staff: true,
+                    can_approve_line: false
+                };
+
+                const { error } = await window.supabaseClient
+                    .from('members')
+                    .insert(formData);
+
+                if (error) throw error;
+
+                // Success
+                window.location.href = 'index.html';
+
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = err.message || '登録に失敗しました。';
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = '<span>登録して開始</span><i data-lucide="arrow-right"></i>';
+                lucide.createIcons();
+            }
+        });
+
+        async function handleLogout() {
+            if (window.supabaseClient) {
+                await window.supabaseClient.auth.signOut();
+            }
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

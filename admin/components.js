@@ -215,8 +215,11 @@ function initSidebarAccordion() {
 function initLogout() {
     const logoutBtn = document.querySelector('.logout-btn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
+        logoutBtn.addEventListener('click', async () => {
             if (confirm('ログアウトしますか？')) {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.auth.signOut();
+                }
                 window.location.href = '../index.html';
             }
         });
