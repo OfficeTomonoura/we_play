@@ -230,7 +230,7 @@
             try {
                 const { data, error } = await window.supabaseClient
                     .from('applicants')
-                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name)')
+                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), school:master_school!school_id(name)')
                     .eq('line_user_id', userId)
                     .maybeSingle();
 
@@ -277,6 +277,7 @@
             const role1 = d.r1?.name || '-';
             const role2 = d.r2?.name || null;
             const role3 = d.r3?.name || null;
+            const schoolName = d.school?.name || d.school_name || '-'; // Fallback to school_name if exists (legacy)
 
             // Format roles
             let rolesHtml = `<div>1. ${role1}</div>`;
@@ -301,7 +302,7 @@
                         </div>
                         
                         <div style="color: var(--text-dim);">所属</div>
-                        <div style="color: white;">${d.school_name} / ${d.grade}</div>
+                        <div style="color: white;">${schoolName} / ${d.grade}</div>
 
                         <div style="color: var(--text-dim);">希望役職</div>
                         <div style="color: white;">${rolesHtml}</div>
