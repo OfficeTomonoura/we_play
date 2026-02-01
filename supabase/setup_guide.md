@@ -59,43 +59,138 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 window.supabaseClient = supabase;
 ```
 
-## 4. データベース設計の変更履歴と構造
+## 4. データベース設計書
 
-### 主要テーブル
+本プロジェクトで使用されているデータベース（Supabase / PostgreSQL）のテーブル定義です。
 
-#### `applicants` (応募者テーブル)
+### 1. `applicants` (応募者テーブル)
 Webフォームからの応募データを格納します。
-- `id`: UUID (Primary Key)
-- `full_name`: 氏名
-- `grade`: 学年（"〇〇年生"）
-- `gender`: 性別 ('男', '女', '選択しない')
-- `email`: メールアドレス
-- `phone`: 電話番号
-- `status`: ステータス ('新規', '確認済み', '採用', '不採用')
-- `referral_source`: 認知経路コード（旧仕様・互換性のため維持）
-- `referral_source_id`: **(New)** 認知経路マスタID
-- `referral_source_other`: 認知経路が「その他」の場合の詳細
-- `desired_role_1`, `2`, `3`: 役職希望コード（旧仕様・互換性のため維持）
-- `assigned_role`: 決定した役職名（旧仕様・互換性のため維持）
-- `assigned_role_id`: **(New)** 決定した役職のマスタID
 
-#### `roles` (役職マスタ)
-- `id`: UUID
-- `name`: 役職名 ('監督', '演者' など)
-- `code`: システム識別コード ('director', 'actor' など)
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK, デフォルト: `gen_random_uuid()` |
+| `full_name` | VARCHAR(255) | 氏名 |
+| `full_kana` | VARCHAR(255) | フリガナ |
+| `school_name` | VARCHAR(255) | 学校名 |
+| `grade` | VARCHAR(50) | 学年 |
+| `gender` | VARCHAR(10) | 性別 ('男', '女', '選択しない') |
+| `email` | VARCHAR(255) | メールアドレス |
+| `phone` | VARCHAR(20) | 電話番号 |
+| `message` | TEXT | 意気込み・メッセージ |
+| `status` | VARCHAR(50) | ステータス ('新規', '確認済み', '選抜済', '不採用')。デフォルト: '新規' |
+| `referral_source` | VARCHAR(255) | 認知経路（選択値） |
+| `referral_source_other` | TEXT | 認知経路（その他詳細） |
+| `desired_role_1` | VARCHAR(100) | 第一希望役職 |
+| `desired_role_2` | VARCHAR(100) | 第二希望役職 |
+| `desired_role_3` | VARCHAR(100) | 第三希望役職 |
+| `assigned_role` | VARCHAR(100) | 決定役職 |
+| `line_user_id` | VARCHAR(50) | LINE User ID (連携用) |
+| `applied_at` | TIMESTAMPTZ | 応募日時。デフォルト: `now()` |
+| `created_at` | TIMESTAMPTZ | 作成日時。デフォルト: `now()` |
+| `updated_at` | TIMESTAMPTZ | 更新日時。デフォルト: `now()` |
 
-#### `referral_sources` (認知経路マスタ)
-- `id`: UUID
-- `name`: 名称 ('学校の先生', 'SNS' など)
-- `display_order`: 表示順
+### 2. `members` (正会員テーブル)
+管理画面を利用する正会員（運営メンバー）の情報です。Supabase Authと連携します。
 
-#### `applicant_role_preferences` (希望役職テーブル)
-応募者の希望役職を正規化して管理します。
-- `applicant_id`: 応募者ID
-- `role_id`: 役職ID
-- `preference_rank`: 希望順位 (1, 2, 3)
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK, デフォルト: `gen_random_uuid()` |
+| `auth_user_id` | UUID | **Supabase Auth User ID** との紐付け用 |
+| `full_name` | VARCHAR(255) | 氏名 |
+| `full_kana` | VARCHAR(255) | フリガナ |
+| `email` | VARCHAR(255) | メールアドレス (NOT NULL) |
+| `phone` | VARCHAR(20) | 電話番号 |
+| `organization` | VARCHAR(255) | 所属（委員会など） |
+| `position` | VARCHAR(100) | 役職（委員長など） |
+| `project_role` | VARCHAR(100) | 本事業での役割 |
+| `is_staff` | BOOLEAN | 管理画面アクセス権限。デフォルト: `false` |
+| `can_approve_line` | BOOLEAN | LINE配信承認権限。デフォルト: `false` |
+| `line_user_id` | VARCHAR(50) | LINE User ID |
+| `created_at` | TIMESTAMPTZ | 作成日時 |
+| `updated_at` | TIMESTAMPTZ | 更新日時 |
 
-## 5. Row Level Security (RLS) の設定について
+### 3. `line_messages` (LINE配信メッセージ)
+公式LINEから配信するメッセージの管理テーブルです。承認フローを含みます。
+
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK, デフォルト: `gen_random_uuid()` |
+| `status` | VARCHAR(50) | ステータス (`pending`:承認待ち, `scheduled`:送信待ち, `sent`:送信済, `rejected`:修正待ち) |
+| `target_type` | VARCHAR(50) | 配信対象 (`external`:応募者/選抜者, `internal`:正会員) |
+| `title` | VARCHAR(255) | 管理用タイトル |
+| `message_body` | TEXT | メッセージ本文 |
+| `scheduled_at` | TIMESTAMPTZ | 配信予定日時 |
+| `created_by` | UUID | 作成者 (`members.id` へのFK) |
+| `approved_by` | UUID | 承認者/却下者 (`members.id` へのFK, nullable) |
+| `approved_at` | TIMESTAMPTZ | 承認日時 |
+| `rejection_comment` | TEXT | **修正依頼コメント** (`status`='rejected'時) |
+| `created_at` | TIMESTAMPTZ | 作成日時 |
+| `updated_at` | TIMESTAMPTZ | 更新日時 |
+
+### 4. `line_received_messages` (LINE受信メッセージ)
+Webhook経由で受信したLINEメッセージのログです。
+
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK, デフォルト: `gen_random_uuid()` |
+| `line_user_id` | VARCHAR(50) | 送信元 LINE User ID |
+| `message_text` | TEXT | 受信メッセージ内容 |
+| `received_at` | TIMESTAMPTZ | 受信日時。デフォルト: `now()` |
+| `created_at` | TIMESTAMPTZ | 作成日時 |
+
+### 5. `collaborators` (協力者テーブル)
+事業に協力してくれる企業・個人の情報です。
+
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK |
+| `company_name` | VARCHAR(255) | 企業・団体名 |
+| `contact_name` | VARCHAR(255) | 担当者名 |
+| `email` | VARCHAR(255) | メールアドレス |
+| `phone` | VARCHAR(20) | 電話番号 |
+| `category` | VARCHAR(100) | 協力種別 |
+| `address` | VARCHAR(255) | 住所 |
+| `notes` | TEXT | 備考 |
+| `created_at` | TIMESTAMPTZ | 作成日時 |
+
+### 6. その他マスタ (互換性のため維持)
+以下のテーブルは初期設計の名残として存在しますが、現在はコード定数として扱われることが多いです。
+
+*   `roles` (役職マスタ)
+*   `referral_sources` (認知経路マスタ)
+
+## 5. LINE通知機能のセットアップ
+
+本システムでは、対内向け（運営メンバー用）と対外向け（応募者用）で2つのLINE公式アカウントを使用します。
+
+### 1. 必要なシークレット変数
+
+Supabase Dashboardの `Settings > Edge Functions > Secrets` に以下の変数を設定してください。
+
+| キー名 | 説明 |
+| :--- | :--- |
+| `LINE_CHANNEL_ACCESS_TOKEN_INTERNAL` | **対内向け** Botのチャネルアクセストークン（長期） |
+| `LINE_CHANNEL_ACCESS_TOKEN_EXTERNAL` | **対外向け** Botのチャネルアクセストークン（長期） |
+| `LINE_TARGET_ID` | 管理者通知用グループID（対内向けBotを招待して取得） |
+
+### 2. アクセストークンの取得手順（共通）
+
+1.  [LINE Developers Console](https://developers.line.biz/console/) にログイン。
+2.  各Botのチャネルを選択（ない場合は「Messaging API」チャネルを新規作成）。
+3.  「Messaging API設定」タブの最下部にある「チャネルアクセストークン（長期）」を発行・コピーする。
+
+### 3. 設定コマンド例
+
+```bash
+# 対内向け (Internal)
+supabase secrets set LINE_CHANNEL_ACCESS_TOKEN_INTERNAL='your_internal_token_here'
+
+# 対外向け (External)
+supabase secrets set LINE_CHANNEL_ACCESS_TOKEN_EXTERNAL='your_external_token_here'
+```
+
+## 6. Row Level Security (RLS) の設定について
+
 現在の設定ではテーブル作成時に RLS (Row Level Security) が有効になっていないか、あるいはポリシーが設定されていません。
 本番運用時には、データの読み書き権限を制御するために RLS ポリシーを設定することを強く推奨します。
 

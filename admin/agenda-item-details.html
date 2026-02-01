@@ -29,7 +29,7 @@
 
 <body>
     <div class="dashboard-container">
- <div id="app-sidebar"></div>
+        <div id="app-sidebar"></div>
         <main class="main-content">
             <header class="top-header">
                 <div style="display: flex; align-items: center; gap: 2rem;">
@@ -47,16 +47,8 @@
                         <span style="color: var(--text-main);">議案詳細</span>
                     </div>
                 </div>
-                <div class="user-profile" style="display: flex; align-items: center; gap: 1.5rem; margin-left: auto;">
-                    <div class="notifications" style="position: relative; color: var(--text-dim); cursor: pointer;">
-                        <i data-lucide="bell"></i>
-                        <span class="badge"
-                            style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%;"></span>
-                    </div>
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin"
-                            style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--secondary);">
-                    </div>
+                <div class="user-profile">
+                    <!-- Dynamic Profile Rendered by components.js -->
                 </div>
             </header>
 

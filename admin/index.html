@@ -29,13 +29,7 @@
                         未来人財育成委員会 事業ポータル</h1>
                 </div>
                 <div class="user-profile">
-                    <div class="notifications">
-                        <i data-lucide="bell"></i>
-                        <span class="badge"></span>
-                    </div>
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
-                    </div>
+                    <!-- Dynamic Profile Rendered by components.js -->
                 </div>
             </header>
 
@@ -173,7 +167,7 @@
 
                 const { data: applicants, error: appErr } = await window.supabaseClient
                     .from('applicants')
-                    .select('*, r1:master_role!desired_role_1_id(name)')
+                    .select('*, r1:master_role!desired_role_1_id(name), school:master_school(name)')
                     .or(`status.eq.新規,created_at.gte.${twoDaysAgoISO}`)
                     .order('created_at', { ascending: false });
 
@@ -192,7 +186,7 @@
                                         <span class="email">${item.email || '-'}</span>
                                     </div>
                                 </td>
-                                <td>${item.school_name || '-'} / ${item.grade || ''}</td>
+                                <td>${item.school?.name || '-'} / ${item.grade || ''}</td>
                                 <td>${item.r1?.name || '-'}</td>
                                 <td>${date}</td>
                                 <td><span class="status-badge ${isNew ? 'new' : item.status === '選抜済' ? 'selected' : ''}">${item.status}</span></td>

@@ -119,9 +119,7 @@
                         統計分析ダッシュボード</h1>
                 </div>
                 <div class="user-profile">
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
-                    </div>
+                    <!-- Dynamic Profile Rendered by components.js -->
                 </div>
             </header>
 
@@ -234,7 +232,7 @@
                 // Fetch data
                 const { data: applicants, error: appErr } = await window.supabaseClient
                     .from('applicants')
-                    .select('*, r1:master_role!desired_role_1_id(name), rs:master_referral_source(name)');
+                    .select('*, r1:master_role!desired_role_1_id(name), rs:master_referral_source(name), school:master_school(name)');
 
                 const { data: members } = await window.supabaseClient
                     .from('members')
@@ -445,7 +443,10 @@
         function renderSchoolChart(data) {
             const ctx = document.getElementById('schoolChart');
             const counts = {};
-            data.forEach(a => { if (a.school_name) counts[a.school_name] = (counts[a.school_name] || 0) + 1; });
+            data.forEach(a => {
+                const schoolName = a.school?.name;
+                if (schoolName) counts[schoolName] = (counts[schoolName] || 0) + 1;
+            });
             const top5 = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
             new Chart(ctx, {
                 type: 'bar',

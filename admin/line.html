@@ -328,10 +328,190 @@
             border: 1px solid rgba(0, 242, 255, 0.3);
         }
 
-        .badge-sent {
-            background: rgba(0, 255, 122, 0.1);
-            color: #00ff7a;
-            border: 1px solid rgba(0, 255, 122, 0.3);
+        .badge-revision {
+            background: rgba(255, 77, 77, 0.1);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: #1a1a1f;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 77, 77, 0.2);
+            color: #ff4d4d;
+        }
+
+        .detail-row {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .clickable-title {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clickable-title:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        /* Enhanced Action Buttons */
+        .action-group {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .btn-action i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary-ghost {
+            background: rgba(0, 242, 255, 0.08);
+            color: var(--primary);
+            border-color: rgba(0, 242, 255, 0.2);
+        }
+
+        .btn-primary-ghost:hover {
+            background: var(--primary);
+            color: var(--bg-main);
+            border-color: var(--primary);
+        }
+
+        .btn-warning-ghost {
+            background: rgba(255, 204, 0, 0.08);
+            color: #ffcc00;
+            border-color: rgba(255, 204, 0, 0.2);
+        }
+
+        .btn-warning-ghost:hover {
+            background: #ffcc00;
+            color: #000;
+            border-color: #ffcc00;
+        }
+
+        .btn-danger-ghost {
+            background: rgba(255, 77, 77, 0.08);
+            color: #ff4d4d;
+            border-color: rgba(255, 77, 77, 0.2);
+        }
+
+        .btn-danger-ghost:hover {
+            background: #ff4d4d;
+            color: white;
+            border-color: #ff4d4d;
+        }
+
+        .btn-secondary-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary-ghost:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .revision-comment-text {
+            font-size: 0.75rem;
+            color: #ff4d4d;
+            margin-top: 0.3rem;
+            padding: 0.4rem;
+            background: rgba(255, 77, 77, 0.05);
+            border-radius: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -339,7 +519,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
- <div id="app-sidebar"></div>
+        <div id="app-sidebar"></div>
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-header">
@@ -402,7 +582,10 @@
                         <!-- Date Time -->
                         <div class="form-group">
                             <label>送信日時指定 <span style="color: var(--accent); margin-left: 0.3rem;">*必須</span></label>
-                            <input type="datetime-local" id="sendDateTime" required>
+                            <div style="display: flex; gap: 1rem;">
+                                <input type="date" id="sendDate" required style="flex: 2;">
+                                <input type="time" id="sendTime" required style="flex: 1;">
+                            </div>
                             <div id="dateTimeNotice"
                                 style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5;">
                                 <div style="display: flex; align-items: flex-start; gap: 0.3rem;">
@@ -495,6 +678,31 @@
                     </div>
                 </div>
 
+                <!-- Revision Needed Section -->
+                <section class="management-section">
+                    <h2><i data-lucide="alert-circle" style="color: #ff4d4d;"></i> 修正待ちメッセージ</h2>
+                    <div class="management-card">
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>タイトル</th>
+                                    <th>配信対象</th>
+                                    <th>作成者</th>
+                                    <th>修正依頼者</th>
+                                    <th>ステータス</th>
+                                    <th style="text-align: center;">コメント</th>
+                                    <th style="text-align: right;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="revisionNeededBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center; opacity:0.5;">データがありません</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
                 <!-- Approval Waiting Section -->
                 <section class="management-section">
                     <h2><i data-lucide="clock" style="color: #ffcc00;"></i> 承認待ちメッセージ</h2>
@@ -504,7 +712,10 @@
                                 <tr>
                                     <th>タイトル</th>
                                     <th>配信対象</th>
-                                    <th>送信予定日時</th>
+                                    <th>送信予定日</th>
+                                    <th>予定時間</th>
+                                    <th>作成者</th>
+                                    <th>作成日</th>
                                     <th>ステータス</th>
                                     <th style="text-align: right;">アクション</th>
                                 </tr>
@@ -534,7 +745,11 @@
                                 <tr>
                                     <th>タイトル</th>
                                     <th>配信対象</th>
-                                    <th>送信予定日時</th>
+                                    <th>送信予定日</th>
+                                    <th>予定時間</th>
+                                    <th>承認者</th>
+                                    <th>承認日</th>
+                                    <th>承認時間</th>
                                     <th>ステータス</th>
                                     <th style="text-align: right;">アクション</th>
                                 </tr>
@@ -564,7 +779,8 @@
                                 <tr>
                                     <th>タイトル</th>
                                     <th>配信対象</th>
-                                    <th>送信完了日時</th>
+                                    <th>送信完了日</th>
+                                    <th>完了時間</th>
                                     <th>ステータス</th>
                                     <th style="text-align: right;">アクション</th>
                                 </tr>
@@ -625,6 +841,169 @@
         </main>
     </div>
 
+    <!-- Message Detail Modal -->
+    <div id="messageDetailModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="close-modal" onclick="closeMessageDetail()">
+                <i data-lucide="x"></i>
+            </button>
+            <h3
+                style="margin-bottom: 2rem; font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 0.8rem;">
+                <i data-lucide="mail" style="color: var(--primary);"></i> メッセージ詳細
+            </h3>
+
+            <div class="detail-row">
+                <div class="detail-label">タイトル</div>
+                <div id="detailTitle" class="detail-value"></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="detail-row">
+                    <div class="detail-label">対象</div>
+                    <div id="detailTarget" class="detail-value"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">ステータス</div>
+                    <div id="detailStatus" class="detail-value"></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="detail-row">
+                    <div class="detail-label" id="dateLabel">送信予定日</div>
+                    <div id="detailDate" class="detail-value"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label" id="timeLabel">時間</div>
+                    <div id="detailTime" class="detail-value" style="color: var(--primary); font-size: 1.2rem;"></div>
+                </div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">プレビュー内容</div>
+                <div class="line-message-bubble" style="margin-top: 0.5rem;">
+                    <div class="flex-header">
+                        <div class="flex-header-content">
+                            <i data-lucide="users" class="flex-header-icon" style="margin-bottom: 0.5rem;"></i>
+                            <div style="font-weight: 700; font-size: 0.8rem;">We Play 事務局</div>
+                        </div>
+                    </div>
+                    <div class="flex-body">
+                        <div id="detailPreviewTitle" class="preview-title"></div>
+                        <div id="detailPreviewBody" class="message-body"></div>
+                    </div>
+                    <div class="flex-footer">
+                        <i data-lucide="info"></i>
+                        <span>システム自動送信</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detailRevisionArea" class="detail-row"
+                style="display: none; padding: 1rem; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.2); border-radius: 12px;">
+                <div class="detail-label" style="color: #ff4d4d; font-weight: 700;">修正依頼コメント</div>
+                <div id="detailRevisionComment" class="detail-value"
+                    style="color: #ffcccc; font-size: 0.9rem; font-weight: 400; margin-top: 0.5rem; white-space: pre-wrap;">
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+                <button class="action-btn" onclick="closeMessageDetail()" style="padding: 0.6rem 2rem;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revision Request Modal -->
+    <div id="revisionRequestModal" class="modal-overlay">
+        <div class="modal-container">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 800; color: #ff4d4d;">
+                <i data-lucide="message-square" style="vertical-align: middle; margin-right: 0.5rem;"></i> 修正依頼コメント
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">
+                修正が必要な箇所や理由を入力してください。
+            </p>
+            <textarea id="rejectionCommentInput"
+                style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 1rem; margin-bottom: 1.5rem;"
+                placeholder="例: 文言の誤字があります。2行目の日時を修正してください。"></textarea>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="action-btn" onclick="closeRevisionModal()"
+                    style="border-color: transparent;">キャンセル</button>
+                <button class="action-btn" onclick="submitRevision()"
+                    style="background: #ff4d4d; color: white; border-color: #ff4d4d; padding: 0.6rem 1.5rem;">
+                    修正依頼を送信
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Approval Modal -->
+    <div id="confirmApprovalModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 450px; padding: 2.5rem;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(0, 242, 255, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; transform: rotate(10deg); border: 1px solid rgba(0, 242, 255, 0.2);">
+                    <i data-lucide="send"
+                        style="width: 32px; height: 32px; color: var(--primary); transform: rotate(-10deg);"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: white; letter-spacing: 0.5px;">承認依頼の確認</h3>
+                <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0.6rem; line-height: 1.5;">
+                    以下の内容で承認依頼を送信します。<br>よろしいですか？</p>
+            </div>
+
+            <div
+                style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 1.5rem; margin-bottom: 2rem; backdrop-filter: blur(10px);">
+                <div class="detail-row"
+                    style="margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                    <div class="detail-label"
+                        style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem;">
+                        <i data-lucide="type" style="width: 14px; height: 14px;"></i> タイトル
+                    </div>
+                    <div id="confirmTitle" class="detail-value" style="font-size: 1.05rem; color: #fff;"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+                    <div class="detail-row" style="margin-bottom: 0;">
+                        <div class="detail-label"
+                            style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem;">
+                            <i data-lucide="user-check" style="width: 14px; height: 14px;"></i> 配信対象
+                        </div>
+                        <div id="confirmTarget" class="detail-value" style="font-size: 0.95rem;"></div>
+                    </div>
+                    <div class="detail-row" style="margin-bottom: 0;">
+                        <div class="detail-label"
+                            style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem;">
+                            <i data-lucide="calendar-days" style="width: 14px; height: 14px;"></i> 配信予定
+                        </div>
+                        <div id="confirmSchedule" class="detail-value"
+                            style="font-size: 0.95rem; color: var(--primary); font-weight: 700;"></div>
+                    </div>
+                </div>
+
+                <div class="detail-row"
+                    style="margin-bottom: 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                    <div class="detail-label"
+                        style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem;">
+                        <i data-lucide="align-left" style="width: 14px; height: 14px;"></i> 本文
+                    </div>
+                    <div id="confirmBody" class="detail-value"
+                        style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.9); white-space: pre-wrap; background: rgba(0, 0, 0, 0.2); padding: 0.8rem; border-radius: 12px; max-height: 150px; overflow-y: auto; line-height: 1.6;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn-action btn-secondary-ghost" onclick="closeConfirmModal()"
+                    style="flex: 1; padding: 0.8rem; border-radius: 14px;">
+                    キャンセル
+                </button>
+                <button class="btn-action" id="finalConfirmBtn"
+                    style="flex: 1.5; padding: 0.8rem; background: var(--primary); color: var(--bg-main); border: none; border-radius: 14px; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);">
+                    <i data-lucide="check-circle"></i> 依頼を確定する
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../assets/js/supabase-client.js"></script>
     <script src="components.js"></script>
@@ -642,7 +1021,8 @@
         const titleCount = document.getElementById('titleCount');
         const bodyCount = document.getElementById('bodyCount');
         const recipientInfo = document.getElementById('recipientInfo');
-        const dateTimeInput = document.getElementById('sendDateTime');
+        const dateInput = document.getElementById('sendDate');
+        const timeInput = document.getElementById('sendTime');
         const dateTimeError = document.getElementById('dateTimeError');
 
         // 2026 Japanese Holidays
@@ -696,20 +1076,33 @@
         // Set default date time (next valid slot)
         function setDefaultDateTime() {
             const now = new Date();
-            // とりあえず現在時刻をセットし、バリデーションで警告を出す
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            dateTimeInput.value = now.toISOString().slice(0, 16);
-            checkAndAlertDateTime(new Date(dateTimeInput.value));
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+
+            dateInput.value = `${year}-${month}-${day}`;
+            timeInput.value = `${hours}:${minutes}`;
+            checkAndAlertDateTime();
         }
         setDefaultDateTime();
 
-        function checkAndAlertDateTime(date) {
+        function checkAndAlertDateTime() {
+            const dateVal = dateInput.value;
+            const timeVal = timeInput.value;
+            if (!dateVal || !timeVal) return;
+
+            const date = new Date(`${dateVal}T${timeVal}`);
+
             if (!validateDateTime(date)) {
                 dateTimeError.style.display = 'flex';
-                dateTimeInput.style.borderColor = '#ff4d4d';
+                dateInput.style.borderColor = '#ff4d4d';
+                timeInput.style.borderColor = '#ff4d4d';
             } else {
                 dateTimeError.style.display = 'none';
-                dateTimeInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                dateInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                timeInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
             }
             updatePreviewDateTime(date);
         }
@@ -726,11 +1119,8 @@
             previewDate.textContent = `${month}/${day}(${weekday})`;
         }
 
-        dateTimeInput.addEventListener('change', (e) => {
-            if (e.target.value) {
-                checkAndAlertDateTime(new Date(e.target.value));
-            }
-        });
+        dateInput.addEventListener('change', checkAndAlertDateTime);
+        timeInput.addEventListener('change', checkAndAlertDateTime);
 
         // Title input
         titleInput.addEventListener('input', (e) => {
@@ -782,20 +1172,30 @@
         });
 
         // Send message
-        function sendMessage() {
+        async function sendMessage() {
+            let body = bodyInput.value.trim();
             const title = titleInput.value.trim();
-            const body = bodyInput.value.trim();
             const target = document.querySelector('input[name="target"]:checked').value;
-            const sendTime = dateTimeInput.value;
+            const dateVal = dateInput.value;
+            const timeVal = timeInput.value;
+            const sendDateTimeObj = new Date(`${dateVal}T${timeVal}`);
+            const sendTime = sendDateTimeObj.toISOString();
+
+            // Developer Bypass Check
+            const isAdminBypass = body.startsWith('/admin');
+            if (isAdminBypass) {
+                // Remove the /admin command from the body before saving
+                body = body.replace(/^\/admin\n?/, '').trim();
+            }
 
             if (!sendTime) {
                 alert('送信日時を指定してください。');
                 return;
             }
 
-            const sendDateTimeObj = new Date(sendTime);
-            if (!validateDateTime(sendDateTimeObj)) {
-                alert('指定された日時は配信可能時間外です。\n\n・平日の 09:30 〜 20:30 の間のみ配信可能です。\n・土日祝日は配信できません。');
+            // Bypass validation if /admin is present
+            if (!isAdminBypass && !validateDateTime(sendDateTimeObj)) {
+                alert('指定された日時は配信可能時間外です。\n\n・平日の 09:30 〜 20:30 の間のみ配信可能です。\n・土日祝日は配信できません。\n\n※急ぎの場合は管理者に連絡してください。');
                 return;
             }
 
@@ -804,21 +1204,492 @@
                 return;
             }
 
-            const targetText = target === 'external' ? '対外向け（応募者・選抜者）' : '対内向け（正会員）';
-            const formattedTime = sendTime.replace('T', ' ');
+            // Show Custom Confirm Modal
+            showConfirmModal('new', {
+                title,
+                body,
+                target: target === 'external' ? '対外向け' : '対内向け',
+                schedule: `${previewDate.textContent} ${previewTime.textContent}`,
+                execute: async () => {
+                    closeConfirmModal();
+                    try {
+                        const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                        if (authError || !user) {
+                            throw new Error('ログインユーザーの情報が取得できません。再ログインしてください。');
+                        }
 
-            if (confirm(`${targetText}へのメッセージ承認依頼を出しますか？\n\n送信予定日時: ${formattedTime}\nタイトル: ${title}\n\n承認後は送信待ちリストに入ります。`)) {
-                alert('メッセージの承認依頼を完了しました！\n管理者の承認をお待ちください。');
-                // Here you would actually send the message via LINE Messaging API
-                titleInput.value = '';
-                bodyInput.value = '';
-                setDefaultDateTime();
-                previewTitle.textContent = 'タイトルがここに表示されます';
-                previewBody.textContent = '本文がここに表示されます';
-                titleCount.textContent = '0';
-                bodyCount.textContent = '0';
+                        const { error } = await window.supabaseClient
+                            .from('line_messages')
+                            .insert({
+                                title: title,
+                                message_body: body,
+                                target_type: target,
+                                scheduled_at: sendTime,
+                                status: 'pending',
+                                created_by: user.id
+                            });
+
+                        if (error) throw error;
+
+                        alert('承認依頼を完了しました！');
+                        titleInput.value = '';
+                        bodyInput.value = '';
+                        setDefaultDateTime();
+                        loadMessages();
+                        if (window.lucide) lucide.createIcons();
+                    } catch (err) {
+                        console.error('Send Message Error:', err);
+                        alert('エラーが発生しました: ' + (err.message || '不明なエラー'));
+                    }
+                }
+            });
+        }
+
+        function showConfirmModal(type, data) {
+            document.getElementById('confirmTitle').textContent = data.title;
+            document.getElementById('confirmTarget').textContent = data.target;
+            document.getElementById('confirmSchedule').textContent = data.schedule;
+            document.getElementById('confirmBody').textContent = data.body;
+
+            const finalBtn = document.getElementById('finalConfirmBtn');
+            finalBtn.innerHTML = type === 'new' ? '<i data-lucide="check-circle"></i> 依頼を確定する' : '<i data-lucide="save"></i> 修正内容で依頼';
+            finalBtn.onclick = data.execute;
+
+            document.getElementById('confirmApprovalModal').classList.add('active');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmApprovalModal').classList.remove('active');
+        }
+
+        async function loadMessages() {
+            try {
+                // Get all members for name mapping
+                const { data: members } = await window.supabaseClient.from('members').select('auth_user_id, full_name');
+                const memberMap = {};
+                members?.forEach(m => {
+                    if (m.auth_user_id) memberMap[m.auth_user_id] = m.full_name;
+                });
+
+                const getName = (userId) => memberMap[userId] || '不明';
+
+                // Revision Needed (rejected)
+                const { data: revision } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('*')
+                    .eq('status', 'rejected')
+                    .order('created_at', { ascending: false });
+
+                document.getElementById('revisionNeededBody').innerHTML = revision?.map(m => {
+                    return `
+                    <tr>
+                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
+                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
+                        <td>${getName(m.created_by)}</td>
+                        <td>${getName(m.approved_by)}</td>
+                        <td><span class="badge-status badge-revision">修正待ち</span></td>
+                        <td style="text-align: center;">
+                            ${m.rejection_comment ?
+                            `<button class="btn-action btn-danger-ghost" onclick="viewCommentOnly('${m.id}')" style="border-radius: 50%; width: 32px; height: 32px; padding: 0;" title="コメントを確認">
+                                    <i data-lucide="message-square"></i>
+                                </button>` : '-'
+                        }
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-group">
+                                <button class="btn-action btn-primary-ghost" onclick="prepareEdit('${m.id}')">
+                                    <i data-lucide="edit-3"></i> 修正
+                                </button>
+                                <button class="btn-action btn-secondary-ghost" onclick="unapproveMessage('${m.id}')">
+                                    <i data-lucide="refresh-cw"></i> 再承認待ちへ
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('') || '<tr><td colspan="7" style="text-align:center; opacity:0.5;">データがありません</td></tr>';
+
+                // Pending
+                const { data: pending } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('*')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
+
+                document.getElementById('waitingApprovalBody').innerHTML = pending?.map(m => {
+                    const d_create = new Date(m.created_at);
+                    const d_sch = new Date(m.scheduled_at);
+                    return `
+                    <tr>
+                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
+                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
+                        <td>${d_sch.toLocaleDateString('ja-JP')}</td>
+                        <td style="font-weight: 600; color: var(--primary);">${d_sch.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
+                        <td>${getName(m.created_by)}</td>
+                        <td>${d_create.toLocaleDateString('ja-JP')}</td>
+                        <td><span class="badge-status badge-waiting">承認待ち</span></td>
+                        <td style="text-align: right;">
+                            <div class="action-group">
+                                <button class="btn-action btn-danger-ghost" onclick="requestRevision('${m.id}')">
+                                    <i data-lucide="corner-up-left"></i> 修正依頼
+                                </button>
+                                <button class="btn-action btn-warning-ghost" onclick="approveMessage('${m.id}')">
+                                    <i data-lucide="check"></i> 承認
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('') || '<tr><td colspan="8" style="text-align:center; opacity:0.5;">データがありません</td></tr>';
+
+                // Scheduled
+                const { data: scheduled } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('*')
+                    .eq('status', 'scheduled')
+                    .order('scheduled_at', { ascending: true });
+
+                document.getElementById('scheduledMessageBody').innerHTML = scheduled?.map(m => {
+                    const d_app = new Date(m.approved_at || m.created_at);
+                    const d_sch = new Date(m.scheduled_at);
+                    return `
+                    <tr>
+                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
+                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
+                        <td>${d_sch.toLocaleDateString('ja-JP')}</td>
+                        <td style="font-weight: 600; color: var(--primary);">${d_sch.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
+                        <td>${getName(m.approved_by || m.created_by)}</td>
+                        <td>${d_app.toLocaleDateString('ja-JP')}</td>
+                        <td style="font-weight: 600;">${d_app.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
+                        <td><span class="badge-status badge-scheduled">送信待ち</span></td>
+                        <td style="text-align: right;">
+                            <div class="action-group">
+                                <button class="btn-action btn-danger-ghost" onclick="unapproveMessage('${m.id}')">
+                                    <i data-lucide="rotate-ccw"></i> 承認取消
+                                </button>
+                                <button class="btn-action btn-secondary-ghost" onclick="viewMessage('${m.id}')">
+                                    <i data-lucide="eye"></i> 詳細
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('') || '<tr><td colspan="9" style="text-align:center; opacity:0.5;">予約済みのメッセージはありません</td></tr>';
+
+                // Sent
+                const { data: sent } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('*')
+                    .eq('status', 'sent')
+                    .order('approved_at', { ascending: false });
+
+                document.getElementById('sentMessageBody').innerHTML = sent?.map(m => {
+                    const d = new Date(m.approved_at || m.created_at);
+                    return `
+                    <tr>
+                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
+                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
+                        <td>${d.toLocaleDateString('ja-JP')}</td>
+                        <td style="font-weight: 600;">${d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
+                        <td><span class="badge-status badge-sent">送信済み</span></td>
+                        <td style="text-align: right;">
+                            <div class="action-group">
+                                <button class="btn-action btn-secondary-ghost" onclick="viewMessage('${m.id}')">
+                                    <i data-lucide="file-text"></i> 詳細
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('') || '<tr><td colspan="6" style="text-align:center; opacity:0.5;">配信済みのデータはありません</td></tr>';
+
+
+                if (window.lucide) lucide.createIcons();
+            } catch (err) {
+                console.error(err);
             }
         }
+
+        let editingId = null;
+
+        async function prepareEdit(id) {
+            try {
+                const { data: m, error } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                editingId = id;
+                titleInput.value = m.title;
+                bodyInput.value = m.message_body;
+
+                // Set target radio
+                document.querySelector(`input[name="target"][value="${m.target_type}"]`).checked = true;
+                if (m.target_type === 'external') {
+                    recipientInfo.textContent = '対外向け: 応募者・選抜者';
+                } else {
+                    recipientInfo.textContent = '対内向け: 正会員';
+                }
+
+                // Set date/time
+                const d = new Date(m.scheduled_at);
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+
+                dateInput.value = `${year}-${month}-${day}`;
+                timeInput.value = `${hours}:${minutes}`;
+
+                checkAndAlertDateTime();
+
+                // Change submit button
+                const submitBtn = document.querySelector('.send-button');
+                submitBtn.innerHTML = '<i data-lucide="save"></i> 修正内容で承認再依頼';
+                submitBtn.setAttribute('onclick', 'updateMessage()');
+                submitBtn.style.background = '#ffcc00';
+                submitBtn.style.color = '#000';
+
+                if (window.lucide) lucide.createIcons();
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (err) {
+                alert('データ取得エラー: ' + err.message);
+            }
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            titleInput.value = '';
+            bodyInput.value = '';
+            setDefaultDateTime();
+
+            const submitBtn = document.querySelector('.send-button');
+            submitBtn.innerHTML = '<i data-lucide="check-circle"></i> メッセージ承認依頼';
+            submitBtn.setAttribute('onclick', 'sendMessage()');
+            submitBtn.style.background = 'var(--primary)';
+            submitBtn.style.color = 'var(--bg-main)';
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function updateMessage() {
+            let body = bodyInput.value.trim();
+            const title = titleInput.value.trim();
+            const target = document.querySelector('input[name="target"]:checked').value;
+            const dateVal = dateInput.value;
+            const timeVal = timeInput.value;
+            const sendDateTimeObj = new Date(`${dateVal}T${timeVal}`);
+            const sendTime = sendDateTimeObj.toISOString();
+
+            if (!title || !body) {
+                alert('タイトルと本文を入力してください。');
+                return;
+            }
+
+            // Show Custom Confirm Modal
+            showConfirmModal('update', {
+                title,
+                body,
+                target: target === 'external' ? '対外向け' : '対内向け',
+                schedule: `${previewDate.textContent} ${previewTime.textContent}`,
+                execute: async () => {
+                    closeConfirmModal();
+                    try {
+                        const { error } = await window.supabaseClient
+                            .from('line_messages')
+                            .update({
+                                title: title,
+                                message_body: body,
+                                target_type: target,
+                                scheduled_at: sendTime,
+                                status: 'pending', // Move back to pending
+                                rejection_comment: null // Clear previous comment
+                            })
+                            .eq('id', editingId);
+
+                        if (error) throw error;
+
+                        alert('修正して承認依頼を出しました。');
+                        cancelEdit();
+                        loadMessages();
+                    } catch (err) {
+                        alert('更新エラー: ' + err.message);
+                    }
+                }
+            });
+        }
+
+        async function approveMessage(id) {
+            if (!confirm('このメッセージを承認しますか？\n承認後は「送信待ちリスト」へ移動します。')) return;
+
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                const { error } = await window.supabaseClient
+                    .from('line_messages')
+                    .update({
+                        status: 'scheduled',
+                        approved_by: user.id,
+                        approved_at: new Date().toISOString()
+                    })
+                    .eq('id', id);
+
+                if (error) throw error;
+                alert('承認しました。送信待ちリストをご確認ください。');
+                loadMessages();
+            } catch (err) {
+                alert('承認エラー: ' + err.message);
+            }
+        }
+
+        let targetRevisionId = null;
+
+        function requestRevision(id) {
+            targetRevisionId = id;
+            document.getElementById('rejectionCommentInput').value = '';
+            document.getElementById('revisionRequestModal').classList.add('active');
+        }
+
+        function closeRevisionModal() {
+            document.getElementById('revisionRequestModal').classList.remove('active');
+            targetRevisionId = null;
+        }
+
+        async function submitRevision() {
+            const comment = document.getElementById('rejectionCommentInput').value.trim();
+            if (!comment) {
+                alert('修正が必要な理由を入力してください。');
+                return;
+            }
+
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                const { error } = await window.supabaseClient
+                    .from('line_messages')
+                    .update({
+                        status: 'rejected',
+                        approved_by: user.id,
+                        approved_at: new Date().toISOString(),
+                        rejection_comment: comment
+                    })
+                    .eq('id', targetRevisionId);
+
+                if (error) throw error;
+
+                alert('修正依頼を出しました。');
+                closeRevisionModal();
+                loadMessages();
+            } catch (err) {
+                alert('エラー: ' + err.message);
+            }
+        }
+
+        async function unapproveMessage(id) {
+            if (!confirm('承認を取り消しますか？\nメッセージは「承認待ちリスト」へ戻ります。')) return;
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('line_messages')
+                    .update({ status: 'pending' })
+                    .eq('id', id);
+
+                if (error) throw error;
+                alert('承認を取り消しました。');
+                loadMessages();
+            } catch (err) {
+                alert('エラー: ' + err.message);
+            }
+        }
+
+        async function viewMessage(id) {
+            try {
+                const { data: m, error } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                document.getElementById('detailTitle').textContent = m.title;
+                document.getElementById('detailTarget').textContent = m.target_type === 'external' ? '対外向け' : '対内向け';
+
+                const statusMap = {
+                    'pending': '承認待ち',
+                    'scheduled': '送信待ち',
+                    'sent': '送信済み',
+                    'rejected': '修正待ち'
+                };
+                document.getElementById('detailStatus').textContent = statusMap[m.status] || m.status;
+
+                document.getElementById('dateLabel').textContent = m.status === 'sent' ? '完了日' : '予定日';
+                document.getElementById('timeLabel').textContent = m.status === 'sent' ? '完了時間' : '時間';
+
+                const d = new Date(m.status === 'sent' ? m.approved_at : m.scheduled_at);
+                document.getElementById('detailDate').textContent = d.toLocaleDateString('ja-JP');
+                document.getElementById('detailTime').textContent = d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+
+                document.getElementById('detailPreviewTitle').textContent = m.title;
+                document.getElementById('detailPreviewBody').innerHTML = linkify(escapeHTML(m.message_body));
+
+                // Show/Hide revision comment
+                const revArea = document.getElementById('detailRevisionArea');
+                if (m.status === 'rejected' && m.rejection_comment) {
+                    document.getElementById('detailRevisionComment').textContent = m.rejection_comment;
+                    revArea.style.display = 'block';
+                } else {
+                    revArea.style.display = 'none';
+                }
+
+                document.getElementById('messageDetailModal').classList.add('active');
+            } catch (err) {
+                alert('エラー: ' + err.message);
+            }
+        }
+
+        function closeMessageDetail() {
+            document.getElementById('messageDetailModal').classList.remove('active');
+        }
+
+        async function viewCommentOnly(id) {
+            try {
+                const { data: m, error } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('rejection_comment')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                // Reuse the view/edit logic by filling the view modal's revision area and showing just that?
+                // For simplicity, let's just use the full viewMessage modal which already shows the comment.
+                viewMessage(id);
+
+            } catch (err) {
+                alert('エラー: ' + err.message);
+            }
+        }
+
+        async function broadcastMessage(id) {
+            if (!confirm('このメッセージの配信を実行しますか？\n実行後は取り消せません。')) return;
+
+            try {
+                const { data, error } = await window.supabaseClient.functions.invoke('broadcast-line', {
+                    body: { messageId: id }
+                });
+
+                if (error) throw error;
+                alert('配信を完了しました！');
+                loadMessages();
+            } catch (err) {
+                alert('配信エラー: ' + err.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMessages);
     </script>
 </body>
 

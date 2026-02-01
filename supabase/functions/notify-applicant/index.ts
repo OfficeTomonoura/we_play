@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
 
     // Send to LINE Messaging API (Push Message)
     // @ts-ignore: Deno global is available in edge runtime
-    const CHANNEL_ACCESS_TOKEN = Deno.env.get('LINE_CHANNEL_ACCESS_TOKEN')
+    const CHANNEL_ACCESS_TOKEN = Deno.env.get('LINE_CHANNEL_ACCESS_TOKEN_INTERNAL')
     // @ts-ignore: Deno global is available in edge runtime
     const TARGET_ID = Deno.env.get('LINE_TARGET_ID')
 

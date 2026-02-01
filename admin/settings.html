@@ -171,6 +171,53 @@
             display: block;
         }
 
+        /* Master Data Sidebar Layout */
+        .master-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .master-sidebar {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem;
+            position: sticky;
+            top: 5rem;
+        }
+
+        .master-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .master-nav-item {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .master-nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .master-nav-item.active {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -202,13 +249,7 @@
                      Request said "Tab is user registration / master data". 
                      For simplicity, I will put tabs inside the main content flow but make them sticky. -->
                 <div class="user-profile">
-                    <div class="notifications">
-                        <i data-lucide="bell"></i>
-                        <span class="badge"></span>
-                    </div>
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
-                    </div>
+                    <!-- Dynamic Profile Rendered by components.js -->
                 </div>
             </header>
 
@@ -286,31 +327,53 @@
 
                 <!-- Tab: Master Data Settings -->
                 <div id="master-data" class="tab-content">
-                    <div class="settings-card">
-                        <h3><i data-lucide="database"></i> マスターデータ設定</h3>
-                        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                            選択したマスターテーブルのデータを追加・編集・削除します。
-                        </p>
+                    <div class="master-grid">
+                        <!-- Secondary Sidebar for Master Selection -->
+                        <aside class="master-sidebar">
+                            <h4
+                                style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.2rem; padding-left: 0.5rem;">
+                                マスター種別</h4>
+                            <nav class="master-nav-list">
+                                <div class="master-nav-item active" data-table="master_organization">
+                                    <i data-lucide="building-2" style="width: 16px;"></i>所属マスター
+                                </div>
+                                <div class="master-nav-item" data-table="master_position">
+                                    <i data-lucide="briefcase" style="width: 16px;"></i>役職マスター
+                                </div>
+                                <div class="master-nav-item" data-table="master_project_role">
+                                    <i data-lucide="clipboard-list" style="width: 16px;"></i>事業役割マスター
+                                </div>
+                                <div class="master-nav-item" data-table="master_role">
+                                    <i data-lucide="users" style="width: 16px;"></i>参加者役割マスター
+                                </div>
+                                <div class="master-nav-item" data-table="master_school">
+                                    <i data-lucide="graduation-cap" style="width: 16px;"></i>学校マスター
+                                </div>
+                                <div class="master-nav-item" data-table="master_referral_source">
+                                    <i data-lucide="megaphone" style="width: 16px;"></i>認知経路マスター
+                                </div>
+                            </nav>
+                        </aside>
 
-                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
-                            <select id="masterTableSelect"
-                                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.6rem 1rem; border-radius: 6px; outline: none;">
-                                <option value="master_organization">所属マスター (master_organization)</option>
-                                <option value="master_position">役職マスター (master_position)</option>
-                                <option value="master_project_role">事業役割マスター (master_project_role)</option>
-                                <option value="master_role">参加者役割マスター (master_role)</option>
-                                <option value="master_referral_source">認知経路マスター (master_referral_source)</option>
-                            </select>
+                        <!-- Main Master Management Area -->
+                        <div class="master-main">
+                            <div class="settings-card">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <h3 id="masterDisplayName"><i data-lucide="database"></i> 所属マスター設定</h3>
+                                    <button id="addMasterBtn" onclick="masterManager.openAddModal()"
+                                        style="background: var(--primary); border: none; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #000;">
+                                        <i data-lucide="plus" style="width: 18px;"></i>新規追加
+                                    </button>
+                                </div>
+                                <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                                    このテーブルのデータを追加・編集・削除します。表示順はフォームでの並び順に影響します。
+                                </p>
 
-                            <button id="addMasterBtn" onclick="masterManager.openAddModal()"
-                                style="background: var(--primary); border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: bold; cursor: pointer;">
-                                <i data-lucide="plus" style="vertical-align: middle; width: 16px; height: 16px;"></i>
-                                新規追加
-                            </button>
-                        </div>
-
-                        <div id="masterListContainer">
-                            <!-- List will be rendered here -->
+                                <div id="masterListContainer">
+                                    <!-- List will be rendered here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -366,9 +429,24 @@
             // Initial Load (Organization)
             masterManager.loadTable('master_organization');
 
-            // Handle Select Change
-            document.getElementById('masterTableSelect').addEventListener('change', (e) => {
-                masterManager.loadTable(e.target.value);
+            // Handle Sidebar Clicks
+            const navItems = document.querySelectorAll('.master-nav-item');
+            const titleEl = document.getElementById('masterDisplayName');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // UI Update
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    const tableName = item.getAttribute('data-table');
+                    const displayName = item.textContent.trim();
+                    if (titleEl) titleEl.innerHTML = `<i data-lucide="database"></i> ${displayName}設定`;
+
+                    // Load Data
+                    masterManager.loadTable(tableName);
+                    if (window.lucide) lucide.createIcons();
+                });
             });
         });
 

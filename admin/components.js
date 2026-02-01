@@ -5,6 +5,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     renderSidebar();
+    renderHeaderProfile();
+    injectProfileModal();
 });
 
 function renderSidebar() {
@@ -138,6 +140,262 @@ function renderSidebar() {
     initLogout();
 }
 
+async function renderHeaderProfile() {
+    const profileContainer = document.querySelector('.user-profile');
+    if (!profileContainer) return;
+
+    let email = 'admin@example.com';
+    let initials = 'AD';
+
+    if (window.supabaseClient) {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (user) {
+            email = user.email;
+            // Get initials from email or full_name if available (using email prefix for now)
+            const prefix = email.split('@')[0];
+            initials = prefix.substring(0, 2).toUpperCase();
+        }
+    }
+
+    profileContainer.innerHTML = `
+        <span class="user-email" style="color: var(--text-dim); font-size: 0.85rem; font-weight: 500;">${email}</span>
+        <div class="avatar" id="headerAvatar" style="width: 40px; height: 40px; background: rgba(112, 0, 255, 0.1); border: 1px solid var(--secondary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--primary); font-size: 0.9rem; cursor: pointer;">
+            ${initials}
+        </div>
+    `;
+
+    // Add click listener for My Page
+    document.getElementById('headerAvatar').addEventListener('click', openProfileModal);
+}
+
+function injectProfileModal() {
+    if (document.getElementById('userProfileModal')) return;
+
+    const modalHTML = `
+        <div id="userProfileModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="modal-header">
+                    <h3 style="display: flex; align-items: center; gap: 0.8rem;">
+                        <i data-lucide="user-circle"></i> マイプロフィール
+                    </h3>
+                    <button class="close-modal" onclick="closeProfileModal()">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 1.5rem 2rem;">
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group">
+                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">氏名</label>
+                                <input type="text" id="profileName" required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">ふりがな</label>
+                                <input type="text" id="profileKana" required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">出身高校</label>
+                            <input type="text" id="profileHighSchool" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">所属</label>
+                            <select id="profileOrg" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="form-group">
+                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">役職</label>
+                                <select id="profilePos" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                                    <option value="">選択してください</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">役割</label>
+                                <select id="profileProjectRole" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                                    <option value="">選択してください</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                            <button type="button" onclick="closeProfileModal()" style="flex: 1; padding: 0.8rem; border-radius: 12px; background: rgba(255,255,255,0.05); border: none; color: white; cursor: pointer;">キャンセル</button>
+                            <button type="submit" id="saveProfileBtn" style="flex: 2; padding: 0.8rem; border-radius: 12px; background: var(--primary); border: none; color: #000; font-weight: bold; cursor: pointer;">プロフィール保存</button>
+                        </div>
+                    </form>
+
+                    <!-- Password Change Section -->
+                    <div style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem; margin-top: 1rem;">
+                        <h4 style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="key-round" style="width: 14px;"></i> パスワード変更
+                        </h4>
+                        <div id="passwordFields">
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">新しいパスワード (6文字以上)</label>
+                                <input type="password" id="newPassword" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">新しいパスワード (確認)</label>
+                                <input type="password" id="confirmPassword" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                            </div>
+                            <button type="button" id="updatePasswordBtn" onclick="updateUserPassword()" style="width: 100%; padding: 0.8rem; border-radius: 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                                パスワードを更新する
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        saveProfileData();
+    });
+}
+
+async function openProfileModal() {
+    const modal = document.getElementById('userProfileModal');
+    if (!modal || !window.supabaseClient) return;
+
+    try {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (!user) return;
+
+        // Fetch member data and master data in parallel
+        const [memberRes, orgsRes, posRes, projRes] = await Promise.all([
+            window.supabaseClient.from('members').select('*').eq('auth_user_id', user.id).single(),
+            window.supabaseClient.from('master_organization').select('id, name').order('sort_order'),
+            window.supabaseClient.from('master_position').select('id, name').order('sort_order'),
+            window.supabaseClient.from('master_project_role').select('id, name').order('sort_order')
+        ]);
+
+        if (memberRes.error) throw memberRes.error;
+        const member = memberRes.data;
+
+        // Populate Selects
+        const populateSelect = (id, data, currentId) => {
+            const select = document.getElementById(id);
+            if (!select) return;
+            let html = '<option value="">選択してください</option>';
+            data.forEach(item => {
+                html += `<option value="${item.id}" ${item.id === currentId ? 'selected' : ''}>${item.name}</option>`;
+            });
+            select.innerHTML = html;
+        };
+
+        populateSelect('profileOrg', orgsRes.data || [], member.organization_id);
+        populateSelect('profilePos', posRes.data || [], member.position_id);
+        populateSelect('profileProjectRole', projRes.data || [], member.project_role_id);
+
+        document.getElementById('profileName').value = member.full_name || '';
+        document.getElementById('profileKana').value = member.full_kana || '';
+        document.getElementById('profileHighSchool').value = member.high_school || '';
+
+        modal.style.display = 'flex';
+        if (window.lucide) lucide.createIcons();
+    } catch (err) {
+        console.error('Profile Load Error:', err);
+        alert('プロフィールの読み込みに失敗しました。');
+    }
+}
+
+function closeProfileModal() {
+    document.getElementById('userProfileModal').style.display = 'none';
+}
+
+async function saveProfileData() {
+    const btn = document.getElementById('saveProfileBtn');
+    const name = document.getElementById('profileName').value.trim();
+    const kana = document.getElementById('profileKana').value.trim();
+    const highSchool = document.getElementById('profileHighSchool').value.trim();
+    const organization_id = document.getElementById('profileOrg').value;
+    const position_id = document.getElementById('profilePos').value;
+    const project_role_id = document.getElementById('profileProjectRole').value;
+
+    if (!name || !kana) return;
+
+    btn.disabled = true;
+    btn.textContent = '保存中...';
+
+    try {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+        const { error } = await window.supabaseClient
+            .from('members')
+            .update({
+                full_name: name,
+                full_kana: kana,
+                high_school: highSchool,
+                organization_id: organization_id || null,
+                position_id: position_id || null,
+                project_role_id: project_role_id || null
+            })
+            .eq('auth_user_id', user.id);
+
+        if (error) throw error;
+
+        alert('プロフィールを更新しました。');
+        closeProfileModal();
+        // Refresh initials in header
+        renderHeaderProfile();
+    } catch (err) {
+        console.error('Profile Save Error:', err);
+        alert('保存に失敗しました: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'プロフィール保存';
+    }
+}
+
+async function updateUserPassword() {
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmPassword').value;
+    const btn = document.getElementById('updatePasswordBtn');
+
+    if (!newPass) {
+        alert('新しいパスワードを入力してください');
+        return;
+    }
+    if (newPass.length < 6) {
+        alert('パスワードは6文字以上で設定してください');
+        return;
+    }
+    if (newPass !== confirmPass) {
+        alert('パスワードが一致しません');
+        return;
+    }
+
+    if (!confirm('パスワードを更新してもよろしいですか？')) return;
+
+    btn.disabled = true;
+    btn.textContent = '更新中...';
+
+    try {
+        const { error } = await window.supabaseClient.auth.updateUser({
+            password: newPass
+        });
+
+        if (error) throw error;
+
+        alert('パスワードを更新しました');
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+
+    } catch (err) {
+        console.error('Password Update Error:', err);
+        alert('エラーが発生しました: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'パスワードを更新する';
+    }
+}
+
 function setActiveLink(currentPage) {
     // 1. 完全一致で探す
     const links = document.querySelectorAll(`a[href="${currentPage}"], a[data-page="${currentPage}"]`);
@@ -218,12 +476,10 @@ function initLogout() {
     const logoutBtn = document.querySelector('.logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            if (confirm('ログアウトしますか？')) {
-                if (window.supabaseClient) {
-                    await window.supabaseClient.auth.signOut();
-                }
-                window.location.href = '../index.html';
+            if (window.supabaseClient) {
+                await window.supabaseClient.auth.signOut();
             }
+            window.location.href = '../index.html';
         });
     }
 }

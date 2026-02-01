@@ -11,6 +11,7 @@ class MasterDataManager {
             'master_position': '役職マスター',
             'master_project_role': '事業役割マスター',
             'master_role': '参加者役割マスター',
+            'master_school': '学校マスター',
             'master_referral_source': '認知経路マスター'
         };
 

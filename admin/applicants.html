@@ -37,13 +37,7 @@
                         未来人財育成委員会 事業ポータル</h1>
                 </div>
                 <div class="user-profile">
-                    <div class="notifications">
-                        <i data-lucide="bell"></i>
-                        <span class="badge"></span>
-                    </div>
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
-                    </div>
+                    <!-- Dynamic Profile Rendered by components.js -->
                 </div>
             </header>
 
@@ -360,7 +354,7 @@
 
                 let query = window.supabaseClient
                     .from('applicants')
-                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), ref:master_referral_source!referral_source_id(name)');
+                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), ref:master_referral_source!referral_source_id(name), school:master_school(name)');
 
                 if (roleId) {
                     // Filter if ANY of the desired roles matches
@@ -413,7 +407,7 @@
                         <div class="user-meta">
                             <span class="furigana" style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">${item.full_kana || ''}</span>
                             <span class="name">${item.full_name || '未設定'}</span>
-                            <span class="email">${item.school_name || ''}</span>
+                            <span class="email">${item.school?.name || ''}</span>
                         </div>
                     </td>
                     <td>${item.grade || '-'}</td>
@@ -475,7 +469,7 @@
                 }
             }
 
-            setText('modalSchoolGrade', (data.school_name || '') + ' / ' + (data.grade || ''));
+            setText('modalSchoolGrade', (data.school?.name || '') + ' / ' + (data.grade || ''));
             setText('modalDate', '応募日: ' + dateStr);
 
             let referralText = data.ref?.name || '-';

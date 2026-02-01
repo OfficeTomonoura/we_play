@@ -13,6 +13,41 @@
         rel="stylesheet">
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .required-badge {
+            background: rgba(255, 75, 75, 0.1);
+            color: #ff4b4b;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        .phone-groups {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .phone-groups input {
+            text-align: center;
+            flex: 1;
+        }
+
+        .phone-groups .separator {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+        }
+
+        .error-text {
+            color: #ff4b4b;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,7 +71,7 @@
                 <input type="hidden" id="line_picture_url" name="line_picture_url" value="">
                 <div class="form-group">
                     <label for="name">
-                        <i data-lucide="user"></i> お名前
+                        <i data-lucide="user"></i> お名前<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <input type="text" id="name" name="applicant_name" placeholder="山田 太郎" required>
@@ -46,17 +81,18 @@
 
                 <div class="form-group">
                     <label for="name-kana">
-                        <i data-lucide="user"></i> お名前（ふりがな）
+                        <i data-lucide="user"></i> お名前（ふりがな）<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
-                        <input type="text" id="name-kana" name="applicant_kana" placeholder="やまだ たろう" required>
+                        <input type="text" id="name-kana" name="applicant_kana" placeholder="やまだ たろう"
+                            pattern="^[ぁ-んー\s]+$" title="ひらがなで入力してください" autocomplete="off" required>
                         <span class="focus-border"></span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="gender">
-                        <i data-lucide="user"></i> 性別
+                        <i data-lucide="user"></i> 性別<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <select id="gender" name="gender" required>
@@ -72,17 +108,20 @@
 
                 <div class="form-group">
                     <label for="school">
-                        <i data-lucide="graduation-cap"></i> 学校名
+                        <i data-lucide="graduation-cap"></i> 学校名<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
-                        <input type="text" id="school" name="school_name" placeholder="〇〇中学校 / 〇〇高校" required>
+                        <select id="school" name="school_id" required>
+                            <option value="" disabled selected>読み込み中...</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="select-icon"></i>
                         <span class="focus-border"></span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="grade">
-                        <i data-lucide="hash"></i> 学年
+                        <i data-lucide="hash"></i> 学年<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <select id="grade" name="grade" required>
@@ -98,7 +137,7 @@
 
                 <div class="form-group">
                     <label for="role-1">
-                        <i data-lucide="star"></i> 第1希望役職
+                        <i data-lucide="star"></i> 第1希望役職<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <select id="role-1" name="role-1" class="role-select" required>
@@ -111,7 +150,7 @@
 
                 <div class="form-group">
                     <label for="role-2">
-                        <i data-lucide="star"></i> 第2希望役職
+                        <i data-lucide="star"></i> 第2希望役職<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <select id="role-2" name="role-2" class="role-select" required>
@@ -124,7 +163,7 @@
 
                 <div class="form-group">
                     <label for="role-3">
-                        <i data-lucide="star"></i> 第3希望役職
+                        <i data-lucide="star"></i> 第3希望役職<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <select id="role-3" name="role-3" class="role-select" required>
@@ -137,7 +176,7 @@
 
                 <div class="form-group">
                     <label for="referral">
-                        <i data-lucide="megaphone"></i> 何で知ったか
+                        <i data-lucide="megaphone"></i> 何で知ったか<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <select id="referral" name="referral" class="referral-select" required>
@@ -150,7 +189,8 @@
 
                 <div class="form-group" id="referral-other-group" style="display: none;">
                     <label for="referral-other">
-                        <i data-lucide="edit-3"></i> その他の理由
+                        <i data-lucide="edit-3"></i> その他の理由<span class="required-badge" style="display: none;"
+                            id="referral-other-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <textarea id="referral-other" name="referral-other" rows="2"
@@ -161,7 +201,7 @@
 
                 <div class="form-group">
                     <label for="email">
-                        <i data-lucide="mail"></i> メールアドレス
+                        <i data-lucide="mail"></i> メールアドレス<span class="required-badge">必須</span>
                     </label>
                     <div class="input-wrapper">
                         <input type="email" id="email" name="email" placeholder="example@weplay.com" required>
@@ -170,13 +210,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">
-                        <i data-lucide="phone"></i> 電話番号
+                    <label for="phone-1">
+                        <i data-lucide="phone"></i> 電話番号<span class="required-badge">必須</span>
                     </label>
-                    <div class="input-wrapper">
-                        <input type="tel" id="phone" name="phone" placeholder="090-0000-0000" required>
+                    <div class="input-wrapper phone-groups">
+                        <input type="tel" id="phone-1" name="phone_1" placeholder="090" pattern="\d*" required>
+                        <span class="separator">-</span>
+                        <input type="tel" id="phone-2" name="phone_2" placeholder="1234" pattern="\d*" required>
+                        <span class="separator">-</span>
+                        <input type="tel" id="phone-3" name="phone_3" placeholder="5678" pattern="\d*" required>
                         <span class="focus-border"></span>
                     </div>
+                    <input type="hidden" id="phone" name="phone">
                 </div>
 
                 <div class="form-group">
@@ -249,6 +294,22 @@
         async function loadMasterData() {
             if (!window.supabaseClient) return;
             try {
+                // Load Schools
+                const { data: schools, error: schoolErr } = await window.supabaseClient
+                    .from('master_school')
+                    .select('id, name')
+                    .order('sort_order', { ascending: true });
+
+                if (schoolErr) throw schoolErr;
+                const schoolSelect = document.getElementById('school');
+                if (schoolSelect) {
+                    let html = '<option value="" disabled selected>選択してください</option>';
+                    schools.forEach(s => {
+                        html += `<option value="${s.id}">${s.name}</option>`;
+                    });
+                    schoolSelect.innerHTML = html;
+                }
+
                 // Load Roles
                 const { data: roles, error: roleError } = await window.supabaseClient
                     .from('master_role')
@@ -264,6 +325,24 @@
                         html += `<option value="${role.id}">${role.name}</option>`;
                     });
                     select.innerHTML = html;
+                });
+
+                // Add mutual exclusion logic
+                const updateRoleOptions = () => {
+                    const selectedValues = Array.from(roleSelects).map(s => s.value).filter(v => v);
+
+                    roleSelects.forEach(select => {
+                        const currentValue = select.value;
+                        Array.from(select.options).forEach(option => {
+                            if (!option.value) return; // Skip placeholder
+                            // Disable if selected elsewhere, unless it's the current selection for this dropdown
+                            option.disabled = selectedValues.includes(option.value) && option.value !== currentValue;
+                        });
+                    });
+                };
+
+                roleSelects.forEach(select => {
+                    select.addEventListener('change', updateRoleOptions);
                 });
 
                 // Load Referral Sources
@@ -287,16 +366,19 @@
                         const selectedOption = refSelect.options[refSelect.selectedIndex];
                         const referralOtherGroup = document.getElementById('referral-other-group');
                         const referralOtherInput = document.getElementById('referral-other');
+                        const referralOtherBadge = document.getElementById('referral-other-badge');
 
                         if (selectedOption && selectedOption.getAttribute('data-name') === 'その他') {
                             if (referralOtherGroup) referralOtherGroup.style.display = 'block';
                             if (referralOtherInput) referralOtherInput.required = true;
+                            if (referralOtherBadge) referralOtherBadge.style.display = 'inline-block';
                         } else {
                             if (referralOtherGroup) referralOtherGroup.style.display = 'none';
                             if (referralOtherInput) {
                                 referralOtherInput.required = false;
                                 referralOtherInput.value = '';
                             }
+                            if (referralOtherBadge) referralOtherBadge.style.display = 'none';
                         }
                     });
                 }

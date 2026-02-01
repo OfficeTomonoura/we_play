@@ -5,6 +5,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add float label effect or shadow on focus for better interactivity
     inputs.forEach(input => {
+        let isComposing = false;
+
+        input.addEventListener('compositionstart', () => {
+            isComposing = true;
+        });
+
+        input.addEventListener('compositionend', () => {
+            isComposing = false;
+            // Trigger filter once composition finishes
+            if (input.id === 'name-kana') {
+                input.value = input.value.replace(/[^ぁ-んー\s]/g, '');
+            } else if (input.id?.startsWith('phone-')) {
+                input.value = input.value.replace(/[^\d]/g, '');
+            }
+        });
+
+        // Hiragana Enforcement for name-kana
+        if (input.id === 'name-kana') {
+            input.addEventListener('input', () => {
+                if (isComposing) return;
+                input.value = input.value.replace(/[^ぁ-んー\s]/g, '');
+            });
+        }
+
+        // Numeric Enforcement for phone segments
+        if (input.id?.startsWith('phone-')) {
+            input.addEventListener('input', () => {
+                if (isComposing) return;
+                input.value = input.value.replace(/[^\d]/g, '');
+            });
+        }
+
         input.addEventListener('focus', () => {
             const group = input.parentElement.closest('.form-group');
             if (group) group.classList.add('focused');
@@ -38,7 +70,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const privacyCheckbox = form.querySelector('input[name="privacy"]');
         if (!privacyCheckbox || !privacyCheckbox.checked) {
             isValid = false;
-            // Additional privacy error handling could go here
+            if (privacyCheckbox) showError(privacyCheckbox);
+        } else if (privacyCheckbox) {
+            removeError(privacyCheckbox);
+        }
+
+        // Check for duplicate roles
+        const role1 = form.querySelector('#role-1')?.value;
+        const role2 = form.querySelector('#role-2')?.value;
+        const role3 = form.querySelector('#role-3')?.value;
+
+        if (role1 && (role1 === role2 || role1 === role3)) {
+            isValid = false;
+            alert('希望役職が重複しています。別の役職を選択してください。');
+        } else if (role2 && role2 === role3) {
+            isValid = false;
+            alert('希望役職が重複しています。別の役職を選択してください。');
         }
 
         if (isValid) {
@@ -72,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     full_name: formData.get('applicant_name'),
                     full_kana: formData.get('applicant_kana'),
                     gender: genderMap[genderVal] || genderVal,
-                    school_name: formData.get('school_name'),
+                    school_id: formData.get('school_id'),
                     grade: formattedGrade,
                     desired_role_1_id: formData.get('role-1'),
                     desired_role_2_id: formData.get('role-2'),
@@ -80,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     referral_source_id: formData.get('referral'),
                     referral_source_other: formData.get('referral-other'),
                     email: formData.get('email'),
-                    phone: formData.get('phone'),
+                    phone: `${formData.get('phone_1')}-${formData.get('phone_2')}-${formData.get('phone_3')}`,
                     message: formData.get('message'),
                     status: '新規',
                     // LINE Linkage
