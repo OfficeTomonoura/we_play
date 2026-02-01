@@ -3,11 +3,38 @@
  * 共通サイドバーを生成・制御するスクリプト
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuthStatus(); // Add Auth Guard
     renderSidebar();
     renderHeaderProfile();
     injectProfileModal();
 });
+
+async function checkAuthStatus() {
+    // Only run on dashboard pages (pages that use components.js)
+    // We assume login, line_link, and member_registration do NOT use this file.
+    if (!window.supabaseClient) return;
+
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    if (!session) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Check Member Status
+    const { data: member } = await window.supabaseClient
+        .from('members')
+        .select('line_user_id, is_registered')
+        .eq('auth_user_id', session.user.id)
+        .maybeSingle();
+
+    if (!member || !member.line_user_id) {
+        window.location.href = 'line_link.html';
+    } else if (!member.is_registered) {
+        window.location.href = 'member_registration.html';
+    }
+    // If all good, proceed.
+}
 
 function renderSidebar() {
     const sidebarPlaceholder = document.getElementById('app-sidebar');
