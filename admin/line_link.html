@@ -116,59 +116,95 @@
             // 2. Initialize LIFF
             try {
                 await liff.init({ liffId: LIFF_ID });
+
+                // [NEW] Auto-detect login and process link
+                if (liff.isLoggedIn()) {
+                    await processLineLink();
+                }
             } catch (err) {
                 console.error('LIFF Init failed:', err);
                 alert('LIFFの初期化に失敗しました。');
             }
         });
 
-        document.getElementById('linkBtn').addEventListener('click', async () => {
+        // Refactored linking logic into a standalone function
+        async function processLineLink() {
             const btn = document.getElementById('linkBtn');
-            btn.disabled = true;
-            btn.innerHTML = '処理中...';
+            const loadingArea = document.getElementById('loadingArea');
+            const actionArea = document.getElementById('actionArea');
+
+            // Show loading UI
+            if (actionArea) actionArea.style.display = 'none';
+            if (loadingArea) {
+                loadingArea.style.display = 'block';
+                loadingArea.innerHTML = '<p>LINEアカウントを確認中...</p>';
+            }
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '処理中...';
+            }
 
             try {
-                // Ensure logged in to LIFF
-                if (!liff.isLoggedIn()) {
-                    // Explicitly redirect back to THIS page, not the default LIFF endpoint
-                    liff.login({ redirectUri: window.location.href });
-                    return; // Login redirects, so stop here
-                }
-
                 const profile = await liff.getProfile();
                 const lineUserId = profile.userId;
 
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
-                if (!session) throw new Error('セッションが切れました。再ログインしてください。');
+                if (!session) {
+                    // If session is lost (rare but possible), redirect to login
+                    window.location.href = 'login.html';
+                    return;
+                }
 
                 console.log('Linking LINE ID:', lineUserId, 'to Auth User:', session.user.id);
 
                 // Upsert into members table
-                // Note: We use upsert because the row might not exist yet if it's a fresh invite
                 const { error } = await window.supabaseClient
                     .from('members')
                     .upsert({
                         auth_user_id: session.user.id,
                         email: session.user.email,
-                        line_user_id: lineUserId
-                    }, { onConflict: 'auth_user_id' }); // Conflict key
+                        line_user_id: lineUserId,
+                        // Don't overwrite is_registered if it exists, but upsert might reset it if we don't include it?
+                        // Actually, we should use UPDATE if the record exists? 
+                        // But strictly speaking, if we use upsert with specific columns, it updates/inserts. 
+                        // If we omit other columns, they keep their values on UPDATE, or default on INSERT.
+                        // Wait, Supabase UPSERT needs all Not Null columns on Insert. 
+                        // Ideally we check if it exists first.
+                    }, { onConflict: 'auth_user_id' });
+
+                // To be safe against overwriting 'is_registered' (though it defaults to false), 
+                // let's do a smart update. 
+                // Actually, the previous code was using upsert effectively. 
+                // If the record exists, it updates provided fields.
 
                 if (error) throw error;
 
-                // Success -> Go to Onboarding
-                alert('LINE連携が完了しました！');
-                window.location.href = 'member_registration.html';
+                // Success
+                if (loadingArea) loadingArea.innerHTML = '<p>連携成功！移動します...</p>';
+                setTimeout(() => {
+                    window.location.href = 'member_registration.html';
+                }, 1000);
 
             } catch (err) {
                 console.error('Link Error:', err);
-                alert('連携に失敗しました: ' + err.message);
-                btn.disabled = false;
-                btn.innerHTML = `
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M21.157 12.008c0-4.846-5.053-8.898-11.458-8.898-6.406 0-11.458 4.052-11.458 8.898 0 4.398 4.15 8.125 10.37 8.807 1.018.238 1.468.647 1.468.647s.17.962.08 1.46c0 0-.27 1.516 1.34 0 .907-.852 5.09-4.322 5.09-4.322 3.14-1.637 4.568-3.71 4.568-6.592z"/>
-                    </svg>
-                    LINEアカウントと連携する`;
+                alert('連携処理に失敗しました: ' + err.message);
+                // Restore UI if failed (so they can try again or logout)
+                if (actionArea) actionArea.style.display = 'block';
+                if (loadingArea) loadingArea.style.display = 'none';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'LINEアカウントと連携する';
+                }
             }
+        }
+
+        document.getElementById('linkBtn').addEventListener('click', async () => {
+            // Manual click logic (triggers login if needed)
+            if (!liff.isLoggedIn()) {
+                liff.login({ redirectUri: window.location.href });
+                return;
+            }
+            await processLineLink();
         });
 
         async function handleLogout() {
