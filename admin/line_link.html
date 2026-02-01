@@ -130,7 +130,8 @@
             try {
                 // Ensure logged in to LIFF
                 if (!liff.isLoggedIn()) {
-                    liff.login();
+                    // Explicitly redirect back to THIS page, not the default LIFF endpoint
+                    liff.login({ redirectUri: window.location.href });
                     return; // Login redirects, so stop here
                 }
 
