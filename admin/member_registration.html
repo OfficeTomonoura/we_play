@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正会員登録 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .login-box {
+            max-width: 600px;
+            /* Slightly wider for better layout */
+            width: 100%;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Section divider */
+        .form-section-title {
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <section class="form-wrapper login-box">
+            <header class="form-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY ADMIN</span>
+                </div>
+                <h1>Member Registration</h1>
+                <p class="login-subtitle">
+                    正会員（運営メンバー）情報の登録を行います。<br>
+                    以下の情報を入力し、アカウント設定を完了してください。
+                </p>
+            </header>
+
+            <form id="memberForm" class="registration-form">
+                <div id="errorMsg"
+                    style="display: none; color: #ff007a; background: rgba(255, 0, 122, 0.1); padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; text-align: center; border: 1px solid rgba(255, 0, 122, 0.2); margin-bottom: 1rem;">
+                </div>
+
+                <!-- Basic Info -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">氏名 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="fullName" name="full_name" placeholder="山田 太郎" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullKana">ふりがな <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="fullKana" name="full_kana" placeholder="やまだ たろう" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">メールアドレス (固定)</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" readonly
+                            style="background: rgba(255,255,255,0.05); color: #aaa; border: 1px solid rgba(255,255,255,0.1);">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="highSchool">出身高校</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="highSchool" name="high_school" placeholder="出身高校名を入力">
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <h3 class="form-section-title">所属・役割</h3>
+
+                <div class="form-group">
+                    <label for="organization">主たる所属（委員会名など） <span style="color:var(--primary)">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="organization" name="organization" placeholder="例: 未来人財育成委員会" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="position">役職 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="position" name="position" placeholder="例: 委員長" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectRole">本事業での役割 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="projectRole" name="project_role" placeholder="例: 統括" required>
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="form-section-title">パスワード変更 (必須)</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newPassword">新しいパスワード <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="password" id="newPassword" name="new_password" placeholder="6文字以上" required
+                                minlength="6">
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">パスワード確認 <span style="color:var(--primary)">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="password" id="confirmPassword" name="confirm_password" placeholder="再入力"
+                                required minlength="6">
+                            <span class="focus-border"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button" style="margin-top: 2rem;">
+                    <span>登録して開始</span>
+                    <i data-lucide="arrow-right"></i>
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!window.supabaseClient) return;
+
+            // Check Session
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fill Email
+            document.getElementById('email').value = session.user.email;
+
+            // Check if already registered? Default behavior is upsert/overwrite if accessing this page directly.
+        });
+
+        document.getElementById('memberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const errorMsg = document.getElementById('errorMsg');
+
+            errorMsg.style.display = 'none';
+            btn.disabled = true;
+            btn.innerHTML = '<span>登録中...</span>';
+
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) throw new Error('セッションが切れました。再ログインしてください。');
+
+                // Validate Password
+                const newPass = document.getElementById('newPassword').value;
+                const confirmPass = document.getElementById('confirmPassword').value;
+
+                if (newPass !== confirmPass) {
+                    throw new Error('パスワードが一致しません。');
+                }
+
+                // Prepare Data
+                const formData = {
+                    auth_user_id: session.user.id,
+                    email: session.user.email,
+                    full_name: document.getElementById('fullName').value,
+                    full_kana: document.getElementById('fullKana').value,
+                    high_school: document.getElementById('highSchool').value,
+                    organization: document.getElementById('organization').value,
+                    position: document.getElementById('position').value,
+                    project_role: document.getElementById('projectRole').value,
+                    is_staff: true,
+                    // can_approve_line is left to default false or DB setting
+                    updated_at: new Date()
+                };
+
+                // 1. Upsert Profile (Using Upsert to handle both insert and update if partially exists from LINE link)
+                // Note: We don't want to overwrite line_user_id if it exists, so we fetch first or use upsert with ignore?
+                // Actually, upsert overwrites. We should fetch first to preserve line_user_id? 
+                // Or simply NOT include line_user_id in the update payload. 
+                // Supabase upsert updates specified columns. If line_user_id is not in formData, it might NOT be touched? 
+                // Wait, upsert REPLACES the row if not careful depending on PostgREST. 
+                // Better to use UPDATE since the row SHOULD exist from line_link.html step.
+
+                // Let's try UPDATE first. If no row, that's an issue with the flow (LINE link should have created it).
+                // But to be safe, we can check.
+
+                const { error: updateError } = await window.supabaseClient
+                    .from('members')
+                    .update(formData)
+                    .eq('auth_user_id', session.user.id);
+
+                if (updateError) throw updateError;
+
+                // 2. Update Auth Password
+                const { error: authError } = await window.supabaseClient.auth.updateUser({
+                    password: newPass
+                });
+
+                if (authError) throw authError;
+
+                // Success
+                alert('登録が完了しました！ダッシュボードへ移動します。');
+                window.location.href = 'index.html';
+
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = err.message || '登録に失敗しました。';
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = '<span>登録して開始</span><i data-lucide="arrow-right"></i>';
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+
+</html>
