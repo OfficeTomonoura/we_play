@@ -103,9 +103,9 @@ Webフォームからの応募データを格納します。
 | `full_kana` | VARCHAR(255) | フリガナ |
 | `email` | VARCHAR(255) | メールアドレス (NOT NULL) |
 | `phone` | VARCHAR(20) | 電話番号 |
-| `organization` | VARCHAR(255) | 所属（委員会など） |
-| `position` | VARCHAR(100) | 役職（委員長など） |
-| `project_role` | VARCHAR(100) | 本事業での役割 |
+| `organization_id` | UUID | 所属マスタID (organizationカラムは廃止予定) |
+| `position_id` | UUID | 役職マスタID (positionカラムは廃止予定) |
+| `project_role_id` | UUID | プロジェクト役割マスタID (project_roleカラムは廃止予定) |
 | `is_staff` | BOOLEAN | 管理画面アクセス権限。デフォルト: `false` |
 | `can_approve_line` | BOOLEAN | LINE配信承認権限。デフォルト: `false` |
 | `is_registered` | BOOLEAN | 登録フォーム入力完了フラグ。デフォルト: `false` |
@@ -157,13 +157,36 @@ Webhook経由で受信したLINEメッセージのログです。
 | `notes` | TEXT | 備考 |
 | `created_at` | TIMESTAMPTZ | 作成日時 |
 
-### 6. その他マスタ (互換性のため維持)
+### 6. マスタテーブル
+ 
+#### `master_organization` (所属マスタ)
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK |
+| `name` | VARCHAR(255) | 所属名 (例: 未来人財育成委員会) |
+| `sort_order` | INTEGER | 表示順 |
+
+#### `master_position` (役職マスタ)
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK |
+| `name` | VARCHAR(255) | 役職名 (例: 委員長) |
+| `sort_order` | INTEGER | 表示順 |
+
+#### `master_project_role` (プロジェクト役割マスタ)
+| カラム名 | 型 | 説明 |
+| :--- | :--- | :--- |
+| `id` | UUID | PK |
+| `name` | VARCHAR(255) | 役割名 (例: 統括) |
+| `sort_order` | INTEGER | 表示順 |
+
+### 7. その他マスタ (互換性のため維持)
 以下のテーブルは初期設計の名残として存在しますが、現在はコード定数として扱われることが多いです。
 
 *   `roles` (役職マスタ)
 *   `referral_sources` (認知経路マスタ)
 
-## 5. LINE通知機能のセットアップ
+## 8. LINE通知機能のセットアップ
 
 本システムでは、対内向け（運営メンバー用）と対外向け（応募者用）で2つのLINE公式アカウントを使用します。
 

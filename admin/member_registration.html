@@ -56,7 +56,7 @@
                 </div>
                 <h1>Member Registration</h1>
                 <p class="login-subtitle">
-                    正会員（運営メンバー）情報の登録を行います。<br>
+                    正会員情報の登録を行います。<br>
                     以下の情報を入力し、アカウント設定を完了してください。
                 </p>
             </header>
@@ -67,20 +67,19 @@
                 </div>
 
                 <!-- Basic Info -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fullName">氏名 <span style="color:var(--primary)">*</span></label>
-                        <div class="input-wrapper">
-                            <input type="text" id="fullName" name="full_name" placeholder="山田 太郎" required>
-                            <span class="focus-border"></span>
-                        </div>
+                <div class="form-group">
+                    <label for="fullName">氏名 <span style="color:var(--primary)">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullName" name="full_name" placeholder="山田 太郎" required>
+                        <span class="focus-border"></span>
                     </div>
-                    <div class="form-group">
-                        <label for="fullKana">ふりがな <span style="color:var(--primary)">*</span></label>
-                        <div class="input-wrapper">
-                            <input type="text" id="fullKana" name="full_kana" placeholder="やまだ たろう" required>
-                            <span class="focus-border"></span>
-                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fullKana">ふりがな <span style="color:var(--primary)">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullKana" name="full_kana" placeholder="やまだ たろう" required>
+                        <span class="focus-border"></span>
                     </div>
                 </div>
 
@@ -105,25 +104,26 @@
                 <div class="form-group">
                     <label for="organization">主たる所属（委員会名など） <span style="color:var(--primary)">*</span></label>
                     <div class="input-wrapper">
-                        <input type="text" id="organization" name="organization" placeholder="例: 未来人財育成委員会" required>
+                        <select id="organization" name="organization_id" required
+                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                            <option value="" style="color: black;">読み込み中...</option>
+                        </select>
                         <span class="focus-border"></span>
+                        <i data-lucide="chevron-down"
+                            style="position: absolute; right: 1rem; top: 1rem; color: var(--text-dim); pointer-events: none;"></i>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="position">役職 <span style="color:var(--primary)">*</span></label>
-                        <div class="input-wrapper">
-                            <input type="text" id="position" name="position" placeholder="例: 委員長" required>
-                            <span class="focus-border"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="projectRole">本事業での役割 <span style="color:var(--primary)">*</span></label>
-                        <div class="input-wrapper">
-                            <input type="text" id="projectRole" name="project_role" placeholder="例: 統括" required>
-                            <span class="focus-border"></span>
-                        </div>
+                <div class="form-group">
+                    <label for="position">役職 <span style="color:var(--primary)">*</span></label>
+                    <div class="input-wrapper">
+                        <select id="position" name="position_id" required
+                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                            <option value="" style="color: black;">読み込み中...</option>
+                        </select>
+                        <span class="focus-border"></span>
+                        <i data-lucide="chevron-down"
+                            style="position: absolute; right: 1rem; top: 1rem; color: var(--text-dim); pointer-events: none;"></i>
                     </div>
                 </div>
 
@@ -174,8 +174,34 @@
             // Fill Email
             document.getElementById('email').value = session.user.email;
 
-            // Check if already registered? Default behavior is upsert/overwrite if accessing this page directly.
+            // Load Master Data
+            try {
+                const [orgRes, posRes] = await Promise.all([
+                    window.supabaseClient.from('master_organization').select('id, name').order('sort_order'),
+                    window.supabaseClient.from('master_position').select('id, name').order('sort_order')
+                ]);
+
+                populateSelect('organization', orgRes.data || []);
+                populateSelect('position', posRes.data || []);
+
+            } catch (err) {
+                console.error('Master load error:', err);
+                alert('マスターデータの読み込みに失敗しました。');
+            }
         });
+
+        function populateSelect(elementId, items) {
+            const select = document.getElementById(elementId);
+            if (!select) return;
+            select.innerHTML = '<option value="" style="color: black;">選択してください</option>';
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.textContent = item.name;
+                opt.style.color = 'black'; // Ensure visibility
+                select.appendChild(opt);
+            });
+        }
 
         document.getElementById('memberForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -205,26 +231,15 @@
                     full_name: document.getElementById('fullName').value,
                     full_kana: document.getElementById('fullKana').value,
                     high_school: document.getElementById('highSchool').value,
-                    organization: document.getElementById('organization').value,
-                    position: document.getElementById('position').value,
-                    project_role: document.getElementById('projectRole').value,
+                    organization_id: document.getElementById('organization').value,
+                    position_id: document.getElementById('position').value,
+                    // project_role_id removed
                     is_staff: true,
                     is_registered: true, // Registration Complete
-                    // can_approve_line is left to default false or DB setting
                     updated_at: new Date()
                 };
 
-                // 1. Upsert Profile (Using Upsert to handle both insert and update if partially exists from LINE link)
-                // Note: We don't want to overwrite line_user_id if it exists, so we fetch first or use upsert with ignore?
-                // Actually, upsert overwrites. We should fetch first to preserve line_user_id? 
-                // Or simply NOT include line_user_id in the update payload. 
-                // Supabase upsert updates specified columns. If line_user_id is not in formData, it might NOT be touched? 
-                // Wait, upsert REPLACES the row if not careful depending on PostgREST. 
-                // Better to use UPDATE since the row SHOULD exist from line_link.html step.
-
-                // Let's try UPDATE first. If no row, that's an issue with the flow (LINE link should have created it).
-                // But to be safe, we can check.
-
+                // Update Profile
                 const { error: updateError } = await window.supabaseClient
                     .from('members')
                     .update(formData)
