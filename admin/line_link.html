@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE連携 | We Play</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css"> <!-- Reuse main form styles -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        .login-box {
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .line-btn {
+            background-color: #06C755;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .line-btn:hover {
+            opacity: 0.9;
+        }
+
+        .logout-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <section class="form-wrapper login-box">
+            <header class="form-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY ADMIN</span>
+                </div>
+                <h1>Link LINE Account</h1>
+                <p class="login-subtitle">
+                    アカウントのセットアップを続けるには<br>LINEアカウントとの連携が必要です。
+                </p>
+            </header>
+
+            <div id="loadingArea" style="display: none;">
+                <p>連携処理中...</p>
+            </div>
+
+            <div id="actionArea">
+                <button id="linkBtn" class="line-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M21.157 12.008c0-4.846-5.053-8.898-11.458-8.898-6.406 0-11.458 4.052-11.458 8.898 0 4.398 4.15 8.125 10.37 8.807 1.018.238 1.468.647 1.468.647s.17.962.08 1.46c0 0-.27 1.516 1.34 0 .907-.852 5.09-4.322 5.09-4.322 3.14-1.637 4.568-3.71 4.568-6.592z" />
+                    </svg>
+                    LINEアカウントと連携する
+                </button>
+            </div>
+
+            <a onclick="handleLogout()" class="logout-link">ログアウトして戻る</a>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // LIFF ID (From manual_liff.html)
+        const LIFF_ID = "2009015373-QGkjtgDJ";
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 1. Check Auth Session first
+            if (!window.supabaseClient) {
+                alert('Database connection failed.');
+                return;
+            }
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Initialize LIFF
+            try {
+                await liff.init({ liffId: LIFF_ID });
+            } catch (err) {
+                console.error('LIFF Init failed:', err);
+                alert('LIFFの初期化に失敗しました。');
+            }
+        });
+
+        document.getElementById('linkBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('linkBtn');
+            btn.disabled = true;
+            btn.innerHTML = '処理中...';
+
+            try {
+                // Ensure logged in to LIFF
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                    return; // Login redirects, so stop here
+                }
+
+                const profile = await liff.getProfile();
+                const lineUserId = profile.userId;
+
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) throw new Error('セッションが切れました。再ログインしてください。');
+
+                console.log('Linking LINE ID:', lineUserId, 'to Auth User:', session.user.id);
+
+                // Upsert into members table
+                // Note: We use upsert because the row might not exist yet if it's a fresh invite
+                const { error } = await window.supabaseClient
+                    .from('members')
+                    .upsert({
+                        auth_user_id: session.user.id,
+                        email: session.user.email,
+                        line_user_id: lineUserId
+                    }, { onConflict: 'auth_user_id' }); // Conflict key
+
+                if (error) throw error;
+
+                // Success -> Go to Onboarding
+                alert('LINE連携が完了しました！');
+                window.location.href = 'first_login.html';
+
+            } catch (err) {
+                console.error('Link Error:', err);
+                alert('連携に失敗しました: ' + err.message);
+                btn.disabled = false;
+                btn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21.157 12.008c0-4.846-5.053-8.898-11.458-8.898-6.406 0-11.458 4.052-11.458 8.898 0 4.398 4.15 8.125 10.37 8.807 1.018.238 1.468.647 1.468.647s.17.962.08 1.46c0 0-.27 1.516 1.34 0 .907-.852 5.09-4.322 5.09-4.322 3.14-1.637 4.568-3.71 4.568-6.592z"/>
+                    </svg>
+                    LINEアカウントと連携する`;
+            }
+        });
+
+        async function handleLogout() {
+            if (liff.isLoggedIn()) {
+                liff.logout();
+            }
+            if (window.supabaseClient) {
+                await window.supabaseClient.auth.signOut();
+            }
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>
