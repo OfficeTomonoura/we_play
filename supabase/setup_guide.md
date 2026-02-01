@@ -35,6 +35,9 @@
    - 認知経路マスタ (`referral_sources`) の作成。
    - applicants テーブルに `referral_source_id` (認知経路ID) を追加。
 
+6. **`supabase/update_members_registration.sql`**
+   - members テーブルに `is_registered` カラムを追加。
+
 ## 3. クライアントライブラリのセットアップ
 
 ### HTMLでの読み込み
@@ -105,6 +108,7 @@ Webフォームからの応募データを格納します。
 | `project_role` | VARCHAR(100) | 本事業での役割 |
 | `is_staff` | BOOLEAN | 管理画面アクセス権限。デフォルト: `false` |
 | `can_approve_line` | BOOLEAN | LINE配信承認権限。デフォルト: `false` |
+| `is_registered` | BOOLEAN | 登録フォーム入力完了フラグ。デフォルト: `false` |
 | `line_user_id` | VARCHAR(50) | LINE User ID |
 | `created_at` | TIMESTAMPTZ | 作成日時 |
 | `updated_at` | TIMESTAMPTZ | 更新日時 |

@@ -110,15 +110,15 @@
                 // ログイン成功 -> ステータスチェック
                 const { data: member } = await window.supabaseClient
                     .from('members')
-                    .select('line_user_id, full_name')
+                    .select('line_user_id, is_registered')
                     .eq('auth_user_id', data.session.user.id)
                     .maybeSingle();
 
                 if (!member || !member.line_user_id) {
                     // LINE連携がまだ -> 連携画面へ
                     window.location.href = 'line_link.html';
-                } else if (!member.full_name) {
-                    // プロフィール未登録 -> 初回登録画面へ
+                } else if (!member.is_registered) {
+                    // プロフィール未登録 -> 正会員登録画面へ
                     window.location.href = 'member_registration.html';
                 } else {
                     // 全て完了 -> ダッシュボード
