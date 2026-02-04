@@ -15,11 +15,79 @@
     <style>
         .data-table tbody tr {
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .data-table tbody tr:hover {
             background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.002) translateX(4px);
+        }
+
+        /* Premium Pagination Styles to match uploaded image */
+        .pagination {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .page-btn {
+            min-width: 40px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .page-btn.active {
+            background: white;
+            color: #111;
+            border-color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.02);
+            transform: none !important;
+        }
+
+        .results-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        /* Filter polish */
+        .admin-select {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 14px !important;
+            padding: 0.6rem 1rem !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .admin-select:focus {
+            border-color: var(--primary) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
         }
     </style>
 </head>
@@ -201,19 +269,8 @@
                         <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
                             全 48 件中 1 - 20 件を表示
                         </div>
-                        <div class="pagination" style="display: flex; gap: 0.5rem;">
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
-                                    data-lucide="chevron-left" style="width: 16px;"></i></button>
-                            <button class="page-btn active"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary); cursor: pointer;">1</button>
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;">2</button>
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;">3</button>
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
-                                    data-lucide="chevron-right" style="width: 16px;"></i></button>
+                        <div class="pagination">
+                            <!-- JS will inject buttons here -->
                         </div>
                     </div>
                 </div>
@@ -340,24 +397,30 @@
     <script>
         lucide.createIcons();
 
-        let allApplicants = []; // Store fetched data
+        let allApplicants = []; // Store current page data
+        let currentPage = 1;
+        let itemsPerPage = 20;
+        let totalCount = 0;
 
         async function fetchApplicants() {
             try {
                 const roleId = document.getElementById('roleFilter').value;
                 const status = document.getElementById('statusFilter').value;
-                const limit = parseInt(document.getElementById('limitFilter').value) || 20;
+                itemsPerPage = parseInt(document.getElementById('limitFilter').value) || 20;
 
                 // Show loading state
                 const tbody = document.getElementById('applicantsTableBody');
                 tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
 
+                // Calculate range
+                const from = (currentPage - 1) * itemsPerPage;
+                const to = from + itemsPerPage - 1;
+
                 let query = window.supabaseClient
                     .from('applicants')
-                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), ref:master_referral_source!referral_source_id(name), school:master_school(name)');
+                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), ref:master_referral_source!referral_source_id(name), school:master_school(name)', { count: 'exact' });
 
                 if (roleId) {
-                    // Filter if ANY of the desired roles matches
                     query = query.or(`desired_role_1_id.eq.${roleId},desired_role_2_id.eq.${roleId},desired_role_3_id.eq.${roleId}`);
                 }
 
@@ -365,19 +428,22 @@
                     query = query.eq('status', status);
                 }
 
-                const { data, error } = await query
+                const { data, error, count } = await query
                     .order('created_at', { ascending: false })
-                    .limit(limit);
+                    .range(from, to);
 
                 if (error) throw error;
 
                 allApplicants = data;
+                totalCount = count || 0;
+
                 renderTable(allApplicants);
+                renderPagination();
 
             } catch (err) {
                 console.error('Error fetching applicants:', err);
                 const tbody = document.getElementById('applicantsTableBody');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: #ff4b4b; padding: 2rem;">データの取得に失敗しました</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color: #ff4b4b; padding: 2rem;">データの取得に失敗しました</td></tr>';
             }
         }
 
@@ -433,7 +499,68 @@
 
             // Simple count update
             const resultInfo = document.querySelector('.results-info');
-            if (resultInfo) resultInfo.textContent = `全 ${data.length} 件を表示`;
+            if (resultInfo) {
+                const from = (currentPage - 1) * itemsPerPage + 1;
+                const to = Math.min(currentPage * itemsPerPage, totalCount);
+                resultInfo.textContent = totalCount > 0 ? `全 ${totalCount} 件中 ${from} - ${to} 件を表示` : '全 0 件を表示';
+            }
+        }
+
+        function renderPagination() {
+            const pagination = document.querySelector('.pagination');
+            if (!pagination) return;
+            pagination.innerHTML = '';
+
+            const totalPages = Math.ceil(totalCount / itemsPerPage);
+            if (totalPages <= 1) return;
+
+            // Prev Button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.innerHTML = '<i data-lucide="chevron-left" style="width: 20px;"></i>';
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchApplicants();
+                }
+            };
+            pagination.appendChild(prevBtn);
+
+            // Page numbers
+            const maxVisible = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+            if (endPage - startPage + 1 < maxVisible) {
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => {
+                    currentPage = i;
+                    fetchApplicants();
+                };
+                pagination.appendChild(btn);
+            }
+
+            // Next Button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.innerHTML = '<i data-lucide="chevron-right" style="width: 20px;"></i>';
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    fetchApplicants();
+                }
+            };
+            pagination.appendChild(nextBtn);
+
+            if (window.lucide) lucide.createIcons();
         }
 
         let currentApplicantId = null;
@@ -593,7 +720,10 @@
             // Bind change events
             ['roleFilter', 'statusFilter', 'limitFilter'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.addEventListener('change', fetchApplicants);
+                if (el) el.addEventListener('change', () => {
+                    currentPage = 1; // Reset to page 1 on filter change
+                    fetchApplicants();
+                });
             });
         }
 

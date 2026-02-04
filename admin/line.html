@@ -11,7 +11,11 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <style>
         .line-composer {
             display: grid;
@@ -59,6 +63,150 @@
             outline: none;
             border-color: var(--primary);
             background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        /* Date/Time Picker Custom Styling */
+        input[type="date"],
+        input[type="time"] {
+            position: relative;
+            appearance: none;
+            -webkit-appearance: none;
+            min-height: 48px;
+            cursor: pointer;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+            z-index: 2;
+        }
+
+        .datetime-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .datetime-input-wrapper i {
+            position: absolute;
+            right: 1rem;
+            color: var(--primary);
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 1;
+        }
+
+        input[type="date"]:focus+i,
+        input[type="time"]:focus+i {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px var(--primary));
+        }
+
+        /* Customize Webkit native picker elements */
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+        input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+            padding: 0;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-text,
+        input[type="date"]::-webkit-datetime-edit-month-field,
+        input[type="date"]::-webkit-datetime-edit-day-field,
+        input[type="date"]::-webkit-datetime-edit-year-field,
+        input[type="time"]::-webkit-datetime-edit-hour-field,
+        input[type="time"]::-webkit-datetime-edit-minute-field,
+        input[type="time"]::-webkit-datetime-edit-ampm-field {
+            color: var(--text-main);
+        }
+
+        /* Hover effect on wrappers */
+        .datetime-input-wrapper:hover input {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 242, 255, 0.3);
+        }
+
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            background: rgba(20, 20, 25, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+            font-family: 'Outfit', 'Noto Sans JP', sans-serif !important;
+        }
+
+        .flatpickr-day.selected {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: #000 !important;
+            font-weight: 700 !important;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            color: white !important;
+            fill: white !important;
+        }
+
+        .flatpickr-current-month {
+            display: flex !important;
+            flex-direction: row-reverse !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 0 !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .flatpickr-current-month .numInputWrapper {
+            width: 65px !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700 !important;
+        }
+
+        .flatpickr-weekday {
+            color: var(--text-dim) !important;
+            font-weight: 600 !important;
+        }
+
+        .flatpickr-day {
+            color: white !important;
+            border-radius: 10px !important;
+            transition: all 0.2s;
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(0, 242, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        .flatpickr-day.flatpickr-disabled,
+        .flatpickr-day.flatpickr-disabled:hover {
+            opacity: 0.1 !important;
+            cursor: not-allowed !important;
+        }
+
+        .flatpickr-time input {
+            color: white !important;
+            font-weight: 700 !important;
+        }
+
+        .flatpickr-innerContainer {
+            padding: 10px;
         }
 
         .form-group textarea {
@@ -582,22 +730,32 @@
                         <!-- Date Time -->
                         <div class="form-group">
                             <label>送信日時指定 <span style="color: var(--accent); margin-left: 0.3rem;">*必須</span></label>
-                            <div style="display: flex; gap: 1rem;">
-                                <input type="date" id="sendDate" required style="flex: 2;">
-                                <input type="time" id="sendTime" required style="flex: 1;">
+                            <div style="display: flex; gap: 1rem; margin-bottom: 0.8rem;">
+                                <div class="datetime-input-wrapper" style="flex: 2;">
+                                    <input type="text" id="sendDate" placeholder="日付を選択" required>
+                                    <i data-lucide="calendar"></i>
+                                </div>
+                                <div class="datetime-input-wrapper" style="flex: 1;">
+                                    <input type="text" id="sendTime" placeholder="時間" required>
+                                    <i data-lucide="clock"></i>
+                                </div>
                             </div>
+
                             <div id="dateTimeNotice"
-                                style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5;">
-                                <div style="display: flex; align-items: flex-start; gap: 0.3rem;">
-                                    <i data-lucide="info" style="width: 14px; height: 14px; margin-top: 0.1rem;"></i>
+                                style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                    <i data-lucide="info"
+                                        style="width: 14px; height: 14px; margin-top: 0.2rem; color: var(--primary);"></i>
                                     <div>
                                         配信可能時間: 平日 09:30-20:30<br>
-                                        <span style="color: var(--accent);">※土日祝日、および平日夜間・早朝は配信できません。</span>
+                                        <span
+                                            style="color: var(--accent); font-weight: 600;">※土日祝日、および平日夜間・早朝は配信できません。</span>
                                     </div>
                                 </div>
                             </div>
+
                             <div id="dateTimeError"
-                                style="font-size: 0.8rem; color: #ff4d4d; margin-top: 0.5rem; display: none; align-items: center; gap: 0.3rem;">
+                                style="font-size: 0.8rem; color: #ff4d4d; margin-top: 0.5rem; display: none; align-items: center; gap: 0.3rem; padding-left: 0.5rem;">
                                 <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
                                 <span>指定できない日時が選択されています</span>
                             </div>
@@ -1004,6 +1162,82 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 400px; text-align: center;">
+            <button class="close-modal" onclick="closeDeleteModal()">
+                <i data-lucide="x"></i>
+            </button>
+            <div
+                style="width: 64px; height: 64px; background: rgba(255, 77, 77, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.2);">
+                <i data-lucide="trash-2" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: white; margin-bottom: 0.75rem;">メッセージを削除しますか？</h3>
+            <p style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+                この操作は取り消すことができません。<br>本当にこのメッセージを削除してもよろしいですか？
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn-action btn-secondary-ghost" onclick="closeDeleteModal()"
+                    style="flex: 1; padding: 0.8rem; border-radius: 14px;">
+                    キャンセル
+                </button>
+                <button id="finalDeleteBtn" class="btn-action"
+                    style="flex: 1.5; padding: 0.8rem; border-radius: 14px; background: #ff4d4d; color: white; border: none; font-weight: 700;">
+                    <i data-lucide="trash-2"></i> 削除する
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approve Confirmation Modal -->
+    <div id="approveConfirmModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 400px; text-align: center;">
+            <button class="close-modal" onclick="closeApproveModal()">
+                <i data-lucide="x"></i>
+            </button>
+            <div
+                style="width: 64px; height: 64px; background: rgba(0, 242, 255, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--primary); border: 1px solid rgba(0, 242, 255, 0.2);">
+                <i data-lucide="check-circle" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: white; margin-bottom: 0.75rem;">メッセージを承認しますか？</h3>
+            <p style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+                承認後は「送信待ちリスト」へ移動し、<br>指定日時に自動的に配信されます。
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn-action btn-secondary-ghost" onclick="closeApproveModal()"
+                    style="flex: 1; padding: 0.8rem; border-radius: 14px;">
+                    キャンセル
+                </button>
+                <button id="finalApproveBtn" class="btn-action"
+                    style="flex: 1.5; padding: 0.8rem; border-radius: 14px; background: var(--primary); color: var(--bg-main); border: none; font-weight: 700;">
+                    <i data-lucide="check"></i> 承認する
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 400px; text-align: center; padding: 3rem 2rem;">
+            <div
+                style="width: 80px; height: 80px; background: rgba(0, 242, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--primary); border: 2px solid rgba(0, 242, 255, 0.2); position: relative;">
+                <i data-lucide="check" style="width: 40px; height: 40px;"></i>
+                <div
+                    style="position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--primary); animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; opacity: 0.5;">
+                </div>
+            </div>
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 1rem;">送信完了</h3>
+            <p style="color: var(--text-dim); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.6;">
+                承認依頼を送信しました。<br>管理者の承認をお待ちください。
+            </p>
+            <button class="btn-action" onclick="closeSuccessModal()"
+                style="width: 100%; padding: 1rem; background: var(--primary); color: var(--bg-main); border: none; border-radius: 16px; font-weight: 800; font-size: 1rem; letter-spacing: 1px;">
+                確認しました
+            </button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../assets/js/supabase-client.js"></script>
     <script src="components.js"></script>
@@ -1073,7 +1307,31 @@
             return false;
         }
 
-        // Set default date time (next valid slot)
+        // Initialize Flatpickr
+        const fpDate = flatpickr("#sendDate", {
+            locale: "ja",
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            disable: [
+                function (date) {
+                    return (date.getDay() === 0 || date.getDay() === 6 || isJapaneseHoliday(date));
+                }
+            ],
+            onChange: function () {
+                checkAndAlertDateTime();
+            }
+        });
+
+        const fpTime = flatpickr("#sendTime", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            onChange: function () {
+                checkAndAlertDateTime();
+            }
+        });
+
         function setDefaultDateTime() {
             const now = new Date();
             const year = now.getFullYear();
@@ -1082,8 +1340,8 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
 
-            dateInput.value = `${year}-${month}-${day}`;
-            timeInput.value = `${hours}:${minutes}`;
+            fpDate.setDate(`${year}-${month}-${day}`);
+            fpTime.setDate(`${hours}:${minutes}`);
             checkAndAlertDateTime();
         }
         setDefaultDateTime();
@@ -1094,8 +1352,18 @@
             if (!dateVal || !timeVal) return;
 
             const date = new Date(`${dateVal}T${timeVal}`);
+            const now = new Date();
+            const errorSpan = dateTimeError.querySelector('span');
 
-            if (!validateDateTime(date)) {
+            let errorMessage = "";
+            if (date < now) {
+                errorMessage = "過去の日時は指定できません";
+            } else if (!validateDateTime(date)) {
+                errorMessage = "指定できない日時（祝日・時間外）が選択されています";
+            }
+
+            if (errorMessage) {
+                errorSpan.textContent = errorMessage;
                 dateTimeError.style.display = 'flex';
                 dateInput.style.borderColor = '#ff4d4d';
                 timeInput.style.borderColor = '#ff4d4d';
@@ -1119,8 +1387,8 @@
             previewDate.textContent = `${month}/${day}(${weekday})`;
         }
 
-        dateInput.addEventListener('change', checkAndAlertDateTime);
-        timeInput.addEventListener('change', checkAndAlertDateTime);
+        // dateInput.addEventListener('change', checkAndAlertDateTime);
+        // timeInput.addEventListener('change', checkAndAlertDateTime);
 
         // Title input
         titleInput.addEventListener('input', (e) => {
@@ -1150,6 +1418,23 @@
         // Body input
         bodyInput.addEventListener('input', (e) => {
             const value = e.target.value;
+
+            // Check for Admin Bypass
+            const isAdminBypass = value.startsWith('/admin');
+            if (isAdminBypass) {
+                // Enable all dates and remove minDate restriction
+                fpDate.set('minDate', null);
+                fpDate.set('disable', []);
+            } else {
+                // Restore restrictions
+                fpDate.set('minDate', 'today');
+                fpDate.set('disable', [
+                    function (date) {
+                        return (date.getDay() === 0 || date.getDay() === 6 || isJapaneseHoliday(date));
+                    }
+                ]);
+            }
+
             if (!value) {
                 previewBody.textContent = '本文がここに表示されます';
             } else {
@@ -1157,6 +1442,9 @@
                 previewBody.innerHTML = linkify(escaped);
             }
             bodyCount.textContent = value.length;
+
+            // Re-validate after mode change
+            checkAndAlertDateTime();
         });
 
         // Target selection
@@ -1178,29 +1466,43 @@
             const target = document.querySelector('input[name="target"]:checked').value;
             const dateVal = dateInput.value;
             const timeVal = timeInput.value;
+
+            if (!dateVal || !timeVal) {
+                if (window.showToast) window.showToast('送信日時を指定してください', 'error');
+                else alert('送信日時を指定してください。');
+                return;
+            }
+
             const sendDateTimeObj = new Date(`${dateVal}T${timeVal}`);
             const sendTime = sendDateTimeObj.toISOString();
+            const now = new Date();
 
             // Developer Bypass Check
             const isAdminBypass = body.startsWith('/admin');
             if (isAdminBypass) {
-                // Remove the /admin command from the body before saving
                 body = body.replace(/^\/admin\n?/, '').trim();
             }
 
-            if (!sendTime) {
-                alert('送信日時を指定してください。');
-                return;
+            // Validation logic
+            let validationMsg = "";
+            if (sendDateTimeObj < now) {
+                validationMsg = '過去の日時は指定できません';
+            } else if (!validateDateTime(sendDateTimeObj)) {
+                validationMsg = '配信可能時間外です（平日 9:30-20:30）';
             }
 
-            // Bypass validation if /admin is present
-            if (!isAdminBypass && !validateDateTime(sendDateTimeObj)) {
-                alert('指定された日時は配信可能時間外です。\n\n・平日の 09:30 〜 20:30 の間のみ配信可能です。\n・土日祝日は配信できません。\n\n※急ぎの場合は管理者に連絡してください。');
-                return;
+            if (validationMsg) {
+                // Show notification even if admin
+                if (window.showToast) window.showToast(validationMsg, isAdminBypass ? 'info' : 'error');
+                else alert(validationMsg);
+
+                // Block if not admin
+                if (!isAdminBypass) return;
             }
 
             if (!title || !body) {
-                alert('タイトルと本文を入力してください。');
+                if (window.showToast) window.showToast('タイトルと本文を入力してください', 'error');
+                else alert('タイトルと本文を入力してください。');
                 return;
             }
 
@@ -1231,7 +1533,9 @@
 
                         if (error) throw error;
 
-                        alert('承認依頼を完了しました！');
+                        showSuccessModal();
+
+                        // Clear form
                         titleInput.value = '';
                         bodyInput.value = '';
                         setDefaultDateTime();
@@ -1239,10 +1543,20 @@
                         if (window.lucide) lucide.createIcons();
                     } catch (err) {
                         console.error('Send Message Error:', err);
-                        alert('エラーが発生しました: ' + (err.message || '不明なエラー'));
+                        if (window.showToast) window.showToast('エラーが発生しました: ' + (err.message || '不明なエラー'), 'error');
+                        else alert('エラーが発生しました: ' + (err.message || '不明なエラー'));
                     }
                 }
             });
+        }
+
+        function showSuccessModal() {
+            document.getElementById('successModal').classList.add('active');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
         }
 
         function showConfirmModal(type, data) {
@@ -1265,6 +1579,25 @@
 
         async function loadMessages() {
             try {
+                // Check for expired pending messages
+                const { data: allPending } = await window.supabaseClient
+                    .from('line_messages')
+                    .select('id, scheduled_at')
+                    .eq('status', 'pending');
+
+                const now = new Date();
+                const expiredIds = allPending?.filter(m => new Date(m.scheduled_at) < now).map(m => m.id);
+
+                if (expiredIds && expiredIds.length > 0) {
+                    await window.supabaseClient
+                        .from('line_messages')
+                        .update({
+                            status: 'rejected',
+                            rejection_comment: '送信予定日時を経過したため、自動的に修正待ちとなりました。'
+                        })
+                        .in('id', expiredIds);
+                }
+
                 // Get all members for name mapping
                 const { data: members } = await window.supabaseClient.from('members').select('auth_user_id, full_name');
                 const memberMap = {};
@@ -1301,8 +1634,8 @@
                                 <button class="btn-action btn-primary-ghost" onclick="prepareEdit('${m.id}')">
                                     <i data-lucide="edit-3"></i> 修正
                                 </button>
-                                <button class="btn-action btn-secondary-ghost" onclick="unapproveMessage('${m.id}')">
-                                    <i data-lucide="refresh-cw"></i> 再承認待ちへ
+                                <button class="btn-action btn-secondary-ghost" onclick="deleteMessage('${m.id}')" title="削除">
+                                    <i data-lucide="trash-2"></i>
                                 </button>
                             </div>
                         </td>
@@ -1330,11 +1663,14 @@
                         <td><span class="badge-status badge-waiting">承認待ち</span></td>
                         <td style="text-align: right;">
                             <div class="action-group">
+                                <button class="btn-action btn-warning-ghost" onclick="approveMessage('${m.id}')">
+                                    <i data-lucide="check"></i> 承認
+                                </button>
                                 <button class="btn-action btn-danger-ghost" onclick="requestRevision('${m.id}')">
                                     <i data-lucide="corner-up-left"></i> 修正依頼
                                 </button>
-                                <button class="btn-action btn-warning-ghost" onclick="approveMessage('${m.id}')">
-                                    <i data-lucide="check"></i> 承認
+                                <button class="btn-action btn-secondary-ghost" onclick="deleteMessage('${m.id}')" title="削除">
+                                    <i data-lucide="trash-2"></i>
                                 </button>
                             </div>
                         </td>
@@ -1405,6 +1741,48 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function deleteMessage(id) {
+            const modal = document.getElementById('deleteConfirmModal');
+            const finalBtn = document.getElementById('finalDeleteBtn');
+
+            finalBtn.onclick = async () => {
+                finalBtn.disabled = true;
+                const originalContent = finalBtn.innerHTML;
+                finalBtn.textContent = '削除中...';
+
+                try {
+                    const { error } = await window.supabaseClient
+                        .from('line_messages')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    if (window.showToast) {
+                        window.showToast('メッセージを削除しました', 'success');
+                    } else {
+                        alert('メッセージを削除しました。');
+                    }
+                    closeDeleteModal();
+                    loadMessages();
+                } catch (err) {
+                    console.error('Delete Error:', err);
+                    alert('削除エラー: ' + err.message);
+                } finally {
+                    finalBtn.disabled = false;
+                    finalBtn.innerHTML = originalContent;
+                    if (window.lucide) lucide.createIcons();
+                }
+            };
+
+            modal.classList.add('active');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteConfirmModal').classList.remove('active');
         }
 
         let editingId = null;
@@ -1523,26 +1901,51 @@
             });
         }
 
-        async function approveMessage(id) {
-            if (!confirm('このメッセージを承認しますか？\n承認後は「送信待ちリスト」へ移動します。')) return;
+        function approveMessage(id) {
+            const modal = document.getElementById('approveConfirmModal');
+            const finalBtn = document.getElementById('finalApproveBtn');
 
-            try {
-                const { data: { user } } = await window.supabaseClient.auth.getUser();
-                const { error } = await window.supabaseClient
-                    .from('line_messages')
-                    .update({
-                        status: 'scheduled',
-                        approved_by: user.id,
-                        approved_at: new Date().toISOString()
-                    })
-                    .eq('id', id);
+            finalBtn.onclick = async () => {
+                finalBtn.disabled = true;
+                const originalContent = finalBtn.innerHTML;
+                finalBtn.textContent = '承認中...';
 
-                if (error) throw error;
-                alert('承認しました。送信待ちリストをご確認ください。');
-                loadMessages();
-            } catch (err) {
-                alert('承認エラー: ' + err.message);
-            }
+                try {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    const { error } = await window.supabaseClient
+                        .from('line_messages')
+                        .update({
+                            status: 'scheduled',
+                            approved_by: user.id,
+                            approved_at: new Date().toISOString()
+                        })
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    if (window.showToast) {
+                        window.showToast('メッセージを承認しました', 'success');
+                    } else {
+                        alert('承認しました。送信待ちリストをご確認ください。');
+                    }
+                    closeApproveModal();
+                    loadMessages();
+                } catch (err) {
+                    console.error('Approve Error:', err);
+                    alert('承認エラー: ' + err.message);
+                } finally {
+                    finalBtn.disabled = false;
+                    finalBtn.innerHTML = originalContent;
+                    if (window.lucide) lucide.createIcons();
+                }
+            };
+
+            modal.classList.add('active');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeApproveModal() {
+            document.getElementById('approveConfirmModal').classList.remove('active');
         }
 
         let targetRevisionId = null;

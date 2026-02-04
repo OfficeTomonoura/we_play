@@ -4,10 +4,23 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuthStatus(); // Add Auth Guard
-    renderSidebar();
-    renderHeaderProfile();
-    injectProfileModal();
+    // 1. Render UI components immediately so page is not blank
+    try {
+        renderSidebar();
+        renderHeaderProfile();
+        injectProfileModal();
+    } catch (e) {
+        console.error('UI Render Error:', e);
+    }
+
+    // 2. Check Auth Status (Async)
+    try {
+        await checkAuthStatus();
+    } catch (e) {
+        console.error('Auth Check Error:', e);
+        // Fallback: redirects to login if checking fails might be too aggressive? 
+        // Let's just log it for now, or maybe alert user.
+    }
 });
 
 async function checkAuthStatus() {
@@ -234,19 +247,11 @@ function injectProfileModal() {
                             </select>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div class="form-group">
-                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">役職</label>
-                                <select id="profilePos" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
-                                    <option value="">選択してください</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">役割</label>
-                                <select id="profileProjectRole" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
-                                    <option value="">選択してください</option>
-                                </select>
-                            </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 0.4rem;">役職</label>
+                            <select id="profilePos" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 0.6rem 0.8rem; border-radius: 8px; color: white; outline: none; font-size: 0.9rem;">
+                                <option value="">選択してください</option>
+                            </select>
                         </div>
 
                         <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
@@ -295,11 +300,11 @@ async function openProfileModal() {
         if (!user) return;
 
         // Fetch member data and master data in parallel
-        const [memberRes, orgsRes, posRes, projRes] = await Promise.all([
+        // NO PROJECT ROLE fetch needed now
+        const [memberRes, orgsRes, posRes] = await Promise.all([
             window.supabaseClient.from('members').select('*').eq('auth_user_id', user.id).single(),
             window.supabaseClient.from('master_organization').select('id, name').order('sort_order'),
-            window.supabaseClient.from('master_position').select('id, name').order('sort_order'),
-            window.supabaseClient.from('master_project_role').select('id, name').order('sort_order')
+            window.supabaseClient.from('master_position').select('id, name').order('sort_order')
         ]);
 
         if (memberRes.error) throw memberRes.error;
@@ -318,7 +323,6 @@ async function openProfileModal() {
 
         populateSelect('profileOrg', orgsRes.data || [], member.organization_id);
         populateSelect('profilePos', posRes.data || [], member.position_id);
-        populateSelect('profileProjectRole', projRes.data || [], member.project_role_id);
 
         document.getElementById('profileName').value = member.full_name || '';
         document.getElementById('profileKana').value = member.full_kana || '';
@@ -343,7 +347,7 @@ async function saveProfileData() {
     const highSchool = document.getElementById('profileHighSchool').value.trim();
     const organization_id = document.getElementById('profileOrg').value;
     const position_id = document.getElementById('profilePos').value;
-    const project_role_id = document.getElementById('profileProjectRole').value;
+    // const project_role_id = document.getElementById('profileProjectRole').value; // Removed
 
     if (!name || !kana) return;
 
@@ -360,20 +364,29 @@ async function saveProfileData() {
                 full_kana: kana,
                 high_school: highSchool,
                 organization_id: organization_id || null,
-                position_id: position_id || null,
-                project_role_id: project_role_id || null
+                position_id: position_id || null
+                // project_role_id: project_role_id || null // Removed
             })
             .eq('auth_user_id', user.id);
 
         if (error) throw error;
 
-        alert('プロフィールを更新しました。');
+        if (window.showToast) {
+            window.showToast('プロフィールを更新しました', 'success');
+        } else {
+            alert('プロフィールを更新しました。');
+        }
+
         closeProfileModal();
         // Refresh initials in header
         renderHeaderProfile();
     } catch (err) {
         console.error('Profile Save Error:', err);
-        alert('保存に失敗しました: ' + err.message);
+        if (window.showToast) {
+            window.showToast('保存に失敗しました: ' + err.message, 'error');
+        } else {
+            alert('保存に失敗しました: ' + err.message);
+        }
     } finally {
         btn.disabled = false;
         btn.textContent = 'プロフィール保存';
@@ -386,15 +399,15 @@ async function updateUserPassword() {
     const btn = document.getElementById('updatePasswordBtn');
 
     if (!newPass) {
-        alert('新しいパスワードを入力してください');
+        window.showToast ? window.showToast('新しいパスワードを入力してください', 'error') : alert('新しいパスワードを入力してください');
         return;
     }
     if (newPass.length < 6) {
-        alert('パスワードは6文字以上で設定してください');
+        window.showToast ? window.showToast('パスワードは6文字以上で設定してください', 'error') : alert('パスワードは6文字以上で設定してください');
         return;
     }
     if (newPass !== confirmPass) {
-        alert('パスワードが一致しません');
+        window.showToast ? window.showToast('パスワードが一致しません', 'error') : alert('パスワードが一致しません');
         return;
     }
 
@@ -410,13 +423,22 @@ async function updateUserPassword() {
 
         if (error) throw error;
 
-        alert('パスワードを更新しました');
+        if (window.showToast) {
+            window.showToast('パスワードを更新しました', 'success');
+        } else {
+            alert('パスワードを更新しました');
+        }
+
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmPassword').value = '';
 
     } catch (err) {
         console.error('Password Update Error:', err);
-        alert('エラーが発生しました: ' + err.message);
+        if (window.showToast) {
+            window.showToast('エラーが発生しました: ' + err.message, 'error');
+        } else {
+            alert('エラーが発生しました: ' + err.message);
+        }
     } finally {
         btn.disabled = false;
         btn.textContent = 'パスワードを更新する';
@@ -510,3 +532,44 @@ function initLogout() {
         });
     }
 }
+
+/**
+ * Global Toast Notification
+ * @param {string} message 
+ * @param {'success'|'error'|'info'} type 
+ */
+window.showToast = function (message, type = 'info') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    let iconName = 'info';
+    if (type === 'success') iconName = 'check';
+    if (type === 'error') iconName = 'alert-circle';
+
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i data-lucide="${iconName}" style="width: 16px; height: 16px;"></i>
+        </div>
+        <div class="toast-message">${message}</div>
+    `;
+
+    container.appendChild(toast);
+
+    // Icon render
+    if (window.lucide) lucide.createIcons();
+
+    // Auto remove
+    setTimeout(() => {
+        toast.style.animation = 'toastSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+        toast.addEventListener('animationend', () => {
+            toast.remove();
+        });
+    }, 3000);
+};

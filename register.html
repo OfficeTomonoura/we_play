@@ -279,15 +279,23 @@
 
                 if (liff.isLoggedIn()) {
                     setLiffData();
+                    // Load Master Data ONLY if logged in or local
+                    loadMasterData();
                 } else if (!isLocal) {
                     // Force login if in production (HTTPS)
+                    // Skip loading master data because redirect will abort the fetch
                     liff.login();
+                } else {
+                    // Local environment, not logged in -> Just load data
+                    loadMasterData();
                 }
 
-                // Load Master Data
-                loadMasterData();
             } catch (err) {
                 console.warn('LIFF Initialization failed:', err);
+                // Even if LIFF fails, try to load master data if on local
+                if (window.location.hostname === 'localhost') {
+                    loadMasterData();
+                }
             }
         });
 
@@ -384,7 +392,8 @@
                 }
             } catch (err) {
                 console.error('Failed to load master data:', err);
-                alert('マスタデータの読み込みに失敗しました。');
+                const errorMessage = err.message || JSON.stringify(err) || '不明なエラー';
+                alert('マスタデータの読み込みに失敗しました。\n詳細: ' + errorMessage);
             }
         }
 
