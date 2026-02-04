@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 24 - Circular Motion</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #02000a;
+            color: #fff;
+            font-family: 'Josefin Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Galaxy Background Container */
+        .galaxy-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+            perspective: 800px;
+            overflow: hidden;
+        }
+
+        /* Galaxy Spiral Core */
+        .galaxy-spiral {
+            position: absolute;
+            width: 1400px;
+            height: 1400px;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 140, 50, 0.4) 10%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+
+        /* Rotating Star Layers */
+        .star-rotator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Layer 1: Slow, large outer rotation */
+        .stars-1 {
+            width: 200vmax;
+            height: 200vmax;
+            background-image:
+                radial-gradient(1.5px 1.5px at 10% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 20% 80%, #fff, transparent),
+                radial-gradient(2px 2px at 40% 40%, #ffccaa, transparent),
+                radial-gradient(1.5px 1.5px at 60% 20%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 80% 60%, #fff, transparent),
+                radial-gradient(1px 1px at 90% 90%, #fff, transparent);
+            background-size: 800px 800px;
+            opacity: 0.6;
+            animation: rotateStars 120s linear infinite;
+        }
+
+        /* Layer 2: Medium speed, closer */
+        .stars-2 {
+            width: 150vmax;
+            height: 150vmax;
+            background-image:
+                radial-gradient(2px 2px at 15% 15%, #fff, transparent),
+                radial-gradient(2.5px 2.5px at 30% 70%, #ffaa00, transparent),
+                radial-gradient(2px 2px at 60% 30%, #aaddff, transparent),
+                radial-gradient(1.5px 1.5px at 80% 80%, #fff, transparent);
+            background-size: 600px 600px;
+            opacity: 0.7;
+            animation: rotateStars 80s linear infinite reverse;
+        }
+
+        /* Layer 3: Fast center vortex stars */
+        .stars-3 {
+            width: 100vmax;
+            height: 100vmax;
+            background-image:
+                radial-gradient(3px 3px at 50% 10%, #fff, transparent),
+                radial-gradient(2px 2px at 10% 50%, #fff, transparent),
+                radial-gradient(3px 3px at 90% 50%, #fff, transparent),
+                radial-gradient(2px 2px at 50% 90%, #fff, transparent);
+            background-size: 500px 500px;
+            opacity: 0.8;
+            animation: rotateStars 40s linear infinite;
+        }
+
+        @keyframes rotateStars {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Additional Twinkle Overlay for liveliness */
+        .twinkle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 1;
+            pointer-events: none;
+            background-image: radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.2), transparent);
+            background-size: 100px 100px;
+            animation: pulseOpacity 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseOpacity {
+            0% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            z-index: 10;
+            width: 380px;
+            padding: 40px;
+            background: rgba(30, 10, 50, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                inset 0 0 30px rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #ffffff, #ffaa00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(255, 150, 0, 0.6);
+        }
+
+        .glow-input {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .glow-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #ffecd2;
+            text-shadow: 0 0 5px rgba(255, 170, 0, 0.3);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-sizing: border-box;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            background: rgba(20, 0, 40, 0.6);
+            border-color: #ffcc00;
+            box-shadow: 0 0 25px rgba(255, 120, 0, 0.5);
+        }
+
+        /* Radio Cloud */
+        .radio-cloud {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cloud-opt {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cloud-opt input {
+            display: none;
+        }
+
+        .cloud-bg {
+            padding: 10px 0;
+            border-radius: 50px;
+            transition: 0.3s;
+            color: #ccc;
+        }
+
+        .cloud-opt input:checked+.cloud-bg {
+            background: linear-gradient(90deg, #ff8800, #ffcc00);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(255, 120, 0, 0.6);
+        }
+
+        button.glow-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #ff6600, #ffaa00);
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 25px rgba(255, 80, 0, 0.5);
+            margin-top: 10px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        button.glow-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 120, 0, 0.9);
+            filter: brightness(1.2);
+        }
+
+        /* Orbs adhering to circular motion theme */
+        .orb {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .o1 {
+            width: 200px;
+            height: 200px;
+            background: #6600cc;
+            opacity: 0.4;
+            animation: orbital 20s linear infinite;
+        }
+
+        .o2 {
+            width: 300px;
+            height: 300px;
+            background: #cc4400;
+            opacity: 0.3;
+            animation: orbital 25s linear infinite reverse;
+        }
+
+        @keyframes orbital {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(300px) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="galaxy-container">
+        <!-- Galaxy Core -->
+        <div class="galaxy-spiral"></div>
+
+        <!-- Rotating Star Fields -->
+        <div class="star-rotator stars-1"></div>
+        <div class="star-rotator stars-2"></div>
+        <div class="star-rotator stars-3"></div>
+
+        <!-- Subtle overlay -->
+        <div class="twinkle-overlay"></div>
+    </div>
+
+    <!-- Orbiting Glows -->
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+
+    <form class="glass-card">
+        <h1>VORTEX JOIN</h1>
+
+        <div class="glow-input">
+            <label>Name</label>
+            <input type="text" placeholder="Enter Full Name">
+        </div>
+
+        <div class="glow-input">
+            <label>Gender</label>
+            <div class="radio-cloud">
+                <label class="cloud-opt">
+                    <input type="radio" name="sex" checked>
+                    <div class="cloud-bg">Male</div>
+                </label>
+                <label class="cloud-opt">
+                    <input type="radio" name="sex">
+                    <div class="cloud-bg">Female</div>
+                </label>
+                <label class="cloud-opt">
+                    <input type="radio" name="sex">
+                    <div class="cloud-bg">Other</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="glow-input">
+            <label>Phone</label>
+            <input type="tel" placeholder="090-0000-0000">
+        </div>
+
+        <div class="glow-input">
+            <label>University</label>
+            <select>
+                <option>Hiroshima University</option>
+                <option>Okayama University</option>
+            </select>
+        </div>
+
+        <button type="button" class="glow-btn">LAUNCH</button>
+    </form>
+</body>
+
+</html>

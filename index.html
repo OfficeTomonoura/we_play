@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/vivid-main.css">
     <link rel="stylesheet" href="assets/css/lp.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -37,13 +37,27 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero"
+            style="background-image: url('assets/movie-making.jpg'); background-size: cover; background-position: center; position: relative; z-index: 1;">
+            <div
+                style="position: absolute; inset: 0; background: rgba(255, 107, 0, 0.85); mix-blend-mode: multiply; z-index: -1;">
+            </div>
             <div class="hero-content">
-                <span class="hero-tag">FOR FUTURE LEADERS</span>
-                <h1>We Play<br>未来人財育成委員会</h1>
-                <p>映画作ろうぜ！！ 〜地域で育む協働の絆〜<br>君の創造力が、地域の未来を鮮やかに彩る。</p>
-                <div class="cta-group">
-                    <a href="register.html" class="btn-primary">参加を申し込む</a>
+                <span class="hero-tag"
+                    style="background: #000; color: #fff; border: 2px solid #fff; transform: rotate(-3deg);">FOR FUTURE
+                    LEADERS</span>
+                <h1
+                    style="font-size: clamp(3rem, 10vw, 6rem); line-height: 0.9; text-shadow: 6px 6px 0 #000; color: #fff; font-style: italic; transform: skew(-5deg);">
+                    ぼくらの<br>
+                    <span style="color: #000; -webkit-text-stroke: 2px #fff; text-shadow: 4px 4px 0 #fff;">フィルム革命</span>
+                </h1>
+                <p
+                    style="color: #fff; text-shadow: 2px 2px 0 #000; font-weight: 700; font-size: 1.2rem; background: #000; display: inline-block; padding: 0.5rem 1rem; transform: rotate(2deg);">
+                    主役は、きみ。地域とつくる高校生映画。
+                </p>
+                <div class="cta-group" style="margin-top: 3rem;">
+                    <a href="register.html" class="btn-primary"
+                        style="font-size: 1.5rem; padding: 1.5rem 4rem; box-shadow: 8px 8px 0 #000; border: 3px solid #000; background: #fff; color: #000 !important;">参加を申し込む</a>
                 </div>
             </div>
         </section>
@@ -51,31 +65,36 @@
         <!-- Concept Section -->
         <section class="section-padding">
             <div class="container">
-                <div class="glass-card">
-                    <div style="text-align: center; max-width: 700px; margin: 0 auto;">
-                        <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">君が主役の物語。</h2>
-                        <p style="color: var(--text-dim); line-height: 1.8;">
+                <div class="glass-card" style="text-align: center; padding: 4rem 2rem;">
+                    <div style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; color: #000; transform: skew(-2deg);">
+                            君が主役の物語。</h2>
+                        <p style="color: #000; font-weight: 600; font-size: 1.1rem; line-height: 2;">
                             私たちは、映画制作を通じて地域との繋がりを深め、<br>
                             次世代を担う若者たちが自らの可能性を広げる場を提供します。<br>
-                            技術より情熱。未経験者、大歓迎。
+                            <span
+                                style="background: var(--primary); color: #fff; padding: 0.2rem 1rem; border: 2px solid #000; display: inline-block; margin-top: 1rem; transform: rotate(-2deg); font-weight: 800;">技術より情熱。未経験者、大歓迎。</span>
                         </p>
                     </div>
 
                     <div class="features-grid">
-                        <div class="feature-card glass-card">
+                        <div class="feature-card">
                             <div class="feature-icon"><i data-lucide="camera"></i></div>
                             <h3>クリエイティブ体験</h3>
-                            <p style="font-size: 0.9rem; color: var(--text-dim);">プロの機材や本格的な演出を学びながら、自分たちの想いを形にします。</p>
+                            <p style="font-size: 0.95rem; color: #333; font-weight: 500;">
+                                プロの機材や本格的な演出を学びながら、自分たちの想いを形にします。</p>
                         </div>
-                        <div class="feature-card glass-card">
+                        <div class="feature-card">
                             <div class="feature-icon"><i data-lucide="users-2"></i></div>
                             <h3>協働の絆</h3>
-                            <p style="font-size: 0.9rem; color: var(--text-dim);">異なる学校や地域の仲間と共に、一つの目標に向かって突き進む楽しさを。</p>
+                            <p style="font-size: 0.95rem; color: #333; font-weight: 500;">
+                                異なる学校や地域の仲間と共に、一つの目標に向かって突き進む楽しさを。</p>
                         </div>
-                        <div class="feature-card glass-card">
+                        <div class="feature-card">
                             <div class="feature-icon"><i data-lucide="map-pin"></i></div>
                             <h3>地域への想い</h3>
-                            <p style="font-size: 0.9rem; color: var(--text-dim);">自分が住む街を舞台に、新しい発見と感動を自分たちの手で作ります。</p>
+                            <p style="font-size: 0.95rem; color: #333; font-weight: 500;">
+                                自分が住む街を舞台に、新しい発見と感動を自分たちの手で作ります。</p>
                         </div>
                     </div>
                 </div>
@@ -83,33 +102,41 @@
         </section>
 
         <!-- Roles Section -->
-        <section class="section-padding" style="background: rgba(0,0,0,0.3);">
+        <section class="section-padding"
+            style="background: #000; color: #fff; border-top: 4px solid #fff; border-bottom: 4px solid #fff;">
             <div class="container" style="text-align: center;">
-                <h2 style="margin-bottom: 3rem;">募集中の役職</h2>
+                <h2 style="margin-bottom: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--primary);">募集中の役職</h2>
                 <div class="features-grid" style="margin-top: 0;">
-                    <div class="feature-card" style="background: transparent; border: none;">
+                    <!-- Card 1 -->
+                    <div class="feature-card" style="background: #fff; color: #000;">
                         <i data-lucide="clapperboard"
-                            style="width: 40px; height: 40px; color: var(--primary); margin-bottom: 1rem;"></i>
-                        <h4>監督・演出</h4>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">物語の世界観を創り上げ、チームを導くリーダーシップを発揮します。</p>
+                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
+                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">監督・演出</h4>
+                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">物語の世界観を創り上げ、チームを導くリーダーシップを発揮します。
+                        </p>
                     </div>
-                    <div class="feature-card" style="background: transparent; border: none;">
+                    <!-- Card 2 -->
+                    <div class="feature-card" style="background: #fff; color: #000;">
                         <i data-lucide="theater"
-                            style="width: 40px; height: 40px; color: var(--accent); margin-bottom: 1rem;"></i>
-                        <h4>演者</h4>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">カメラの前でキャラクターを生き生きと演じ、物語に命を吹き込みます。</p>
+                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
+                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">演者</h4>
+                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">カメラの前でキャラクターを生き生きと演じ、物語に命を吹き込みます。
+                        </p>
                     </div>
-                    <div class="feature-card" style="background: transparent; border: none;">
+                    <!-- Card 3 -->
+                    <div class="feature-card" style="background: #fff; color: #000;">
                         <i data-lucide="wrench"
-                            style="width: 40px; height: 40px; color: #ffea00; margin-bottom: 1rem;"></i>
-                        <h4>小道具・美術</h4>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">衣装やセットを作り、映画のリアリティと魅力を支える職人技。</p>
+                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
+                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">小道具・美術</h4>
+                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">衣装やセットを作り、映画のリアリティと魅力を支える職人技。</p>
                     </div>
-                    <div class="feature-card" style="background: transparent; border: none;">
+                    <!-- Card 4 -->
+                    <div class="feature-card" style="background: #fff; color: #000;">
                         <i data-lucide="briefcase"
-                            style="width: 40px; height: 40px; color: #7000ff; margin-bottom: 1rem;"></i>
-                        <h4>プロデューサー</h4>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">全体のスケジュール管理や広報など、プロジェクトの成功を支える司令塔。</p>
+                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
+                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">プロデューサー</h4>
+                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">全体のスケジュール管理や広報など、プロジェクトの成功を支える司令塔。
+                        </p>
                     </div>
                 </div>
             </div>

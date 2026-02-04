@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 7 - Glitch</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #ff6600;
+            font-family: 'VT323', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .glitch-container {
+            width: 400px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            position: relative;
+            margin-bottom: 30px;
+            color: #fff;
+            animation: glitch-anim 2s infinite;
+        }
+
+        h1::before,
+        h1::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        h1::before {
+            color: #ff00ff;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+            transform: translate(-3px, -3px);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        h1::after {
+            color: #00ffff;
+            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+            transform: translate(3px, 3px);
+            animation: glitch-anim-3 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                transform: skew(0deg);
+            }
+
+            20% {
+                transform: skew(-10deg);
+            }
+
+            40% {
+                transform: skew(10deg);
+            }
+
+            60% {
+                transform: skew(-5deg);
+            }
+
+            80% {
+                transform: skew(5deg);
+            }
+
+            100% {
+                transform: skew(0deg);
+            }
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 25px;
+            background: #111;
+            border: 2px solid #ff6600;
+        }
+
+        /* Noise overlay for inputs */
+        .input-box::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    #ff6600 2px,
+                    #ff6600 4px);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        label {
+            display: block;
+            background: #ff6600;
+            color: #000;
+            padding: 5px;
+            font-size: 1.2rem;
+            width: fit-content;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #ff6600;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            background: #220d00;
+        }
+
+        .radio-s {
+            display: flex;
+            padding: 10px;
+            gap: 20px;
+            font-size: 1.3rem;
+        }
+
+        button {
+            width: 100%;
+            background: #fff;
+            color: #000;
+            border: 2px solid #ff6600;
+            padding: 15px;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: 0.1s;
+        }
+
+        button:hover {
+            background: #ff6600;
+            color: #fff;
+            box-shadow: 5px 5px 0 #fff;
+            transform: translate(-3px, -3px);
+        }
+
+        /* Scanline global */
+        .scanline {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 102, 0, 0.5);
+            position: absolute;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            animation: scan 4s linear infinite;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% {
+                top: -10%;
+            }
+
+            100% {
+                top: 110%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scanline"></div>
+    <div class="glitch-container">
+        <h1 data-text="ERROR_LOG_IN">ERROR_LOG_IN</h1>
+
+        <div class="input-box">
+            <label>USR_NAME</label>
+            <input type="text">
+        </div>
+
+        <div class="input-box">
+            <label>GENDER_CODE</label>
+            <div class="radio-s">
+                <label><input type="radio" name="g"> M</label>
+                <label><input type="radio" name="g"> F</label>
+                <label><input type="radio" name="g"> NULL</label>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <label>SIGNAL_FREQ</label>
+            <input type="tel">
+        </div>
+
+        <div class="input-box">
+            <label>SECTOR</label>
+            <select>
+                <option>SECTOR_HIROSHIMA</option>
+                <option>SECTOR_OKAYAMA</option>
+            </select>
+        </div>
+
+        <button>INITIALIZE_SEQUENCE</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 29 - Alien</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tenor+Sans&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #080808;
+            color: #ff5500;
+            font-family: 'Tenor Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .monolith {
+            width: 360px;
+            background: linear-gradient(180deg, #151515, #0a0a0a);
+            border: 1px solid #333;
+            padding: 60px 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glowing Rune Line */
+        .rune-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #ff5500, transparent);
+            opacity: 0.3;
+            transform: translateX(-50%);
+        }
+
+        .alien-symbol {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            text-shadow: 0 0 20px #ff5500;
+        }
+
+        .form-row {
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+            padding: 10px 0;
+            font-size: 1.1rem;
+            font-family: 'Tenor Sans', sans-serif;
+            text-align: center;
+            transition: 0.5s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-bottom-color: #ff5500;
+            color: #ff5500;
+        }
+
+        /* Minimal Glyph Radios */
+        .glyph-radios {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .g-label {
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #555;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .g-label:hover {
+            color: #888;
+        }
+
+        .g-label input {
+            display: none;
+        }
+
+        .g-label input:checked+span {
+            color: #ff5500;
+            text-shadow: 0 0 10px #ff5500;
+            border-bottom: 1px solid #ff5500;
+        }
+
+        button.activate-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #333;
+            color: #555;
+            padding: 20px;
+            font-size: 1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.6s;
+            margin-top: 20px;
+        }
+
+        button.activate-btn:hover {
+            border-color: #ff5500;
+            color: #ff5500;
+            box-shadow: 0 0 30px rgba(255, 85, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <form class="monolith">
+        <div class="rune-line"></div>
+        <div class="alien-symbol">⍙</div>
+
+        <div class="form-row">
+            <input type="text" placeholder="IDENTITY" required>
+        </div>
+
+        <div class="form-row">
+            <div class="glyph-radios">
+                <label class="g-label"><input type="radio" name="x"><span>XY</span></label>
+                <label class="g-label"><input type="radio" name="x"><span>XX</span></label>
+                <label class="g-label"><input type="radio" name="x"><span>Ø</span></label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <input type="tel" placeholder="FREQUENCY" required>
+        </div>
+
+        <div class="form-row">
+            <select>
+                <option>HIROSHIMA</option>
+                <option>OKAYAMA</option>
+            </select>
+        </div>
+
+        <button class="activate-btn">TRANSMIT</button>
+    </form>
+</body>
+
+</html>

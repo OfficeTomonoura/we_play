@@ -9,258 +9,812 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&family=Josefin+Sans:wght@300;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .required-badge {
-            background: rgba(255, 75, 75, 0.1);
-            color: #ff4b4b;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-left: 8px;
-            font-weight: 700;
-            vertical-align: middle;
+        /* --- MOVED / MERGED CSS FROM draft_form24_4.html --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #02000a;
+            color: #fff;
+            font-family: 'Josefin Sans', 'Noto Sans JP', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Changed to min-height for scrolling form */
+            overflow-x: hidden;
+            /* Allow vertical scroll */
         }
 
-        .phone-groups {
+        /* --- SPACE ELEMENTS (Base) --- */
+        .galaxy-container {
+            position: fixed;
+            /* Fixed background */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+            perspective: 800px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .galaxy-spiral {
+            position: absolute;
+            width: 1400px;
+            height: 1400px;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 140, 50, 0.4) 10%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+
+        .star-rotator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .stars-1 {
+            width: 200vmax;
+            height: 200vmax;
+            background-image:
+                radial-gradient(1.5px 1.5px at 10% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 20% 80%, #fff, transparent),
+                radial-gradient(2px 2px at 40% 40%, #ffccaa, transparent),
+                radial-gradient(1.5px 1.5px at 60% 20%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 80% 60%, #fff, transparent),
+                radial-gradient(1px 1px at 90% 90%, #fff, transparent);
+            background-size: 800px 800px;
+            opacity: 0.6;
+            animation: rotateStars 120s linear infinite;
+        }
+
+        .stars-2 {
+            width: 150vmax;
+            height: 150vmax;
+            background-image:
+                radial-gradient(2px 2px at 15% 15%, #fff, transparent),
+                radial-gradient(2.5px 2.5px at 30% 70%, #ffaa00, transparent),
+                radial-gradient(2px 2px at 60% 30%, #aaddff, transparent),
+                radial-gradient(1.5px 1.5px at 80% 80%, #fff, transparent);
+            background-size: 600px 600px;
+            opacity: 0.7;
+            animation: rotateStars 80s linear infinite reverse;
+        }
+
+        .stars-3 {
+            width: 100vmax;
+            height: 100vmax;
+            background-image:
+                radial-gradient(3px 3px at 50% 10%, #fff, transparent),
+                radial-gradient(2px 2px at 10% 50%, #fff, transparent),
+                radial-gradient(3px 3px at 90% 50%, #fff, transparent),
+                radial-gradient(2px 2px at 50% 90%, #fff, transparent);
+            background-size: 500px 500px;
+            opacity: 0.8;
+            animation: rotateStars 40s linear infinite;
+        }
+
+        @keyframes rotateStars {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .twinkle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 1;
+            pointer-events: none;
+            background-image: radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.2), transparent);
+            background-size: 100px 100px;
+            animation: pulseOpacity 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseOpacity {
+            0% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        .orb {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .o1 {
+            width: 200px;
+            height: 200px;
+            background: #6600cc;
+            opacity: 0.4;
+            animation: orbital 20s linear infinite;
+        }
+
+        .o2 {
+            width: 300px;
+            height: 300px;
+            background: #cc4400;
+            opacity: 0.3;
+            animation: orbital 25s linear infinite reverse;
+        }
+
+        @keyframes orbital {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(300px) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg);
+            }
+        }
+
+        /* --- CINEMATIC / FILM ELEMENTS (Hidden Taste) --- */
+        .film-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 998;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.9);
+            pointer-events: none;
+            z-index: 997;
+        }
+
+        .film-strip {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 996;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .fs-top {
+            top: 0;
+        }
+
+        .fs-bottom {
+            bottom: 0;
+        }
+
+        .perforations {
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(90deg, transparent 5px, rgba(255, 255, 255, 0.15) 5px, rgba(255, 255, 255, 0.15) 25px, transparent 25px);
+            background-size: 40px 100%;
+            background-position: center;
+            opacity: 0.3;
+        }
+
+        .projector-flicker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            pointer-events: none;
+            z-index: 999;
+            animation: flickerAnim 0.1s infinite alternate;
+            mix-blend-mode: overlay;
+        }
+
+        @keyframes flickerAnim {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        .scratches {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.15;
+            background: repeating-linear-gradient(90deg,
+                    transparent 0,
+                    transparent 49%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    transparent 51%,
+                    transparent 100%);
+            background-size: 200vw 100vh;
+            animation: scratchAnim 0.4s steps(3) infinite;
+        }
+
+        @keyframes scratchAnim {
+            0% {
+                transform: translateX(0);
+                opacity: 0.05;
+            }
+
+            20% {
+                transform: translateX(20px);
+                opacity: 0.1;
+            }
+
+            40% {
+                transform: translateX(-40px);
+                opacity: 0.05;
+            }
+
+            60% {
+                transform: translateX(60px);
+                opacity: 0.15;
+            }
+
+            80% {
+                transform: translateX(-10px);
+                opacity: 0.05;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 0.1;
+            }
+        }
+
+
+        /* --- FORM --- */
+        .glass-card {
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            /* Wider for better mobile/desktop balance */
+            padding: 40px;
+            background: rgba(30, 10, 50, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                inset 0 0 30px rgba(255, 255, 255, 0.05);
+            position: relative;
+            margin: 80px 0;
+            /* Clearance for film strips */
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #ffffff, #ffaa00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(255, 150, 0, 0.6);
+            letter-spacing: 2px;
+            margin-top: 0;
+            /* Reset */
+        }
+
+        /* Subheader additions */
+        .form-subheader {
+            text-align: center;
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-top: -20px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .glow-input {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .glow-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #ffecd2;
+            text-shadow: 0 0 5px rgba(255, 170, 0, 0.3);
             display: flex;
             align-items: center;
+            gap: 6px;
+        }
+
+        .required-badge {
+            background: rgba(255, 75, 75, 0.2);
+            color: #ff8888;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 75, 75, 0.3);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-sizing: border-box;
+            font-family: 'Josefin Sans', 'Noto Sans JP', sans-serif;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            background: rgba(20, 0, 40, 0.6);
+            border-color: #ffcc00;
+            box-shadow: 0 0 25px rgba(255, 120, 0, 0.5);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .radio-cloud {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cloud-opt {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cloud-opt input {
+            display: none;
+        }
+
+        .cloud-bg {
+            padding: 10px 0;
+            border-radius: 50px;
+            transition: 0.3s;
+            color: #ccc;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            transform: translateX(24px);
+            /* Move entire button (text + background) right */
+        }
+
+        .cloud-opt input:checked+.cloud-bg {
+            background: linear-gradient(90deg, #ff8800, #ffcc00);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(255, 120, 0, 0.6);
+        }
+
+        button.glow-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #ff6600, #ffaa00);
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 25px rgba(255, 80, 0, 0.5);
+            margin-top: 10px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 10px;
         }
 
-        .phone-groups input {
-            text-align: center;
-            flex: 1;
+        button.glow-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 120, 0, 0.9);
+            filter: brightness(1.2);
         }
 
-        .phone-groups .separator {
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: bold;
+        /* Checkbox Style */
+        .checkbox-group {
+            margin-bottom: 25px;
         }
 
-        .error-text {
-            color: #ff4b4b;
-            font-size: 0.8rem;
-            margin-top: 5px;
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding-left: 30px;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .custom-checkbox:hover input~.checkmark {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-checkbox input:checked~.checkmark {
+            background-color: #ffaa00;
+            border-color: #ffaa00;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
             display: none;
+        }
+
+        .custom-checkbox input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .custom-checkbox .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom-checkbox a {
+            color: #ffcc00;
+            text-decoration: none;
+            border-bottom: 1px dashed #ffcc00;
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            /* Controlled by JS */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .success-content {
+            background: rgba(30, 20, 40, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #ffaa00;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 100, 0, 0.5);
+            max-width: 90%;
+            width: 350px;
+        }
+
+        .success-icon {
+            color: #ffaa00;
+            margin-bottom: 20px;
+        }
+
+        .success-content h2 {
+            margin: 10px 0;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .success-content p {
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 10px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            .glass-card {
+                width: 95%;
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Header Specifics */
+        .top-label {
+            font-size: 0.8rem;
+            color: #ffd700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            text-align: center;
+        }
+
+        .committee-label {
+            font-size: 0.9rem;
+            color: #fff;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .catchphrase {
+            font-size: 1rem;
+            color: #ddd;
+            margin-bottom: 30px;
+            font-weight: 400;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
 
 <body>
-    <div class="background-overlay"></div>
+    <div class="galaxy-container">
+        <!-- Galaxy Core -->
+        <div class="galaxy-spiral"></div>
 
-    <main class="container">
-        <section class="form-wrapper">
-            <header class="form-header">
-                <div class="logo">
-                    <span class="logo-text">一般社団法人福山青年会議所</span>
-                </div>
-                <h1>We Play 未来人財育成委員会</h1>
-                <h2>映画作ろうぜ！！<br>〜地域で育む協働の絆〜</h2>
-                <p>参加をご希望の方は、以下のフォームより必要事項をご入力ください。</p>
-            </header>
+        <!-- Rotating Star Fields -->
+        <div class="star-rotator stars-1"></div>
+        <div class="star-rotator stars-2"></div>
+        <div class="star-rotator stars-3"></div>
 
-            <form id="registrationForm" class="registration-form" novalidate>
-                <!-- Hidden fields for LINE ID Linkage -->
-                <input type="hidden" id="line_user_id" name="line_user_id" value="">
-                <input type="hidden" id="line_display_name" name="line_display_name" value="">
-                <input type="hidden" id="line_picture_url" name="line_picture_url" value="">
-                <div class="form-group">
-                    <label for="name">
-                        <i data-lucide="user"></i> お名前<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="text" id="name" name="applicant_name" placeholder="山田 太郎" required>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+        <!-- Subtle overlay -->
+        <div class="twinkle-overlay"></div>
+    </div>
 
-                <div class="form-group">
-                    <label for="name-kana">
-                        <i data-lucide="user"></i> お名前（ふりがな）<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="text" id="name-kana" name="applicant_kana" placeholder="やまだ たろう"
-                            pattern="^[ぁ-んー\s]+$" title="ひらがなで入力してください" autocomplete="off" required>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+    <!-- Orbiting Glows -->
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
 
-                <div class="form-group">
-                    <label for="gender">
-                        <i data-lucide="user"></i> 性別<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="gender" name="gender" required>
-                            <option value="" disabled selected>選択してください</option>
-                            <option value="male">男</option>
-                            <option value="female">女</option>
-                            <option value="other">選択しない</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+    <!-- Cinematic Elements -->
+    <div class="vignette"></div>
+    <div class="film-grain"></div>
+    <div class="projector-flicker"></div>
+    <div class="scratches"></div>
 
-                <div class="form-group">
-                    <label for="school">
-                        <i data-lucide="graduation-cap"></i> 学校名<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="school" name="school_id" required>
-                            <option value="" disabled selected>読み込み中...</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+    <div class="film-strip fs-top">
+        <div class="perforations"></div>
+    </div>
+    <div class="film-strip fs-bottom">
+        <div class="perforations"></div>
+    </div>
 
-                <div class="form-group">
-                    <label for="grade">
-                        <i data-lucide="hash"></i> 学年<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="grade" name="grade" required>
-                            <option value="" disabled selected>選択してください</option>
-                            <option value="1">1年生</option>
-                            <option value="2">2年生</option>
-                            <option value="3">3年生</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+    <!-- Main Registration Form -->
+    <form id="registrationForm" class="glass-card" novalidate>
+        <!-- Use existing IDs/Names for JS compatibility -->
+        <input type="hidden" id="line_user_id" name="line_user_id" value="">
+        <input type="hidden" id="line_display_name" name="line_display_name" value="">
+        <input type="hidden" id="line_picture_url" name="line_picture_url" value="">
 
-                <div class="form-group">
-                    <label for="role-1">
-                        <i data-lucide="star"></i> 第1希望役職<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="role-1" name="role-1" class="role-select" required>
-                            <option value="" disabled selected>読み込み中...</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+        <div class="top-label">一般社団法人福山青年会議所</div>
+        <div class="committee-label">We Play 未来人財育成委員会</div>
+        <h1>ぼくらのフィルム革命</h1>
+        <div class="catchphrase">主役は、きみ。地域とつくる高校生映画。</div>
 
-                <div class="form-group">
-                    <label for="role-2">
-                        <i data-lucide="star"></i> 第2希望役職<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="role-2" name="role-2" class="role-select" required>
-                            <option value="" disabled selected>読み込み中...</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+        <div class="glow-input">
+            <label for="name"><i data-lucide="user" size="16"></i> お名前 <span class="required-badge">必須</span></label>
+            <input type="text" id="name" name="applicant_name" placeholder="山田 太郎" required>
+        </div>
 
-                <div class="form-group">
-                    <label for="role-3">
-                        <i data-lucide="star"></i> 第3希望役職<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="role-3" name="role-3" class="role-select" required>
-                            <option value="" disabled selected>読み込み中...</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
+        <div class="glow-input">
+            <label for="name-kana"><i data-lucide="user" size="16"></i> ふりがな <span
+                    class="required-badge">必須</span></label>
+            <input type="text" id="name-kana" name="applicant_kana" placeholder="やまだ たろう" pattern="^[ぁ-んー\s]+$"
+                title="ひらがなで入力してください" required>
+        </div>
 
-                <div class="form-group">
-                    <label for="referral">
-                        <i data-lucide="megaphone"></i> 何で知ったか<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="referral" name="referral" class="referral-select" required>
-                            <option value="" disabled selected>読み込み中...</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="select-icon"></i>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
-
-                <div class="form-group" id="referral-other-group" style="display: none;">
-                    <label for="referral-other">
-                        <i data-lucide="edit-3"></i> その他の理由<span class="required-badge" style="display: none;"
-                            id="referral-other-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <textarea id="referral-other" name="referral-other" rows="2"
-                            placeholder="具体的にご記入ください"></textarea>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">
-                        <i data-lucide="mail"></i> メールアドレス<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="email" id="email" name="email" placeholder="example@weplay.com" required>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone-1">
-                        <i data-lucide="phone"></i> 電話番号<span class="required-badge">必須</span>
-                    </label>
-                    <div class="input-wrapper phone-groups">
-                        <input type="tel" id="phone-1" name="phone_1" placeholder="090" pattern="\d*" required>
-                        <span class="separator">-</span>
-                        <input type="tel" id="phone-2" name="phone_2" placeholder="1234" pattern="\d*" required>
-                        <span class="separator">-</span>
-                        <input type="tel" id="phone-3" name="phone_3" placeholder="5678" pattern="\d*" required>
-                        <span class="focus-border"></span>
-                    </div>
-                    <input type="hidden" id="phone" name="phone">
-                </div>
-
-                <div class="form-group">
-                    <label for="message">
-                        <i data-lucide="message-square"></i> ご要望・メッセージ
-                    </label>
-                    <div class="input-wrapper">
-                        <textarea id="message" name="message" rows="4" placeholder="ご質問や特別なリクエストがあればご記入ください"></textarea>
-                        <span class="focus-border"></span>
-                    </div>
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="privacy" required>
-                        <span class="checkmark"></span>
-                        <span class="label-text"><a href="#">プライバシーポリシー</a>に同意する</span>
-                    </label>
-                </div>
-
-                <button type="submit" class="submit-button">
-                    <span>送信する</span>
-                    <i data-lucide="arrow-right"></i>
-                </button>
-            </form>
-
-            <div id="successMessage" class="success-overlay" style="display: none;">
-                <div class="success-content">
-                    <div class="success-icon">
-                        <i data-lucide="check-circle-2"></i>
-                    </div>
-                    <h2>申し込み完了</h2>
-                    <p>ありがとうございます。確認メールをお送りしました。</p>
-                    <button type="button" class="close-btn" onclick="location.reload()">閉じる</button>
-                </div>
+        <div class="glow-input">
+            <label><i data-lucide="users" size="16"></i> 性別 <span class="required-badge">必須</span></label>
+            <div class="radio-cloud">
+                <label class="cloud-opt">
+                    <!-- Value must match JS map: male, female, other -->
+                    <input type="radio" name="gender" value="male" required>
+                    <div class="cloud-bg">男性</div>
+                </label>
+                <label class="cloud-opt">
+                    <input type="radio" name="gender" value="female">
+                    <div class="cloud-bg">女性</div>
+                </label>
+                <label class="cloud-opt">
+                    <input type="radio" name="gender" value="other">
+                    <div class="cloud-bg">選択しない</div>
+                </label>
             </div>
-        </section>
-    </main>
+        </div>
 
+        <div class="glow-input">
+            <label for="school"><i data-lucide="graduation-cap" size="16"></i> 学校名 <span
+                    class="required-badge">必須</span></label>
+            <select id="school" name="school_id" required>
+                <option value="" disabled selected>読み込み中...</option>
+            </select>
+        </div>
+
+        <div class="glow-input">
+            <label for="grade"><i data-lucide="hash" size="16"></i> 学年 <span class="required-badge">必須</span></label>
+            <select id="grade" name="grade" required>
+                <option value="" disabled selected>選択してください</option>
+                <option value="1">1年生</option>
+                <option value="2">2年生</option>
+                <option value="3">3年生</option>
+                <option value="4">4年生</option>
+            </select>
+        </div>
+
+        <div class="glow-input">
+            <label for="role-1"><i data-lucide="star" size="16"></i> 第1希望役職 <span
+                    class="required-badge">必須</span></label>
+            <select id="role-1" name="role-1" class="role-select" required>
+                <option value="" disabled selected>読み込み中...</option>
+            </select>
+        </div>
+
+        <div class="glow-input">
+            <label for="role-2"><i data-lucide="star" size="16"></i> 第2希望役職 <span
+                    class="required-badge">必須</span></label>
+            <select id="role-2" name="role-2" class="role-select" required>
+                <option value="" disabled selected>読み込み中...</option>
+            </select>
+        </div>
+
+        <div class="glow-input">
+            <label for="role-3"><i data-lucide="star" size="16"></i> 第3希望役職 <span
+                    class="required-badge">必須</span></label>
+            <select id="role-3" name="role-3" class="role-select" required>
+                <option value="" disabled selected>読み込み中...</option>
+            </select>
+        </div>
+
+        <div class="glow-input">
+            <label for="referral"><i data-lucide="megaphone" size="16"></i> 何で知ったか <span
+                    class="required-badge">必須</span></label>
+            <select id="referral" name="referral" class="referral-select" required>
+                <option value="" disabled selected>読み込み中...</option>
+            </select>
+        </div>
+
+        <!-- Hidden group for 'Other' referral -->
+        <div class="glow-input" id="referral-other-group" style="display: none;">
+            <label for="referral-other"><i data-lucide="edit-3" size="16"></i> 詳細 <span class="required-badge"
+                    id="referral-other-badge">必須</span></label>
+            <textarea id="referral-other" name="referral-other" rows="2" placeholder="詳細をご記入ください"></textarea>
+        </div>
+
+        <div class="glow-input">
+            <label for="phone"><i data-lucide="phone" size="16"></i> Phone <span
+                    class="required-badge">必須</span></label>
+            <!-- Single phone input now -->
+            <input type="tel" id="phone" name="phone" placeholder="090-1234-5678" pattern="[\d-]*" required>
+        </div>
+
+        <div class="glow-input">
+            <label for="email"><i data-lucide="mail" size="16"></i> Email <span class="required-badge">必須</span></label>
+            <input type="email" id="email" name="email" placeholder="example@weplay.com" required>
+        </div>
+
+        <div class="glow-input">
+            <label for="message"><i data-lucide="message-square" size="16"></i> Message</label>
+            <textarea id="message" name="message" rows="4" placeholder="ご質問や特別なリクエストがあればご記入ください"></textarea>
+        </div>
+
+        <div class="checkbox-group">
+            <label class="custom-checkbox">
+                <input type="checkbox" name="privacy" required>
+                <span class="checkmark"></span>
+                <span><a href="#">プライバシーポリシー</a>に同意する</span>
+            </label>
+        </div>
+
+        <button type="submit" class="glow-btn">
+            応募する <i data-lucide="rocket" size="20"></i>
+        </button>
+    </form>
+
+    <div id="successMessage" class="success-overlay">
+        <div class="success-content">
+            <div class="success-icon">
+                <i data-lucide="check-circle-2" size="48"></i>
+            </div>
+            <h2>MISSION START</h2>
+            <p>エントリー完了。確認メールを送信しました。</p>
+            <button type="button" class="close-btn" onclick="location.reload()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="assets/js/supabase-client.js"></script>
@@ -268,31 +822,24 @@
     <script>
         lucide.createIcons();
 
-        // LIFF Initialization
+        // LIFF Initialization & Master Data Load (Preserved Logic)
         document.addEventListener('DOMContentLoaded', async () => {
             const liffId = "2009015373-QGkjtgDJ";
             try {
                 await liff.init({ liffId: liffId });
 
-                // Check environment
                 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 
                 if (liff.isLoggedIn()) {
                     setLiffData();
-                    // Load Master Data ONLY if logged in or local
                     loadMasterData();
                 } else if (!isLocal) {
-                    // Force login if in production (HTTPS)
-                    // Skip loading master data because redirect will abort the fetch
                     liff.login();
                 } else {
-                    // Local environment, not logged in -> Just load data
                     loadMasterData();
                 }
-
             } catch (err) {
                 console.warn('LIFF Initialization failed:', err);
-                // Even if LIFF fails, try to load master data if on local
                 if (window.location.hostname === 'localhost') {
                     loadMasterData();
                 }
@@ -343,7 +890,6 @@
                         const currentValue = select.value;
                         Array.from(select.options).forEach(option => {
                             if (!option.value) return; // Skip placeholder
-                            // Disable if selected elsewhere, unless it's the current selection for this dropdown
                             option.disabled = selectedValues.includes(option.value) && option.value !== currentValue;
                         });
                     });
@@ -369,7 +915,6 @@
                     });
                     refSelect.innerHTML = html;
 
-                    // Re-bind the "Other" logic since the elements are now dynamic
                     refSelect.addEventListener('change', () => {
                         const selectedOption = refSelect.options[refSelect.selectedIndex];
                         const referralOtherGroup = document.getElementById('referral-other-group');
@@ -392,8 +937,7 @@
                 }
             } catch (err) {
                 console.error('Failed to load master data:', err);
-                const errorMessage = err.message || JSON.stringify(err) || '不明なエラー';
-                alert('マスタデータの読み込みに失敗しました。\n詳細: ' + errorMessage);
+                alert('マスタデータの読み込みに失敗しました。');
             }
         }
 
@@ -408,11 +952,7 @@
                 if (nameField) nameField.value = profile.displayName;
                 if (picField) picField.value = profile.pictureUrl;
 
-                console.log('LIFF User Linked:', profile.userId);
-
-                // Check if already applied
                 await checkRedirect(profile.userId);
-
             } catch (err) {
                 console.error('Error getting profile:', err);
             }
@@ -421,9 +961,6 @@
         async function checkRedirect(userId) {
             if (!window.supabaseClient) return;
             try {
-                // Determine base path for redirect (LP is usually at root or ../index.html relative to this file?)
-                // register.html is in root (same level as index.html).
-
                 const { data, error } = await window.supabaseClient
                     .from('applicants')
                     .select('id')
@@ -431,9 +968,8 @@
                     .maybeSingle();
 
                 if (data) {
-                    // Already applied, redirect to LP
-                    console.log('Already applied, redirecting to LP...');
-                    window.location.href = 'index.html'; // Adjust if needed
+                    // Already applied
+                    window.location.href = 'index.html';
                 }
             } catch (e) {
                 console.warn('Check redirect failed', e);

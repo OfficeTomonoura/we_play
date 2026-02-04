@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 23 - Retro Alien</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Space+Mono&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d110d;
+            color: #ffaa00;
+            font-family: 'Space Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .terminal-screen {
+            background-color: #000;
+            width: 500px;
+            height: 600px;
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow:
+                inset 0 0 100px rgba(255, 170, 0, 0.1),
+                0 0 50px rgba(255, 170, 0, 0.1);
+            border: 20px solid #222;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* CRT Scanline */
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                    rgba(255, 255, 255, 0),
+                    rgba(255, 255, 255, 0) 50%,
+                    rgba(0, 0, 0, 0.1) 50%,
+                    rgba(0, 0, 0, 0.1));
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .screen-content {
+            height: 100%;
+            border: 2px solid #ffaa00;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Major Mono Display', monospace;
+            text-align: center;
+            border-bottom: 2px dashed #ffaa00;
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-transform: lowercase;
+        }
+
+        .data-line {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .prompt {
+            color: #ff5500;
+            margin-right: 15px;
+            min-width: 100px;
+        }
+
+        input,
+        select {
+            background: transparent;
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            font-family: 'Space Mono', monospace;
+            padding: 5px;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            background: #ffaa00;
+            color: #000;
+            outline: none;
+        }
+
+        .radio-arr {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-item {
+            cursor: pointer;
+        }
+
+        .radio-item input {
+            display: none;
+        }
+
+        .radio-item span::before {
+            content: '( ) ';
+        }
+
+        .radio-item input:checked+span::before {
+            content: '(*) ';
+            color: #ff5500;
+        }
+
+        button.transmit-btn {
+            width: 100%;
+            margin-top: 30px;
+            background: transparent;
+            border: 2px solid #ffaa00;
+            color: #ffaa00;
+            font-family: 'Major Mono Display', monospace;
+            padding: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-transform: lowercase;
+        }
+
+        button.transmit-btn:hover {
+            background: #ff5500;
+            color: #000;
+        }
+
+        /* Flicker Animation */
+        @keyframes flicker {
+            0% {
+                opacity: 0.9;
+            }
+
+            5% {
+                opacity: 0.8;
+            }
+
+            10% {
+                opacity: 0.9;
+            }
+
+            100% {
+                opacity: 0.9;
+            }
+        }
+
+        .screen-content {
+            animation: flicker 0.15s infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="terminal-screen">
+        <div class="scanline"></div>
+        <div class="screen-content">
+            <h1>NOSTROMO</h1>
+
+            <div class="data-line">
+                <span class="prompt">NAME:</span>
+                <input type="text">
+            </div>
+
+            <div class="data-line">
+                <span class="prompt">GENDER:</span>
+                <div class="radio-arr">
+                    <label class="radio-item"><input type="radio" name="x"><span>MALE</span></label>
+                    <label class="radio-item"><input type="radio" name="x"><span>FEMALE</span></label>
+                    <label class="radio-item"><input type="radio" name="x"><span>N/A</span></label>
+                </div>
+            </div>
+
+            <div class="data-line">
+                <span class="prompt">FREQ_ID:</span>
+                <input type="tel">
+            </div>
+
+            <div class="data-line">
+                <span class="prompt">BASE:</span>
+                <select>
+                    <option>HIROSHIMA</option>
+                    <option>OKAYAMA</option>
+                </select>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: #ff5500;">
+                *** SECURE CONNECTION ***
+            </div>
+
+            <button class="transmit-btn">send_data</button>
+        </div>
+    </div>
+</body>
+
+</html>

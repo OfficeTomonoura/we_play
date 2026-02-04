@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 26 - Astronaut</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0;
+            color: #333;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .astro-card {
+            background: #fff;
+            width: 400px;
+            padding: 50px;
+            border-radius: 4px;
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 5px #ff5500;
+            /* Safety Orange */
+            position: relative;
+        }
+
+        /* NASA-style stripe */
+        .stripe {
+            position: absolute;
+            top: 40px;
+            left: -10px;
+            width: 80px;
+            height: 5px;
+            background: #ff5500;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin: 0 0 40px 0;
+            letter-spacing: -2px;
+            color: #000;
+        }
+
+        .form-block {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px;
+            background: #f5f5f5;
+            border: none;
+            border-left: 3px solid #ccc;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            background: #fff;
+            border-left-color: #ff5500;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* Toggle switches */
+        .toggle-group {
+            display: flex;
+            background: #eee;
+            border-radius: 4px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .toggle-opt {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .toggle-opt input {
+            display: none;
+        }
+
+        .toggle-bg {
+            padding: 8px 0;
+            border-radius: 2px;
+            color: #777;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .toggle-opt input:checked+.toggle-bg {
+            background: #fff;
+            color: #ff5500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button.btn-launch {
+            width: 100%;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        button.btn-launch:hover {
+            background: #ff5500;
+        }
+
+        .footer-code {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: #bbb;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="astro-card">
+        <div class="stripe"></div>
+        <h1>CREW RECRUIT</h1>
+
+        <div class="form-block">
+            <label>Name</label>
+            <input type="text" placeholder="John Doe">
+        </div>
+
+        <div class="form-block">
+            <label>Title</label>
+            <div class="toggle-group">
+                <label class="toggle-opt">
+                    <input type="radio" name="s" checked>
+                    <div class="toggle-bg">Mr</div>
+                </label>
+                <label class="toggle-opt">
+                    <input type="radio" name="s">
+                    <div class="toggle-bg">Ms</div>
+                </label>
+                <label class="toggle-opt">
+                    <input type="radio" name="s">
+                    <div class="toggle-bg">N/A</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <label>Contact</label>
+            <input type="tel" placeholder="000-0000-0000">
+        </div>
+
+        <div class="form-block">
+            <label>Unit</label>
+            <select>
+                <option>Hiroshima Division</option>
+                <option>Okayama Division</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn-launch">SUBMIT APPLICATION</button>
+        <div class="footer-code">REF: 8392-AX</div>
+    </form>
+</body>
+
+</html>

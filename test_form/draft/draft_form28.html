@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 28 - Warp</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 500px;
+        }
+
+        /* Warp tunnel effect */
+        .tunnel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, transparent 0%, #000 80%),
+                repeating-radial-gradient(circle, transparent 0, transparent 20px, #ff4400 21px, transparent 22px);
+            opacity: 0.3;
+            animation: warp 1s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes warp {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .warp-form {
+            position: relative;
+            z-index: 5;
+            width: 440px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            box-shadow:
+                0 0 30px #ff4400,
+                inset 0 0 50px rgba(255, 68, 0, 0.2);
+            border: 2px solid #ff4400;
+            transform-style: preserve-3d;
+            transform: rotateX(5deg);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin: 0 0 30px 0;
+            background: linear-gradient(to bottom, #ffaa00, #ff4400);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-style: italic;
+            text-transform: uppercase;
+        }
+
+        .warp-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #aaa;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px;
+            background: #111;
+            border: 1px solid #444;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: 0.2s;
+            box-sizing: border-box;
+            transform: skew(-10deg);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #ff4400;
+            background: #220500;
+            box-shadow: 0 0 15px #ff4400;
+        }
+
+        /* Skewed Radios */
+        .skew-radios {
+            display: flex;
+            gap: 10px;
+        }
+
+        .skew-opt {
+            flex: 1;
+            transform: skew(-10deg);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .skew-opt input {
+            display: none;
+        }
+
+        .skew-box {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: #222;
+            border: 1px solid #444;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .skew-opt input:checked+.skew-box {
+            background: #ff4400;
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 10px #ff4400;
+        }
+
+        button.warp-btn {
+            width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            background: #ff4400;
+            border: none;
+            color: #fff;
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            font-style: italic;
+            cursor: pointer;
+            border-radius: 5px;
+            transform: skew(-10deg);
+            transition: 0.2s;
+        }
+
+        button.warp-btn:hover {
+            background: #fff;
+            color: #ff4400;
+            box-shadow: 0 0 20px #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tunnel"></div>
+    <div class="tunnel" style="animation-delay: 0.5s;"></div>
+
+    <form class="warp-form">
+        <h1>WARP SPEED</h1>
+
+        <div class="warp-group">
+            <label>Name</label>
+            <input type="text" placeholder="Pilot Name">
+        </div>
+
+        <div class="warp-group">
+            <label>Gender</label>
+            <div class="skew-radios">
+                <label class="skew-opt">
+                    <input type="radio" name="sex">
+                    <span class="skew-box">MALE</span>
+                </label>
+                <label class="skew-opt">
+                    <input type="radio" name="sex">
+                    <span class="skew-box">FEMALE</span>
+                </label>
+                <label class="skew-opt">
+                    <input type="radio" name="sex">
+                    <span class="skew-box">OTHER</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="warp-group">
+            <label>Signal</label>
+            <input type="tel" placeholder="000.0000.0000">
+        </div>
+
+        <div class="warp-group">
+            <label>Sector</label>
+            <select>
+                <option>HIROSHIMA</option>
+                <option>OKAYAMA</option>
+            </select>
+        </div>
+
+        <button class="warp-btn">ENGAGE</button>
+    </form>
+</body>
+
+</html>

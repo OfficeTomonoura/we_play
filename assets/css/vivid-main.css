@@ -1,0 +1,378 @@
+:root {
+    /* Vivid Comic Palette */
+    --primary: #FF6B00;
+    /* Vivid Orange */
+    --primary-dark: #cc5500;
+    --secondary: #1A1A1A;
+    /* Dark Grey/Black */
+    --accent-cyan: #00F2FF;
+    --accent-purple: #7000FF;
+    --bg-light: #F4F4F4;
+    /* Light Grey/White equivalent */
+    --text-main: #1A1A1A;
+    --text-white: #FFFFFF;
+
+    /* Design Tokens */
+    --border-width: 3px;
+    --border-color: #000000;
+    --shadow-hard: 6px 6px 0px #000000;
+    --shadow-soft: 4px 4px 0px #000000;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+
+    --easing: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--primary);
+    background-image:
+        radial-gradient(#000 10%, transparent 10%),
+        radial-gradient(#000 10%, transparent 10%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    background-attachment: fixed;
+    /* Dot pattern opacity */
+    background-blend-mode: overlay;
+    color: var(--text-main);
+    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Typography Overrides */
+h1,
+h2,
+h3,
+h4,
+.logo-text,
+.btn-primary {
+    font-family: 'Noto Sans JP', sans-serif;
+    text-transform: uppercase;
+    font-style: italic;
+    /* Speed/Action feel */
+}
+
+h1 {
+    font-weight: 900;
+    font-size: 3rem;
+    color: var(--text-white);
+    text-shadow: 4px 4px 0 #000;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    transform: skew(-5deg);
+}
+
+h2 {
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--secondary);
+    text-shadow: 2px 2px 0 #fff;
+    margin-bottom: 1.5rem;
+    transform: skew(-2deg);
+}
+
+/* Background Overlay Override (Disable implementation from main.css) */
+.background-overlay {
+    display: none;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 900px;
+    /* Slightly wider */
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Form Wrapper - Neo-City Orange */
+.form-wrapper {
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0.4) 0%, rgba(10, 10, 10, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
+    padding: 3rem;
+    position: relative;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+}
+
+/* Header */
+.header-nav {
+    background: rgba(5, 5, 5, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+}
+
+.logo-brand {
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-shadow: 0 0 15px var(--primary);
+    font-style: normal;
+    transform: none;
+    letter-spacing: 2px;
+}
+
+.logo-dot {
+    background: var(--primary);
+    border: none;
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+/* Buttons */
+.btn-primary,
+.submit-button {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent-purple) 100%);
+    color: #fff !important;
+    border: none;
+    border-radius: 9999px;
+    /* Capsule */
+    box-shadow: 0 5px 20px rgba(255, 107, 0, 0.4);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 1px;
+    padding: 1rem 3rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    text-shadow: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.submit-button {
+    width: 100%;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+}
+
+/* Button Hover Glow */
+.btn-primary::before,
+.submit-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--accent-purple) 0%, var(--primary) 100%);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.btn-primary:hover::before,
+.submit-button:hover::before {
+    opacity: 1;
+}
+
+.btn-primary:hover,
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.5);
+}
+
+/* Login Button */
+.btn-login {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    font-weight: 600;
+}
+
+.btn-login:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+/* Form Elements */
+.form-header h2 {
+    color: #e0e0e0;
+    text-shadow: none;
+    font-style: normal;
+    transform: none;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+}
+
+.form-header p {
+    color: #888;
+    font-weight: 400;
+}
+
+label {
+    color: #aaa;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+    text-transform: none;
+    display: block;
+    letter-spacing: 0.05em;
+    text-shadow: none;
+    padding-left: 1rem;
+    /* Align with capsule input */
+}
+
+label i {
+    color: var(--primary);
+    filter: drop-shadow(0 0 5px var(--primary));
+}
+
+/* Capsule Inputs with Gradient Focus Border */
+.input-wrapper {
+    position: relative;
+    border-radius: 9999px;
+    /* Capsule */
+    background: transparent;
+    padding: 2px;
+    /* For border width */
+    /* Default border state (invisible or simple color) */
+    background-image: linear-gradient(#333, #333), linear-gradient(#333, #333);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    transition: all 0.3s ease;
+}
+
+/* The actual input sits inside, transparent */
+input,
+select,
+textarea {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #444;
+    /* Default border */
+    border-radius: 9999px;
+    /* Capsule */
+    color: #fff;
+    font-weight: 400;
+    padding: 1rem 1.5rem;
+    font-size: 16px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+textarea {
+    border-radius: 20px;
+    /* Semi-capsule for textarea */
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Focus State: Gradient Border Glow */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: transparent;
+    /* Hide default border */
+    background-image: linear-gradient(#111, #111), linear-gradient(135deg, var(--primary), var(--accent-purple));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
+    outline: none;
+    transform: none;
+}
+
+/* Remove default focus border animation */
+.focus-border {
+    display: none;
+}
+
+/* Required Badge */
+.required-badge {
+    background: var(--primary);
+    color: #fff;
+    border: 1px solid #000;
+    font-style: italic;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    transform: skew(-10deg);
+}
+
+/* Features (for LP) */
+.glass-card {
+    background: #fff;
+    border: var(--border-width) solid #000;
+    border-radius: 0;
+    box-shadow: var(--shadow-hard);
+    width: 100%;
+}
+
+.feature-icon {
+    background: var(--primary);
+    border: 2px solid #000;
+    border-radius: 50%;
+    color: #fff;
+    box-shadow: 2px 2px 0 #000;
+}
+
+.feature-card {
+    background: #fff;
+    border: 2px solid #000;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 #ccc;
+    transition: transform 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    background: var(--accent-cyan);
+}
+
+.feature-card h3 {
+    font-weight: 800;
+    color: #000;
+    margin-top: 1rem;
+}
+
+/* Footer */
+.footer {
+    background: #000;
+    color: #fff;
+    border-top: 4px solid var(--primary);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.2rem;
+        /* Ensure title fits */
+        word-break: keep-all;
+        /* Avoid awkward breaks */
+    }
+
+    .container {
+        padding: 0.5rem;
+    }
+
+    .form-wrapper {
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .phone-groups {
+        gap: 5px;
+    }
+
+    .phone-groups .separator {
+        color: #000;
+    }
+}

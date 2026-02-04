@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 25 - Spaceship HUD</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b1015;
+            color: #ff9900;
+            font-family: 'Share Tech', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image:
+                linear-gradient(rgba(255, 153, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 153, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .hud-container {
+            width: 550px;
+            height: 400px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* HUD Circle Ring */
+        .hud-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #ff9900;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: rotateRing 60s linear infinite;
+        }
+
+        @keyframes rotateRing {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Center Content */
+        .hud-interface {
+            width: 400px;
+            background: rgba(11, 16, 21, 0.9);
+            border: 1px solid #ff9900;
+            padding: 20px;
+            clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%, 0 10%);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Corner accents */
+        .hud-interface::before,
+        .hud-interface::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: #ff9900;
+            border-style: solid;
+        }
+
+        .hud-interface::before {
+            top: 5px;
+            left: 5px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .hud-interface::after {
+            bottom: 5px;
+            right: 5px;
+            border-width: 0 2px 2px 0;
+        }
+
+        h2 {
+            text-align: center;
+            border-bottom: 2px solid #ff9900;
+            line-height: 0.1em;
+            margin: 10px 0 30px;
+            font-size: 1.5rem;
+        }
+
+        h2 span {
+            background: #0b1015;
+            padding: 0 10px;
+        }
+
+        .hud-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .hud-label {
+            width: 80px;
+            text-align: right;
+            margin-right: 15px;
+            font-size: 0.9rem;
+            color: #cc7a00;
+        }
+
+        input,
+        select {
+            flex: 1;
+            background: rgba(255, 153, 0, 0.1);
+            border: 1px solid #ff9900;
+            color: #fff;
+            padding: 5px 10px;
+            font-family: 'Share Tech', sans-serif;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            background: rgba(255, 153, 0, 0.3);
+            outline: none;
+            box-shadow: 0 0 10px #ff9900;
+        }
+
+        /* Target Reticle Radios */
+        .target-radios {
+            display: flex;
+            justify-content: space-around;
+            flex: 1;
+        }
+
+        .target-opt {
+            cursor: pointer;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .target-opt input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .crosshair {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #ff9900;
+            border-radius: 50%;
+        }
+
+        .crosshair::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #ff9900;
+            transform: translate(-50%, -50%) scale(0);
+            transition: 0.2s;
+        }
+
+        .target-opt input:checked~.crosshair::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .lock-btn {
+            width: 100%;
+            background: transparent;
+            border: 2px solid #ff9900;
+            color: #ff9900;
+            padding: 10px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lock-btn:hover {
+            background: #ff9900;
+            color: #000;
+        }
+
+        .lock-btn::before {
+            content: '[ LOCK_TARGET ]';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hud-container">
+        <div class="hud-ring"></div>
+
+        <form class="hud-interface">
+            <h2><span>PILOT DATA</span></h2>
+
+            <div class="hud-row">
+                <label class="hud-label">ID_NAME</label>
+                <input type="text" value="GUEST_USER">
+            </div>
+
+            <div class="hud-row">
+                <label class="hud-label">CLASS</label>
+                <div class="target-radios">
+                    <label class="target-opt">
+                        <input type="radio" name="g">
+                        <span class="crosshair"></span> Male
+                    </label>
+                    <label class="target-opt">
+                        <input type="radio" name="g">
+                        <span class="crosshair"></span> Female
+                    </label>
+                    <label class="target-opt">
+                        <input type="radio" name="g">
+                        <span class="crosshair"></span> N/A
+                    </label>
+                </div>
+            </div>
+
+            <div class="hud-row">
+                <label class="hud-label">SIGNAL</label>
+                <input type="tel" value="999-999-9999">
+            </div>
+
+            <div class="hud-row">
+                <label class="hud-label">SECTOR</label>
+                <select>
+                    <option>Sector Hiroshima</option>
+                    <option>Sector Okayama</option>
+                </select>
+            </div>
+
+            <button type="button" class="lock-btn">INITIATE</button>
+        </form>
+    </div>
+</body>
+
+</html>

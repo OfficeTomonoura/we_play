@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Trigger filter once composition finishes
             if (input.id === 'name-kana') {
                 input.value = input.value.replace(/[^ぁ-んー\s]/g, '');
-            } else if (input.id?.startsWith('phone-')) {
-                input.value = input.value.replace(/[^\d]/g, '');
             }
         });
 
@@ -29,22 +27,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Numeric Enforcement for phone segments
-        if (input.id?.startsWith('phone-')) {
+        // Phone Validation (Single Input)
+        if (input.id === 'phone') {
             input.addEventListener('input', () => {
                 if (isComposing) return;
-                input.value = input.value.replace(/[^\d]/g, '');
+                // Allow numbers and hyphens only
+                input.value = input.value.replace(/[^\d-]/g, '');
             });
         }
 
         input.addEventListener('focus', () => {
-            const group = input.parentElement.closest('.form-group');
+            const group = input.parentElement.closest('.glow-input');
             if (group) group.classList.add('focused');
         });
 
         input.addEventListener('blur', () => {
             if (input.value === '') {
-                const group = input.parentElement.closest('.form-group');
+                const group = input.parentElement.closest('.glow-input');
                 if (group) group.classList.remove('focused');
             }
         });
@@ -56,9 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Simple validation check
         let isValid = true;
-        // Check text inputs
-        inputs.forEach(input => {
-            if (input.type !== 'checkbox' && input.hasAttribute('required') && !input.value.trim()) {
+
+        // 1. Check all required visible text/select/textarea inputs
+        form.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea').forEach(input => {
+            if (input.hasAttribute('required') && !input.value.trim()) {
+                // If it's the "Other" referral input, only require it if visible
+                if (input.id === 'referral-other' && input.offsetParent === null) {
+                    return;
+                }
                 isValid = false;
                 showError(input);
             } else {
@@ -66,16 +70,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Check privacy checkbox
+        // 2. Check Radio Buttons (Gender)
+        const genderRadios = form.querySelectorAll('input[name="gender"]');
+        let genderChecked = false;
+        genderRadios.forEach(r => {
+            if (r.checked) genderChecked = true;
+        });
+        if (!genderChecked) {
+            isValid = false;
+            // Highlight the container
+            const container = genderRadios[0].closest('.radio-cloud');
+            if (container) container.style.border = '1px solid #ff4b4b';
+        } else {
+            const container = genderRadios[0].closest('.radio-cloud');
+            if (container) container.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+        }
+
+        // 3. Check privacy checkbox
         const privacyCheckbox = form.querySelector('input[name="privacy"]');
         if (!privacyCheckbox || !privacyCheckbox.checked) {
             isValid = false;
-            if (privacyCheckbox) showError(privacyCheckbox);
-        } else if (privacyCheckbox) {
-            removeError(privacyCheckbox);
+            // Highlight checkbox text
+            const label = privacyCheckbox.closest('.custom-checkbox');
+            if (label) label.style.color = '#ff4b4b';
+        } else {
+            const label = privacyCheckbox.closest('.custom-checkbox');
+            if (label) label.style.color = '#ddd';
         }
 
-        // Check for duplicate roles
+        // 4. Check for duplicate roles
         const role1 = form.querySelector('#role-1')?.value;
         const role2 = form.querySelector('#role-2')?.value;
         const role3 = form.querySelector('#role-3')?.value;
@@ -93,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalContent = submitBtn.innerHTML;
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>送信中...</span><div class="spinner"></div>';
+            submitBtn.innerHTML = '<span>TRANSMITTING...</span><div class="spinner"></div>';
             submitBtn.style.opacity = '0.7';
 
             try {
@@ -127,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     referral_source_id: formData.get('referral'),
                     referral_source_other: formData.get('referral-other'),
                     email: formData.get('email'),
-                    phone: `${formData.get('phone_1')}-${formData.get('phone_2')}-${formData.get('phone_3')}`,
+                    phone: formData.get('phone'), // Direct single input
                     message: formData.get('message'),
                     status: '新規',
                     // LINE Linkage
@@ -148,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     await window.supabaseClient.functions.invoke('notify-applicant', {
                         body: {
                             record: insertedApplicant,
-                            // Pass names for legacy/simple notification if needed, or IDs
                             roles: [insertedApplicant.r1?.name, insertedApplicant.r2?.name, insertedApplicant.r3?.name].filter(Boolean),
                             referral: insertedApplicant.ref?.name
                         }
@@ -175,14 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showError(input) {
         input.style.borderColor = '#ff4b4b';
-        input.parentElement.classList.add('shake');
-        setTimeout(() => {
-            input.parentElement.classList.remove('shake');
-        }, 500);
+        // Attempt to find the closest glow-input wrapper to shake
+        const wrapper = input.parentElement.closest('.glow-input');
+        if (wrapper) {
+            wrapper.classList.add('shake');
+            setTimeout(() => {
+                wrapper.classList.remove('shake');
+            }, 500);
+        } else {
+            input.classList.add('shake');
+            setTimeout(() => {
+                input.classList.remove('shake');
+            }, 500);
+        }
     }
 
     function removeError(input) {
-        input.style.borderColor = '';
+        input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
     }
 });
 
@@ -196,6 +227,7 @@ style.textContent = `
         border-radius: 50%;
         border-top-color: #fff;
         animation: spin 0.8s linear infinite;
+        margin-left: 10px;
     }
     @keyframes spin {
         to { transform: rotate(360deg); }

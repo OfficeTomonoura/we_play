@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Form 20 - Orbital</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo:wght@300;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #ff9d00;
+            font-family: 'Exo', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Planet Background */
+        .planet {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle at 30% 30%, #442200, #000);
+            border-radius: 50%;
+            top: -400px;
+            right: -200px;
+            box-shadow: -20px 20px 100px rgba(255, 136, 0, 0.2);
+            z-index: 0;
+        }
+
+        .ring {
+            position: absolute;
+            border: 1px solid rgba(255, 157, 0, 0.3);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        .r1 {
+            width: 600px;
+            height: 600px;
+            animation: spin 20s linear infinite;
+        }
+
+        .r2 {
+            width: 900px;
+            height: 900px;
+            animation: spin 30s linear infinite reverse;
+            border-color: rgba(255, 157, 0, 0.1);
+        }
+
+        .r3 {
+            width: 1200px;
+            height: 1200px;
+            animation: spin 40s linear infinite;
+            border-color: rgba(255, 157, 0, 0.05);
+        }
+
+        @keyframes spin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 10;
+            width: 400px;
+            background: rgba(10, 5, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 157, 0, 0.3);
+            border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(255, 136, 0, 0.1);
+        }
+
+        .form-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff9d00, transparent);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            color: #cc7a00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: rgba(255, 157, 0, 0.05);
+            border: 1px solid rgba(255, 157, 0, 0.2);
+            padding: 12px;
+            color: #fff;
+            font-family: 'Exo', sans-serif;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #ff9d00;
+            box-shadow: 0 0 15px rgba(255, 157, 0, 0.2);
+        }
+
+        .radio-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-btn {
+            cursor: pointer;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .radio-btn input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            border: 1px solid #ff9d00;
+            border-radius: 50%;
+        }
+
+        .radio-btn input:checked~.circle {
+            background: radial-gradient(#ff9d00 40%, transparent 50%);
+            box-shadow: 0 0 10px #ff9d00;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #ff9d00;
+            border: none;
+            color: #000;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #ffb733;
+            box-shadow: 0 0 20px #ff9d00;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="planet"></div>
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+
+    <div class="form-container">
+        <h1>ORBITAL ENTRY</h1>
+
+        <div class="input-group">
+            <label>名前</label>
+            <input type="text" placeholder="氏名を入力">
+        </div>
+
+        <div class="input-group">
+            <label>性別</label>
+            <div class="radio-options">
+                <label class="radio-btn">
+                    <input type="radio" name="gender">
+                    <span class="circle"></span> 男性
+                </label>
+                <label class="radio-btn">
+                    <input type="radio" name="gender">
+                    <span class="circle"></span> 女性
+                </label>
+                <label class="radio-btn">
+                    <input type="radio" name="gender">
+                    <span class="circle"></span> 選択しない
+                </label>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>電話番号</label>
+            <input type="tel" placeholder="000-0000-0000">
+        </div>
+
+        <div class="input-group">
+            <label>出身大学</label>
+            <select>
+                <option>広島大学</option>
+                <option>岡山大学</option>
+            </select>
+        </div>
+
+        <button>送信</button>
+    </div>
+</body>
+
+</html>
