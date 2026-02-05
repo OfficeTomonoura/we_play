@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>We Play 未来人財育成委員会 | 映画作ろうぜ！！</title>
-    <meta name="description" content="地域で育む協働の絆。We Play 未来人財育成委員会がおくる、次世代のための映画制作プロジェクト。">
+    <title>We Play 未来人財育成委員会 | デザイン案01</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+JP:wght@400;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/vivid-main.css">
+    <!-- Using lp.css which contains the extracted styles from dynamic_LP.html -->
     <link rel="stylesheet" href="assets/css/lp.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -21,361 +19,138 @@
 
     <header class="header-nav">
         <div class="container nav-wrapper">
-            <div class="logo-brand">
-                <span class="logo-dot"></span>
-                WE PLAY
+            <div id="header-left">
+                <!-- Content will be rendered by JS -->
             </div>
-            <nav class="nav-links" style="display: flex; align-items: center; gap: 1rem;">
-                <div id="line-user-status" style="display: none;"></div>
-                <a href="admin/login.html" class="btn-login" id="admin-link-btn">
-                    <i data-lucide="log-in"></i>
-                    <span>管理者ログイン</span>
-                </a>
+            <nav class="nav-links" id="header-right">
+                <!-- Content will be rendered by JS -->
             </nav>
         </div>
     </header>
 
     <main>
         <!-- Hero Section -->
-        <section class="hero"
-            style="background-image: url('assets/movie-making.jpg'); background-size: cover; background-position: center; position: relative; z-index: 1;">
-            <div
-                style="position: absolute; inset: 0; background: rgba(255, 107, 0, 0.85); mix-blend-mode: multiply; z-index: -1;">
-            </div>
+        <section class="hero">
+            <div class="hero-bg"></div>
             <div class="hero-content">
-                <span class="hero-tag"
-                    style="background: #000; color: #fff; border: 2px solid #fff; transform: rotate(-3deg);">FOR FUTURE
-                    LEADERS</span>
-                <h1
-                    style="font-size: clamp(3rem, 10vw, 6rem); line-height: 0.9; text-shadow: 6px 6px 0 #000; color: #fff; font-style: italic; transform: skew(-5deg);">
+                <span class="hero-tag">We Play 未来人財育成委員会</span>
+                <h1>
                     ぼくらの<br>
-                    <span style="color: #000; -webkit-text-stroke: 2px #fff; text-shadow: 4px 4px 0 #fff;">フィルム革命</span>
+                    <span>フィルム革命</span>
                 </h1>
-                <p
-                    style="color: #fff; text-shadow: 2px 2px 0 #000; font-weight: 700; font-size: 1.2rem; background: #000; display: inline-block; padding: 0.5rem 1rem; transform: rotate(2deg);">
-                    主役は、きみ。地域とつくる高校生映画。
+                <p>
+                    主役は、きみ。<br class="sp-br">地域とつくる高校生映画。
                 </p>
-                <div class="cta-group" style="margin-top: 3rem;">
-                    <a href="register.html" class="btn-primary"
-                        style="font-size: 1.5rem; padding: 1.5rem 4rem; box-shadow: 8px 8px 0 #000; border: 3px solid #000; background: #fff; color: #000 !important;">参加を申し込む</a>
+                <div style="margin-top: 3rem;">
+                    <a href="javascript:void(0)" class="btn-primary" id="cta-btn">参加を申し込む</a>
                 </div>
             </div>
         </section>
 
-        <!-- Concept Section -->
+        <!-- Concept -->
         <section class="section-padding">
             <div class="container">
-                <div class="glass-card" style="text-align: center; padding: 4rem 2rem;">
-                    <div style="max-width: 800px; margin: 0 auto;">
-                        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; color: #000; transform: skew(-2deg);">
-                            君が主役の物語。</h2>
-                        <p style="color: #000; font-weight: 600; font-size: 1.1rem; line-height: 2;">
-                            私たちは、映画制作を通じて地域との繋がりを深め、<br>
-                            次世代を担う若者たちが自らの可能性を広げる場を提供します。<br>
-                            <span
-                                style="background: var(--primary); color: #fff; padding: 0.2rem 1rem; border: 2px solid #000; display: inline-block; margin-top: 1rem; transform: rotate(-2deg); font-weight: 800;">技術より情熱。未経験者、大歓迎。</span>
-                        </p>
-                    </div>
+                <h2>君が主役の物語。</h2>
+                <div style="max-width: 800px;">
+                    <p>
+                        私たちは、映画制作を通じて地域との繋がりを深め、<br>
+                        次世代を担う若者たちが自らの可能性を広げる場を提供します。<br>
+                        <span
+                            style="color: var(--orange); font-weight: bold; font-size: 1.2rem; display: block; margin-top: 1rem;">
+                            /// 技術より情熱。未経験者、大歓迎。
+                        </span>
+                    </p>
+                </div>
 
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon"><i data-lucide="camera"></i></div>
-                            <h3>クリエイティブ体験</h3>
-                            <p style="font-size: 0.95rem; color: #333; font-weight: 500;">
-                                プロの機材や本格的な演出を学びながら、自分たちの想いを形にします。</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon"><i data-lucide="users-2"></i></div>
-                            <h3>協働の絆</h3>
-                            <p style="font-size: 0.95rem; color: #333; font-weight: 500;">
-                                異なる学校や地域の仲間と共に、一つの目標に向かって突き進む楽しさを。</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon"><i data-lucide="map-pin"></i></div>
-                            <h3>地域への想い</h3>
-                            <p style="font-size: 0.95rem; color: #333; font-weight: 500;">
-                                自分が住む街を舞台に、新しい発見と感動を自分たちの手で作ります。</p>
-                        </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="camera" size="40"></i></div>
+                        <h3>クリエイティブ体験</h3>
+                        <p>プロの機材や本格的な演出を学びながら、自分たちの想いを形にします。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="users-2" size="40"></i></div>
+                        <h3>協働の絆</h3>
+                        <p>異なる学校や地域の仲間と共に、一つの目標に向かって突き進む楽しさを。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="map-pin" size="40"></i></div>
+                        <h3>地域への想い</h3>
+                        <p>自分が住む街を舞台に、新しい発見と感動を自分たちの手で作ります。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Roles Section -->
-        <section class="section-padding"
-            style="background: #000; color: #fff; border-top: 4px solid #fff; border-bottom: 4px solid #fff;">
-            <div class="container" style="text-align: center;">
-                <h2 style="margin-bottom: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--primary);">募集中の役職</h2>
-                <div class="features-grid" style="margin-top: 0;">
-                    <!-- Card 1 -->
-                    <div class="feature-card" style="background: #fff; color: #000;">
-                        <i data-lucide="clapperboard"
-                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
-                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">監督・演出</h4>
-                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">物語の世界観を創り上げ、チームを導くリーダーシップを発揮します。
-                        </p>
+        <!-- Roles -->
+        <section class="section-padding" style="background: var(--white); color: var(--black);">
+            <div class="container">
+                <h2 style="color: var(--black); border-color: var(--black);">募集中の役職</h2>
+                <div class="features-grid">
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="clapperboard"
+                                size="40"></i></div>
+                        <h4>監督・演出</h4>
+                        <p>物語の世界観を創り上げ、チームを導くリーダーシップを発揮します。</p>
                     </div>
-                    <!-- Card 2 -->
-                    <div class="feature-card" style="background: #fff; color: #000;">
-                        <i data-lucide="theater"
-                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
-                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">演者</h4>
-                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">カメラの前でキャラクターを生き生きと演じ、物語に命を吹き込みます。
-                        </p>
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="theater" size="40"></i>
+                        </div>
+                        <h4>演者</h4>
+                        <p>カメラの前でキャラクターを生き生きと演じ、物語に命を吹き込みます。</p>
                     </div>
-                    <!-- Card 3 -->
-                    <div class="feature-card" style="background: #fff; color: #000;">
-                        <i data-lucide="wrench"
-                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
-                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">小道具・美術</h4>
-                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">衣装やセットを作り、映画のリアリティと魅力を支える職人技。</p>
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="wrench" size="40"></i>
+                        </div>
+                        <h4>小道具・美術</h4>
+                        <p>衣装やセットを作り、映画のリアリティと魅力を支える職人技。</p>
                     </div>
-                    <!-- Card 4 -->
-                    <div class="feature-card" style="background: #fff; color: #000;">
-                        <i data-lucide="briefcase"
-                            style="width: 50px; height: 50px; color: #000; margin-bottom: 1rem; filter: drop-shadow(2px 2px 0 var(--primary));"></i>
-                        <h4 style="font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 900;">プロデューサー</h4>
-                        <p style="font-size: 0.9rem; color: #333; font-weight: 600;">全体のスケジュール管理や広報など、プロジェクトの成功を支える司令塔。
-                        </p>
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="briefcase" size="40"></i>
+                        </div>
+                        <h4>プロデューサー</h4>
+                        <p>全体のスケジュール管理や広報など、プロジェクトの成功を支える司令塔。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Final CTA -->
-        <section class="section-padding">
-            <div class="container" style="text-align: center;">
-                <h2 style="margin-bottom: 2rem;">未来を一緒に撮影しよう。</h2>
-                <a href="register.html" class="btn-primary" style="padding: 1.5rem 4rem;">今すぐ応募する</a>
+        <!-- CTA -->
+        <section class="section-padding" style="text-align: center; border-top: 10px solid var(--orange);">
+            <div class="container">
+                <h2 style="border: none; padding: 0;">未来を一緒に撮影しよう。</h2>
+                <a href="javascript:void(0)" class="btn-primary" style="margin-top: 2rem;">今すぐ応募する</a>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
+    <footer>
         <div class="container">
-            <p style="margin-bottom: 1rem;">© 2026 We Play 未来人財育成委員会</p>
-            <div style="display: flex; gap: 2rem; justify-content: center;">
-                <a href="admin/login.html" class="admin-link">管理者ポータル</a>
-            </div>
+            <p>© 2026 We Play 未来人財育成委員会</p>
+            <a href="admin/login.html" class="admin-link">管理者ポータル</a>
         </div>
     </footer>
 
+    <!-- Status Modal (Simple Mock structure for potential reuse) -->
+    <div id="statusModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 200; align-items: center; justify-content: center;">
+        <div
+            style="background: #1a1a1a; padding: 2rem; border: 1px solid var(--orange); text-align: center; max-width: 500px; width: 90%;">
+            <h2 style="color: var(--orange);">申し込み状況</h2>
+            <div id="applicantDetailsContent" style="color: white; margin: 20px 0;">
+                読み込み中...
+            </div>
+            <button onclick="closeStatusModal()" class="btn-primary" style="padding: 0.5rem 2rem;">閉じる</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js"></script>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script>
-        lucide.createIcons();
 
-        let currentApplicantData = null;
-
-
-
-        // LIFF Initialization for LP
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Check Admin Session
-            checkAdminSession();
-
-            const liffId = "2009015373-QGkjtgDJ";
-            try {
-                await liff.init({ liffId: liffId });
-
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    showLineUser(profile);
-                    checkApplicationStatus(profile.userId);
-                }
-            } catch (err) {
-                console.warn('LIFF Init failed:', err);
-            }
-        });
-
-        async function checkAdminSession() {
-            if (!window.supabaseClient) return;
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            console.log('AdminSession Check:', session ? 'Logged In' : 'No Session');
-
-            if (session) {
-                const adminBtn = document.getElementById('admin-link-btn');
-                if (adminBtn) {
-                    adminBtn.href = 'admin/index.html';
-                    adminBtn.innerHTML = `
-                        <i data-lucide="layout-dashboard"></i>
-                        <span>管理ダッシュボード</span>
-                    `;
-                    // Optional: Make it stand out more
-                    adminBtn.style.background = 'rgba(255, 255, 255, 0.2)';
-                    adminBtn.style.borderColor = 'var(--primary)';
-                    lucide.createIcons();
-                }
-            }
-        }
-
-        function showLineUser(profile) {
-            const container = document.getElementById('line-user-status');
-            if (container) {
-                container.style.display = 'flex';
-
-                let logoutHtml = '';
-                if (!liff.isInClient()) {
-                    logoutHtml = `
-                        <button onclick="logoutLine()" title="ログアウト" style="margin-left: 0.5rem; background: transparent; border: none; padding: 0; cursor: pointer; color: rgba(255,255,255,0.7); display: flex; align-items: center;">
-                            <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
-                        </button>
-                     `;
-                }
-
-                container.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 0.6rem; background: rgba(0, 0, 0, 0.6); padding: 0.4rem 1rem; border-radius: 30px; border: 1px solid rgba(6, 199, 85, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <div style="display: flex; align-items: center; gap: 0.4rem;">
-                            <span style="width: 8px; height: 8px; background-color: #06c755; border-radius: 50%; box-shadow: 0 0 8px rgba(6, 199, 85, 0.8);"></span>
-                            <span style="font-size: 0.7rem; color: #06c755; font-weight: 800; letter-spacing: 0.05em;">LOGIN</span>
-                        </div>
-                        <div style="width: 1px; height: 14px; background: rgba(255,255,255,0.15);"></div>
-                        <img src="${profile.pictureUrl}" alt="User" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);">
-                        <span style="font-size: 0.85rem; color: white; font-weight: 500;">${profile.displayName}</span>
-                        ${logoutHtml}
-                    </div>
-                `;
-                lucide.createIcons();
-            }
-        }
-
-        function logoutLine() {
-            if (liff.isLoggedIn()) {
-                if (liff.isInClient()) {
-                    window.alert('LINEアプリ内ではログアウトできません。');
-                    return;
-                }
-                liff.logout();
-                window.location.reload();
-            }
-        }
-
-        async function checkApplicationStatus(userId) {
-            if (!window.supabaseClient) return;
-
-            try {
-                const { data, error } = await window.supabaseClient
-                    .from('applicants')
-                    .select('*, r1:master_role!desired_role_1_id(name), r2:master_role!desired_role_2_id(name), r3:master_role!desired_role_3_id(name), school:master_school!school_id(name)')
-                    .eq('line_user_id', userId)
-                    .maybeSingle();
-
-                if (data) {
-                    currentApplicantData = data;
-                    // Already applied
-                    const ctaBtns = document.querySelectorAll('.btn-primary'); // Hero and bottom CTA
-                    ctaBtns.forEach(btn => {
-                        btn.textContent = '応募状況を確認する';
-                        btn.href = 'javascript:void(0)';
-                        btn.classList.add('btn-status-check'); // Style marker
-                        btn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            openStatusModal();
-                        });
-                        // Change style slightly to indicate status check
-                        btn.style.background = 'linear-gradient(135deg, #00b900 0%, #008500 100%)';
-                        btn.style.boxShadow = '0 0 20px rgba(0, 185, 0, 0.4)';
-                    });
-                }
-            } catch (err) {
-                console.error('Error checking status:', err);
-            }
-        }
-
-        function openStatusModal() {
-            const modal = document.getElementById('statusModal');
-            if (modal) {
-                modal.style.display = 'flex';
-                renderApplicantDetails();
-            }
-        }
-
-        function closeStatusModal() {
-            const modal = document.getElementById('statusModal');
-            if (modal) modal.style.display = 'none';
-        }
-
-        function renderApplicantDetails() {
-            const container = document.getElementById('applicantDetailsContent');
-            if (!container || !currentApplicantData) return;
-
-            const d = currentApplicantData;
-            const role1 = d.r1?.name || '-';
-            const role2 = d.r2?.name || null;
-            const role3 = d.r3?.name || null;
-            const schoolName = d.school?.name || d.school_name || '-'; // Fallback to school_name if exists (legacy)
-
-            // Format roles
-            let rolesHtml = `<div>1. ${role1}</div>`;
-            if (role2) rolesHtml += `<div>2. ${role2}</div>`;
-            if (role3) rolesHtml += `<div>3. ${role3}</div>`;
-
-            // Status Badge Color
-            let statusColor = '#a1a1aa';
-            if (d.status === '採用' || d.status === '合格') statusColor = '#00f2ff';
-            if (d.status === '不採用' || d.status === '不合格') statusColor = '#ff4b4b';
-            if (d.status === '確認済み' || d.status === '審査中' || d.status === '新規') statusColor = '#ffea00';
-
-            container.innerHTML = `
-                <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1.5rem; margin-top: 1rem; text-align: left;">
-                    <div style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-dim); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">登録内容</div>
-                    
-                    <div style="display: grid; grid-template-columns: 80px 1fr; gap: 1rem; font-size: 0.95rem;">
-                        <div style="color: var(--text-dim);">お名前</div>
-                        <div style="color: white; font-weight: 500;">
-                            ${d.full_name} 
-                            <div style="font-size: 0.8em; color: var(--text-dim); font-weight: normal;">${d.full_kana}</div>
-                        </div>
-                        
-                        <div style="color: var(--text-dim);">所属</div>
-                        <div style="color: white;">${schoolName} / ${d.grade}</div>
-
-                        <div style="color: var(--text-dim);">希望役職</div>
-                        <div style="color: white;">${rolesHtml}</div>
-
-                        <div style="color: var(--text-dim);">連絡先</div>
-                        <div style="color: white; font-size: 0.9em; word-break: break-all;">
-                            ${d.email}<br>${d.phone}
-                        </div>
-
-                        <div style="color: var(--text-dim);">ステータス</div>
-                        <div style="color: ${statusColor}; font-weight: bold; font-size: 1.1em;">${d.status}</div>
-                    </div>
-
-                    ${d.message ? `
-                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
-                        <div style="color: var(--text-dim); margin-bottom: 0.3rem;">メッセージ</div>
-                        <div style="color: rgba(255,255,255,0.8); font-size: 0.9em;">${d.message}</div>
-                    </div>` : ''}
-                </div>
-            `;
-        }
-    </script>
-
-    <!-- Status Modal -->
-    <div id="statusModal"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);">
-        <div class="glass-card"
-            style="width: 90%; max-width: 500px; padding: 2rem; text-align: center; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto;">
-            <div style="margin-bottom: 1rem;">
-                <i data-lucide="clipboard-check" style="width: 48px; height: 48px; color: var(--primary);"></i>
-            </div>
-            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: white;">応募状況確認</h3>
-            <p style="color: var(--text-dim); line-height: 1.6; margin-bottom: 1rem; font-size: 0.9rem;">
-                現在のご登録内容は以下の通りです。<br>変更が必要な場合は運営までご連絡ください。
-            </p>
-
-            <div id="applicantDetailsContent">
-                <div style="padding: 1rem; color: var(--text-dim);">読み込み中...</div>
-            </div>
-
-            <button onclick="closeStatusModal()"
-                style="margin-top: 2rem; background: transparent; border: 1px solid var(--glass-border); color: white; padding: 0.8rem 2rem; border-radius: 2rem; cursor: pointer; transition: all 0.3s; width: 100%;">
-                閉じる
-            </button>
-        </div>
-    </div>
+    <!-- LP Logic -->
+    <script src="assets/js/lp.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Play 未来人財育成委員会 | デザイン案01</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+JP:wght@400;900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --orange: #ff4500;
+            /* Vivid Orange Red */
+            --black: #0a0a0a;
+            --white: #f0f0f0;
+        }
+
+        body {
+            margin: 0;
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Noto Sans JP', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Dramatic Lighting Effect */
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--orange);
+            background: rgba(0, 0, 0, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-brand {
+            font-family: 'Anton', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: var(--orange);
+            text-transform: uppercase;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-login {
+            border: 1px solid var(--white);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: flex;
+            /* keep icon aligned */
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Hero */
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 10px solid var(--orange);
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('../../assets/movie-making.jpg') no-repeat center/cover;
+            filter: grayscale(100%) contrast(150%) brightness(50%);
+            z-index: 1;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(255, 69, 0, 0.4), transparent);
+            mix-blend-mode: hard-light;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-tag {
+            background: var(--orange);
+            color: var(--black);
+            font-weight: 900;
+            padding: 0.2rem 1rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-family: 'Anton', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 900;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+            margin: 0;
+            text-shadow: 10px 10px 0 #000;
+            color: var(--white);
+        }
+
+        h1 span {
+            color: var(--orange);
+            -webkit-text-stroke: 2px var(--white);
+            /* Unique style */
+            text-shadow: none;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bgZoom {
+            from {
+                transform: scale(1.1);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .hero-bg {
+            animation: bgZoom 10s ease-out forwards;
+        }
+
+        /* Animated Elements */
+        .hero-tag {
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        h1 {
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 0.8s;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            background: var(--black);
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            border: 1px solid var(--orange);
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 1.2s;
+        }
+
+        .hero .btn-primary {
+            opacity: 0;
+            animation: fadeInScale 0.8s ease-out forwards;
+            animation-delay: 1.6s;
+        }
+
+        /* Sections */
+        .section-padding {
+            padding: 6rem 0;
+        }
+
+        h2 {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            border-left: 10px solid var(--orange);
+            padding-left: 20px;
+            color: var(--white);
+        }
+
+        p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            border: 1px solid #333;
+            background: #111;
+            padding: 2rem;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--orange);
+        }
+
+        .feature-icon {
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        h3,
+        h4 {
+            font-weight: 900;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--orange);
+            color: var(--white) !important;
+            padding: 1rem 3rem;
+            text-decoration: none;
+            font-weight: 900;
+            border: none;
+            text-transform: uppercase;
+            display: inline-block;
+            transition: 0.2s;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+            color: var(--black) !important;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 3rem 0;
+            border-top: 1px solid #333;
+            text-align: center;
+            color: #666;
+        }
+
+        .admin-link {
+            color: #666;
+            text-decoration: none;
+            border-bottom: 1px solid #666;
+        }
+
+        /* Mobile Utility */
+        .sp-br {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .sp-br {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <header class="header-nav">
+        <div class="container nav-wrapper">
+            <div class="logo-brand">WE PLAY</div>
+            <nav class="nav-links">
+                <a href="javascript:void(0)" class="btn-login" id="admin-link-btn">
+                    <i data-lucide="log-in"></i><span>管理者ログイン</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <span class="hero-tag">FILM NOIR STYLE</span>
+                <h1>
+                    ぼくらの<br>
+                    <span>フィルム革命</span>
+                </h1>
+                <p>
+                    主役は、きみ。<br class="sp-br">地域とつくる高校生映画。
+                </p>
+                <div style="margin-top: 3rem;">
+                    <a href="javascript:void(0)" class="btn-primary">参加を申し込む</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concept -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>君が主役の物語。</h2>
+                <div style="max-width: 800px;">
+                    <p>
+                        私たちは、映画制作を通じて地域との繋がりを深め、<br>
+                        次世代を担う若者たちが自らの可能性を広げる場を提供します。<br>
+                        <span
+                            style="color: var(--orange); font-weight: bold; font-size: 1.2rem; display: block; margin-top: 1rem;">
+                            /// 技術より情熱。未経験者、大歓迎。
+                        </span>
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="camera" size="40"></i></div>
+                        <h3>クリエイティブ体験</h3>
+                        <p>プロの機材や本格的な演出を学びながら、自分たちの想いを形にします。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="users-2" size="40"></i></div>
+                        <h3>協働の絆</h3>
+                        <p>異なる学校や地域の仲間と共に、一つの目標に向かって突き進む楽しさを。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="map-pin" size="40"></i></div>
+                        <h3>地域への想い</h3>
+                        <p>自分が住む街を舞台に、新しい発見と感動を自分たちの手で作ります。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roles -->
+        <section class="section-padding" style="background: var(--white); color: var(--black);">
+            <div class="container">
+                <h2 style="color: var(--black); border-color: var(--black);">募集中の役職</h2>
+                <div class="features-grid">
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="clapperboard"
+                                size="40"></i></div>
+                        <h4>監督・演出</h4>
+                        <p>物語の世界観を創り上げ、チームを導くリーダーシップを発揮します。</p>
+                    </div>
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="theater" size="40"></i>
+                        </div>
+                        <h4>演者</h4>
+                        <p>カメラの前でキャラクターを生き生きと演じ、物語に命を吹き込みます。</p>
+                    </div>
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="wrench" size="40"></i>
+                        </div>
+                        <h4>小道具・美術</h4>
+                        <p>衣装やセットを作り、映画のリアリティと魅力を支える職人技。</p>
+                    </div>
+                    <div class="feature-card" style="background: #e0e0e0;">
+                        <div class="feature-icon" style="color: var(--black);"><i data-lucide="briefcase" size="40"></i>
+                        </div>
+                        <h4>プロデューサー</h4>
+                        <p>全体のスケジュール管理や広報など、プロジェクトの成功を支える司令塔。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section-padding" style="text-align: center; border-top: 10px solid var(--orange);">
+            <div class="container">
+                <h2 style="border: none; padding: 0;">未来を一緒に撮影しよう。</h2>
+                <a href="javascript:void(0)" class="btn-primary" style="margin-top: 2rem;">今すぐ応募する</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 We Play 未来人財育成委員会</p>
+            <a href="javascript:void(0)" class="admin-link">管理者ポータル</a>
+        </div>
+    </footer>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>
