@@ -290,3 +290,20 @@ footer {
         display: block;
     }
 }
+
+/* Print Optimization */
+@media print {
+    .background-overlay {
+        display: none !important;
+    }
+
+    body {
+        background-color: #fff !important;
+        color: #000 !important;
+        background-image: none !important;
+    }
+
+    .hero-bg {
+        filter: none !important;
+    }
+}

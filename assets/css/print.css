@@ -1,0 +1,59 @@
+/* Print Optimization Styles */
+@media print {
+
+    /* Hide the orange lighting effect */
+    .background-overlay {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* Reset Body to White Paper style */
+    body {
+        background-color: #fff !important;
+        color: #000 !important;
+        background-image: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Ensure text is dark and readable */
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    span,
+    div {
+        color: #000 !important;
+        text-shadow: none !important;
+    }
+
+    /* Ensure Hero Image is clear */
+    .hero-bg {
+        filter: none !important;
+        position: absolute !important;
+        /* Ensure it stays */
+    }
+
+    /* Buttons might not be needed in print */
+    .btn-primary,
+    .btn-login {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        background: transparent !important;
+    }
+
+    /* Remove heavy sections dark backgrounds if any */
+    .feature-card {
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        color: #000 !important;
+    }
+
+    /* Force full width */
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
