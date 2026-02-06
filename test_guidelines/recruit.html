@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+JP:wght@400;700;900&family=Oswald:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/lp.css">
+    <link rel="stylesheet" href="../assets/css/debug-panel.css">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Local overrides / Specific styles for Recruit Page within LP Framework */
+
+        /* Typography override for consistency */
+        h1,
+        h2,
+        h3,
+        h4,
+        .hero-tag,
+        .btn-primary {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .oswald {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        /* Timeline Component (Custom for this page but using LP vars) */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            border-left: 2px solid #333;
+            padding-left: 2rem;
+        }
+
+        .t-event {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .t-event:last-child {
+            border-bottom: none;
+        }
+
+        .t-dot {
+            position: absolute;
+            left: -2.6rem;
+            top: 0.2rem;
+            width: 1rem;
+            height: 1rem;
+            background: #000;
+            border: 2px solid #666;
+            transform: rotate(45deg);
+            /* Diamond shape for Noir feel */
+        }
+
+        .t-event.important .t-dot {
+            border-color: var(--orange);
+            background: var(--orange);
+        }
+
+        .t-event.important h3 {
+            color: var(--orange);
+        }
+
+        .t-date {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* Tabs for Roles */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-weight: 900;
+            transition: 0.3s;
+            text-transform: uppercase;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            border-color: var(--orange);
+            color: var(--black);
+            background: var(--orange);
+        }
+
+        .tab-content {
+            display: none;
+            background: #111;
+            padding: 2rem;
+            border: 1px solid #333;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Requirements Table */
+        .req-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .req-table th,
+        .req-table td {
+            text-align: left;
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .req-table th {
+            width: 30%;
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        /* Apply Steps */
+        .apply-steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .step-arrow {
+            text-align: center;
+            padding-top: 1.5rem;
+        }
+
+        @media(max-width: 600px) {
+
+            .req-table th,
+            .req-table td {
+                display: block;
+                width: 100%;
+            }
+
+            /* Typography Adjustments */
+            h1 {
+                font-size: 3.5rem !important;
+            }
+
+            h2 {
+                font-size: 1.8rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            h3 {
+                font-size: 1.3rem !important;
+            }
+
+            /* Spacing Adjustments */
+            .section-padding {
+                padding: 4rem 0 !important;
+            }
+
+            /* Hero Adjustments */
+            .hero-content {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                padding: 10px 0 20px 0 !important;
+            }
+
+            /* Component Adjustments */
+            .btn-primary {
+                padding: 1rem 2rem !important;
+                font-size: 1rem !important;
+            }
+
+            .check-item {
+                font-size: 0.9rem;
+            }
+
+            /* Tabs stacking */
+            .tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .tab-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            /* Timeline positioning */
+            .timeline {
+                padding-left: 1.5rem;
+                border-left: 1px solid #333;
+                margin-left: 0.5rem;
+            }
+
+            .t-dot {
+                left: -2.05rem;
+                width: 0.8rem;
+                height: 0.8rem;
+                top: 0.3rem;
+            }
+
+            .t-date {
+                font-size: 1.2rem;
+            }
+
+            /* Hide process numbers on mobile if too big, or scale them */
+            .p-step div:first-child {
+                font-size: 1.5rem !important;
+            }
+
+            /* Apply Steps Mobile */
+            .apply-steps {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .step-arrow {
+                padding-top: 0;
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Role Description List */
+        .role-desc-list {
+            margin-top: 1.5rem;
+            padding-left: 1.5rem;
+            color: #ddd;
+            line-height: 1.8;
+            list-style: none;
+            /* Custom markers via before */
+        }
+
+        .role-desc-list li {
+            position: relative;
+            margin-bottom: 0.8rem;
+        }
+
+        .role-desc-list li::before {
+            content: "";
+            position: absolute;
+            left: -1.2rem;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            background: var(--orange);
+            border-radius: 50%;
+        }
+
+        /* Check List */
+        .check-item {
+            background: #111;
+            padding: 1rem;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: 0.3s;
+        }
+
+        .check-item:hover {
+            border-color: var(--orange);
+            transform: translateX(5px);
+        }
+
+        /* Process Flow */
+        .process-step-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .p-step {
+            flex: 1;
+            min-width: 140px;
+            position: relative;
+            background: #111;
+            padding: 1.5rem;
+            border: 1px solid #333;
+        }
+
+        .p-step h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .p-step p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Accordion for Safety */
+        details {
+            background: #111;
+            margin-bottom: 1rem;
+            border: 1px solid #333;
+        }
+
+        summary {
+            padding: 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--orange);
+        }
+
+        details[open] summary::after {
+            content: '-';
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid #333;
+        }
+
+        .details-content {
+            padding: 1.5rem;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Timeline Details */
+        .tl-details {
+            margin-top: 1rem;
+            border: 1px solid #333;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .tl-details summary {
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .tl-details summary::after {
+            font-size: 1.2rem;
+        }
+
+        .tl-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tl-item {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            gap: 0.3rem;
+        }
+
+        .tl-item:last-child {
+            border-bottom: none;
+        }
+
+        .tl-label {
+            font-size: 0.8rem;
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        .tl-time {
+            font-family: 'Oswald';
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .tl-place {
+            font-size: 0.85rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    <!-- Header (Mocking index.html output with corrected paths) -->
+    <header class="header-nav">
+        <div class="container nav-wrapper">
+            <div id="header-left">
+                <div class="logo-brand">WE PLAY</div>
+            </div>
+            <nav class="nav-links" id="header-right">
+                <!-- Static Guest View for Guidelines Page -->
+                <a href="javascript:void(0)" class="btn-login" onclick="alert('デザイン確認用ページのため無効化されています')">
+                    <i data-lucide="log-in"></i><span>管理者ログイン</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <span class="hero-tag">We Play 未来人財育成委員会</span>
+                <h1>
+                    ぼくらの<br>
+                    <span>フィルム革命</span>
+                </h1>
+                <p>
+                    主役は、きみ。<br>
+                    <span
+                        style="font-size: 1rem; color: #aaa; border:none; background:transparent; display:block; margin-top:0.5rem;">
+                        地域と作る高校生映画。
+                    </span>
+                </p>
+                <div style="margin-top: 3rem;">
+                    <!-- Direct LINE Link for recruitment -->
+                    <a href="javascript:void(0)" class="btn-primary"
+                        onclick="alert('デザイン確認用ページのため無効化されています')">参加申し込み</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Hook -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>高校生 × 地域 × 映画制作<br>福山で“映画づくり”に本気で挑戦する夏</h2>
+
+                <div class="features-grid" style="margin-top: 2rem;">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="video" size="40"></i></div>
+                        <h3>君が主役</h3>
+                        <p>高校生が「主役」。あなたのアイディアと情熱が、一本の映画になる。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="mic-2" size="40"></i></div>
+                        <h3>プロフェッショナル</h3>
+                        <p>第一線で活躍するプロの映画監督から、直接指導を受けられる貴重な現場。<br>
+                            講師 : 福山市出身の新進気鋭の映画監督・ナカモトユウ氏。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="monitor-play" size="40"></i></div>
+                        <h3>スクリーンデビュー</h3>
+                        <p>完成作品は映画館「シネマモード」で上映。大スクリーンで感動を共有しよう。</p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; text-align: center; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <span style="border: 1px solid #666; padding: 0.5rem 1rem; color: #aaa;">期間: <strong>5月 -
+                            10月</strong></span>
+                    <span style="border: 1px solid #666; padding: 0.5rem 1rem; color: #aaa;">費用:
+                        <strong>参加無料</strong></span>
+                    <span style="border: 1px solid #666; padding: 0.5rem 1rem; color: #aaa;">定員:
+                        <strong>20名</strong></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Overview -->
+        <section class="section-padding" style="background: rgba(255,255,255,0.03);">
+            <div class="container">
+                <h2>プロジェクトの流れ</h2>
+                <div class="process-step-wrap">
+                    <div class="p-step">
+                        <div style="color:var(--orange); font-size:2rem; font-family:'Anton';">01</div>
+                        <h3>企画・脚本</h3>
+                        <p>物語をゼロから生み出す。<br>チームで構想を練り上げる。</p>
+                    </div>
+                    <div class="p-step">
+                        <div style="color:var(--orange); font-size:2rem; font-family:'Anton';">02</div>
+                        <h3>撮影準備</h3>
+                        <p>ロケハン、配役、衣装。<br>プロの準備を体験する。</p>
+                    </div>
+                    <div class="p-step">
+                        <div style="color:var(--orange); font-size:2rem; font-family:'Anton';">03</div>
+                        <h3>撮影本番</h3>
+                        <p>夏休みを利用して撮影。<br>福山の街がスタジオになる。</p>
+                    </div>
+                    <div class="p-step">
+                        <div style="color:var(--orange); font-size:2rem; font-family:'Anton';">04</div>
+                        <h3>編集・上映</h3>
+                        <p>映像を繋ぎ、音を入れる。<br>そして感動のフィナーレへ。</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; background: #111; padding: 2rem; border-left: 4px solid var(--orange);">
+                    <h4 style="color: var(--white); margin-bottom: 0.5rem;">保護者の皆様へ</h4>
+                    <p style="font-size: 0.95rem; color: #aaa;">
+                        本プロジェクトは、映画制作という「正解のない問い」に対して、仲間と協働しながら答えを導き出す「探究学習」の実践の場です。
+                        社会で必要とされる主体性、創造力、コミュニケーション能力を、実践を通じて育みます。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Benefits -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>参加のメリット</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="award" size="40"></i></div>
+                        <h3>修了証明書の発行</h3>
+                        <p>最後までやり遂げた証として証明書を発行。探究学習の成果や入試等の活動実績として活用できます。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="star" size="40"></i></div>
+                        <h3>プロ機材での制作</h3>
+                        <p>普段触れることのない本格的なシネマカメラや照明機材を使用。本物のクリエイティブに触れる夏。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="zap" size="40"></i></div>
+                        <h3>学校外の仲間</h3>
+                        <p>学校や学年の垣根を超えた出会い。同じ志を持つ仲間との絆は、一生の財産になります。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="trending-up" size="40"></i></div>
+                        <h3>圧倒的な成長</h3>
+                        <p>「自分にもできる」という自信。失敗を恐れずに挑戦するマインドセットが手に入ります。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Persona -->
+        <section class="section-padding" style="background: rgba(255,255,255,0.03);">
+            <div class="container">
+                <h2>こんな人におすすめ</h2>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> 福山をとにかく盛り上げたい</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> チームリーダーを経験してみたい</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> 人前で表現することに興味がある</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> 地場の企業や大人とつながりたい</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> 学校外の仲間と何かに挑戦したい</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> とにかく映画が大好き！</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> 一生残る最高の思い出をつくりたい</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> 本格的な動画編集を学びたい</div>
+                    <div class="check-item"><i data-lucide="check-circle" color="#ff4500"></i> もっと地元・福山について知りたい</div>
+                </div>
+                <p style="text-align: center; margin-top: 2rem; color: #888;">ひとつでも当てはまれば、あなたはすでに候補生です。</p>
+            </div>
+        </section>
+
+        <!-- 5. Roles -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>役割紹介</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab('director')">監督・脚本</button>
+                    <button class="tab-btn" onclick="openTab('actor')">役者</button>
+                    <button class="tab-btn" onclick="openTab('crew')">撮影チーム</button>
+                    <button class="tab-btn" onclick="openTab('editor')">編集・発信</button>
+                </div>
+
+                <div id="director" class="tab-content active">
+                    <h3>監督・脚本チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>映画の骨組みである脚本を書き上げる。</li>
+                        <li>衣装やロケ地などを決めてメンバーに指示する。</li>
+                        <li>撮影現場では、役者への演技指導やカメラアングルの指示など、全体の調整役を担う。</li>
+                        <li>制作の全過程で各チームを指揮し指示を出す。</li>
+                    </ul>
+                </div>
+
+                <div id="actor" class="tab-content">
+                    <h3>役者チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>カメラの前で演技し、作品を表現する。</li>
+                        <li>SNSでの発信に協力し作品をPRする。</li>
+                        <li>撮影が始まる前は、地域の人々の協力を仰ぎロケ地や衣装の提供をお願いする。</li>
+                        <li>撮影が終わった後は、上映会に向け準備する。</li>
+                    </ul>
+                </div>
+
+                <div id="crew" class="tab-content">
+                    <h3>撮影チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>カメラを使って映画のシーンを撮影していく。</li>
+                        <li>音響や照明もこのチームに所属する。</li>
+                        <li>撮影前後は、ロケ地や衣装の調整、上映会準備を行う。</li>
+                    </ul>
+                </div>
+
+                <div id="editor" class="tab-content">
+                    <h3>編集・発信チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>映像を時系列に整理し、物語を伝えやすくする。</li>
+                        <li>音響効果やBGMを追加し、映像の魅力を高める。</li>
+                        <li>撮影の裏側や活動の様子を記録しSNSで発信する。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Timeline -->
+        <section class="section-padding" style="background: rgba(255,255,255,0.03);">
+            <div class="container">
+                <h2>スケジュール</h2>
+                <div class="timeline">
+                    <div class="t-event">
+                        <div class="t-dot"></div>
+                        <div class="t-date">5.23 - 6.19</div>
+                        <h3>キックオフ・企画</h3>
+                        <p>顔合わせ、企画会議、脚本執筆。<br>毎週末のワークショップ形式で進行します。</p>
+                        <details class="tl-details">
+                            <summary>詳細スケジュールを見る</summary>
+                            <div class="tl-list">
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード1</span>
+                                    <span class="tl-time">5月23日(土) 13:00～15:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> iti-Setouchi</span>
+                                </div>
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード2</span>
+                                    <span class="tl-time">6月5日(金) 17:00～19:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i>
+                                        福山青年会議所事務局（企画・脚本）</span>
+                                </div>
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード3</span>
+                                    <span class="tl-time">6月19日(金) 17:00～19:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山青年会議所事務局</span>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="t-event important">
+                        <div class="t-dot"></div>
+                        <div class="t-date">7.11</div>
+                        <h3>中間発表会</h3>
+                        <p>中間発表会 @ iti-Setouchi。<br>制作途中の成果を発表し、フィードバックを得ます。</p>
+                        <details class="tl-details">
+                            <summary>詳細スケジュールを見る</summary>
+                            <div class="tl-list">
+                                <div class="tl-item">
+                                    <span class="tl-label">中間発表会</span>
+                                    <span class="tl-time">7月11日(土) 13:00～15:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> iti-Setouchi</span>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="t-event important">
+                        <div class="t-dot"></div>
+                        <div class="t-date">7.24 - 8.16</div>
+                        <h3>撮影</h3>
+                        <p>撮影期間。夏休みを利用し、チームごとにロケを行います。<br>最高の夏の思い出を。</p>
+                        <details class="tl-details">
+                            <summary>詳細スケジュールを見る</summary>
+                            <div class="tl-list">
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード4</span>
+                                    <span class="tl-time">7月24日(金) 10:00～</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山市内</span>
+                                </div>
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード5</span>
+                                    <span class="tl-time">8月2日(日) 10:00～</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山市内（撮影）</span>
+                                </div>
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード6</span>
+                                    <span class="tl-time">8月16日(日) 10:00～</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山市内</span>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="t-event">
+                        <div class="t-dot"></div>
+                        <div class="t-date">9.04 - 10.09</div>
+                        <h3>編集</h3>
+                        <p>編集期間。素材を繋ぎ合わせ、一つの作品へと仕上げていきます。</p>
+                        <details class="tl-details">
+                            <summary>詳細スケジュールを見る</summary>
+                            <div class="tl-list">
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード7</span>
+                                    <span class="tl-time">9月4日(金) 17:00～19:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山青年会議所事務局</span>
+                                </div>
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード8</span>
+                                    <span class="tl-time">9月25日(金) 17:00～19:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山青年会議所事務局（編集）</span>
+                                </div>
+                                <div class="tl-item">
+                                    <span class="tl-label">エピソード9</span>
+                                    <span class="tl-time">10月9日(金) 17:00～19:00</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i> 福山青年会議所事務局</span>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="t-event important">
+                        <div class="t-dot"></div>
+                        <div class="t-date">10.18</div>
+                        <h3>完成披露上映会</h3>
+                        <p>完成披露上映会 @ 福山駅前シネマモード。<br>レッドカーペットを歩こう。</p>
+                        <details class="tl-details">
+                            <summary>詳細スケジュールを見る</summary>
+                            <div class="tl-list">
+                                <div class="tl-item">
+                                    <span class="tl-label">上映会</span>
+                                    <span class="tl-time">10月18日(日) 13:00～</span>
+                                    <span class="tl-place"><i data-lucide="map-pin" size="14"></i>
+                                        福山駅前シネマモード（作品上映・成果発表）</span>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 2rem; color: #666; font-size: 0.9rem;">
+                    ※スケジュールは進捗状況により変更になる可能性があります。</p>
+            </div>
+        </section>
+
+        <!-- 7. Requirements -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>募集要項</h2>
+                <table class="req-table">
+                    <tr>
+                        <th>対象</th>
+                        <td>2026年度 高校1年生〜3年生</td>
+                    </tr>
+                    <tr>
+                        <th>活動期間</th>
+                        <td>2026年5月1日 〜 10月31日</td>
+                    </tr>
+                    <tr>
+                        <th>定員</th>
+                        <td>20名（応募者多数の場合は選考あり）</td>
+                    </tr>
+                    <tr>
+                        <th>参加費</th>
+                        <td>無料<br><span style="font-size:0.8rem; color:#888;">※会場までの交通費、活動中の飲食費は自己負担となります。</span></td>
+                    </tr>
+                    <tr>
+                        <th>条件</th>
+                        <td>原則、全日程参加 / 保護者同意 / 送迎各自 / LINE連絡必須</td>
+                    </tr>
+                    <tr>
+                        <th>締切</th>
+                        <td>
+                            <strong style="color: var(--orange);">一次締切：2026年4月30日</strong><br>
+                            <span style="font-size: 0.8rem; color: #888;">二次締切：2026年5月20日（※定員未達時のみ）</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- 8. Apply -->
+        <section class="section-padding"
+            style="text-align: center; background: rgba(255,69,0,0.05); border-top: 1px solid var(--orange); border-bottom: 1px solid var(--orange);">
+            <div class="container">
+                <h2 style="border: none; padding: 0; text-align: center;">応募方法</h2>
+                <div class="apply-steps">
+                    <div style="text-align:center;">
+                        <div style="font-family:'Anton'; font-size: 3rem; color:var(--orange);">01</div>
+                        <p>このページから<br>参加申し込み</p>
+                    </div>
+                    <div class="step-arrow"><i data-lucide="arrow-right" size="32" color="#ffffff"></i></div>
+                    <div style="text-align:center;">
+                        <div style="font-family:'Anton'; font-size: 3rem; color:var(--orange);">02</div>
+                        <p>運営からの連絡を待つ<br><span style="font-size:0.8rem; color:#888;">（結果はこのページにも表示）</span></p>
+                    </div>
+                </div>
+
+                <a href="javascript:void(0)" class="btn-primary" style="padding: 1.5rem 5rem; font-size: 1.5rem;"
+                    onclick="alert('デザイン確認用ページのため無効化されています')">
+                    参加申し込み
+                </a>
+                <p style="margin-top: 1rem; color: var(--orange);">応募締切: 4月30日まで</p>
+            </div>
+        </section>
+
+        <!-- 9. Safety -->
+        <section class="section-padding">
+            <div class="container" style="max-width: 800px;">
+                <h2 style="font-size: 1.5rem; border: none; padding: 0; margin-bottom: 2rem;">安心・安全への取り組み</h2>
+                <details>
+                    <summary>安全管理体制について</summary>
+                    <div class="details-content">
+                        活動中は常に福山青年会議所の担当者が帯同し、安全管理に努めます。万が一の事故に備え、参加者全員に対してイベント保険に加入します（費用は主催者負担）。
+                    </div>
+                </details>
+                <details>
+                    <summary>個人情報の取り扱いについて</summary>
+                    <div class="details-content">
+                        ご提供いただいた個人情報は、本プロジェクトの運営・連絡のみに使用し、法令に基づく場合を除き、ご本人の同意なく第三者に提供することはありません。
+                    </div>
+                </details>
+                <details>
+                    <summary>肖像権・SNS公開について</summary>
+                    <div class="details-content">
+                        活動の様子（写真・動画）は、活動報告や次年度以降の広報のためにウェブサイトやSNS等で公開する場合があります。事前に承諾書にて確認させていただきます。
+                    </div>
+                </details>
+                <details>
+                    <summary>飲食・送迎について</summary>
+                    <div class="details-content">
+                        活動中の食事は原則として各自持参、または近隣での購入となります。会場までの送迎は行っておりません。公共交通機関等をご利用ください。
+                    </div>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer (Matching index.html) -->
+    <footer>
+        <div class="container">
+            <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.2rem;">一般社団法人 福山青年会議所<br><span
+                    style="font-size:0.9rem; font-weight:normal; color: #888;">We Play 未来人財育成委員会</span></h3>
+
+            <p style="margin-bottom: 2rem;">
+                〒720-0067 広島県福山市西町2-10-1<br>
+                TEL: 084-922-5992 (平日 10:00-17:00)
+            </p>
+
+            <a href="javascript:void(0)" class="btn-primary" style="padding: 0.5rem 2rem; font-size: 0.9rem;"
+                onclick="alert('デザイン確認用ページのため無効化されています')">LINEでお問い合わせ</a>
+
+            <p style="margin-top: 3rem;">© 2026 We Play 未来人財育成委員会</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function openTab(tabName) {
+            var i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+            }
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+    <!-- Debug Panel -->
+    <script src="../assets/js/debug-panel.js"></script>
+    <!-- Status Modal (Initially Hidden) -->
+    <div id="statusModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div
+            style="background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #333; position: relative;">
+            <button id="closeStatusModal"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            <h3 style="margin-bottom: 1rem; font-family: 'Anton'; letter-spacing: 1px;">STATUS</h3>
+            <div id="applicantDetailsContent">
+                <!-- Details injected via JS -->
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

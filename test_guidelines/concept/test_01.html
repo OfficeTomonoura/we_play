@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 - 案01 v2</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Oswald:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* 改善点: 背景を完全な黒から深いグラデーションへ */
+            --bg-color: #050505;
+            --bg-gradient: radial-gradient(circle at center top, #1a1f2e, #050505 60%);
+            --text-main: #f0f0f0;
+            --text-sub: #a0a0a0;
+            --accent: #E50914;
+            /* Cinema Red */
+            --accent-glow: rgba(229, 9, 20, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Noto Sans JP', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Light Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -20%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(30, 30, 80, 0.2), transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Header / Hero */
+        header {
+            height: 90vh;
+            /* 画面いっぱいに */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-logo-box {
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin: 0;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-weight: 900;
+        }
+
+        .sub-title {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--text-sub);
+            margin-top: 1rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* Decoration: Film Strip Top/Bottom */
+        .film-strip {
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            background-image: linear-gradient(to right, #000 50%, transparent 50%);
+            background-size: 40px 100%;
+            opacity: 0.3;
+        }
+
+        .strip-top {
+            top: 0;
+            border-bottom: 2px solid #333;
+        }
+
+        .strip-bottom {
+            bottom: 0;
+            border-top: 2px solid #333;
+        }
+
+        /* Scroll Down */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Sections */
+        section {
+            padding: 8rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: left;
+            border-left: 5px solid var(--accent);
+            padding-left: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin: 0;
+            line-height: 1;
+            color: var(--text-main);
+        }
+
+        .section-desc {
+            color: var(--text-sub);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        /* Purpose Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card-cinematic {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-light);
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-cinematic:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-cinematic::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .card-cinematic:hover::after {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* Roles horizontal list */
+        .role-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 1rem;
+            padding: 1.5rem 2rem;
+            border-left: 3px solid transparent;
+            /* default */
+            transition: 0.3s;
+        }
+
+        .role-row:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--accent);
+        }
+
+        .role-icon-wrap {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .role-name h3 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .role-name span {
+            font-family: 'Noto Sans JP';
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* Requirements Table Style */
+        .req-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .req-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .role-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #333;
+            padding: 1rem 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-label {
+            color: var(--text-sub);
+            font-weight: bold;
+        }
+
+        .data-val {
+            text-align: right;
+        }
+
+        /* Schedule Timeline */
+        .timeline-wrapper {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #333;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            background: #111;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 10px;
+        }
+
+        .timeline-date {
+            font-family: 'Oswald', sans-serif;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 10rem 0;
+            background: radial-gradient(circle at center, rgba(62, 21, 21, 0.4), transparent 70%);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: var(--accent);
+            color: #fff;
+            padding: 1.2rem 4rem;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            border-radius: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #fff;
+            color: var(--accent);
+            box-shadow: 0 0 40px rgba(229, 9, 20, 0.6);
+            transform: scale(1.05);
+        }
+
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="film-strip strip-top"></div>
+        <div class="film-strip strip-bottom"></div>
+
+        <div class="hero-logo-box reveal active">
+            <p style="letter-spacing: 0.3em; margin-bottom: 1rem; color: var(--accent);">PROJECT - 2026</p>
+            <h1 class="main-title">ぼくらの<br>フィルム革命</h1>
+            <p class="sub-title">高校生 × 地域 × 映画制作</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <i data-lucide="chevron-down" size="32" color="#666"></i>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Vision / Concept -->
+        <section>
+            <div class="section-header reveal">
+                <h2 class="section-title">CONCEPT</h2>
+                <div class="section-desc">このプロジェクトについて</div>
+            </div>
+
+            <div class="grid-3 reveal">
+                <div class="card-cinematic">
+                    <div class="card-icon"><i data-lucide="clapperboard" size="32"></i></div>
+                    <h3>Create</h3>
+                    <p style="color: var(--text-sub); line-height: 1.6;">
+                        プロの監督とともに、ゼロから物語を生み出す。脚本、撮影、編集。映画制作のすべてを体験する。
+                    </p>
+                </div>
+                <div class="card-cinematic">
+                    <div class="card-icon"><i data-lucide="users" size="32"></i></div>
+                    <h3>Connect</h3>
+                    <p style="color: var(--text-sub); line-height: 1.6;">
+                        学校の枠を超えた仲間との出会い。地域の大人たちとの協働。ここでしか得られない絆。
+                    </p>
+                </div>
+                <div class="card-cinematic">
+                    <div class="card-icon"><i data-lucide="zap" size="32"></i></div>
+                    <h3>Change</h3>
+                    <p style="color: var(--text-sub); line-height: 1.6;">
+                        「自分」を変える夏。リーダーシップ、表現力、創造性を解放し、次のステージへ。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roles -->
+        <section>
+            <div class="section-header reveal">
+                <h2 class="section-title">CASTING</h2>
+                <div class="section-desc">募集する役割</div>
+            </div>
+
+            <div class="reveal">
+                <div class="role-row">
+                    <div class="role-icon-wrap">
+                        <i data-lucide="pen-tool" color="#888"></i>
+                        <div class="role-name">
+                            <h3>Director / Script</h3>
+                            <span>監督・脚本</span>
+                        </div>
+                    </div>
+                    <p style="color:#888; margin: 0;">物語の骨格を作り、現場を指揮するクリエイター。</p>
+                </div>
+                <div class="role-row">
+                    <div class="role-icon-wrap">
+                        <i data-lucide="smile" color="#888"></i>
+                        <div class="role-name">
+                            <h3>Actor</h3>
+                            <span>役者</span>
+                        </div>
+                    </div>
+                    <p style="color:#888; margin: 0;">スクリーンの中で生きる。作品の顔となる表現者。</p>
+                </div>
+                <div class="role-row">
+                    <div class="role-icon-wrap">
+                        <i data-lucide="monitor" color="#888"></i>
+                        <div class="role-name">
+                            <h3>Editor / PR</h3>
+                            <span>編集・発信</span>
+                        </div>
+                    </div>
+                    <p style="color:#888; margin: 0;">映像を繋ぎ、エフェクトをかけ、世界へ発信する。</p>
+                </div>
+                <div class="role-row">
+                    <div class="role-icon-wrap">
+                        <i data-lucide="camera" color="#888"></i>
+                        <div class="role-name">
+                            <h3>Crew</h3>
+                            <span>撮影・技術</span>
+                        </div>
+                    </div>
+                    <p style="color:#888; margin: 0;">カメラ、照明、音響。技術で世界観を支える職人。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requirements & Schedule -->
+        <section>
+            <div class="req-grid reveal">
+                <!-- Requirements -->
+                <div>
+                    <h2 style="font-family:'Oswald'; margin-bottom: 2rem;">REQUIREMENTS</h2>
+                    <div class="data-row">
+                        <span class="data-label">対象</span>
+                        <span class="data-val">2026年度 高校1〜3年生<br><small style="color:#666">福山市内で活動可能な方</small></span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">定員</span>
+                        <span class="data-val">20名程度</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">参加費</span>
+                        <span class="data-val">無料 (飲食費等は自己負担)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">締切 (1次)</span>
+                        <span class="data-val" style="color: var(--accent); font-weight: bold;">2026.04.30</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">締切 (2次)</span>
+                        <span class="data-val">2026.05.20 (空枠時のみ)</span>
+                    </div>
+                </div>
+
+                <!-- Schedule -->
+                <div>
+                    <h2 style="font-family:'Oswald'; margin-bottom: 2rem;">TIMELINE</h2>
+                    <div class="timeline-wrapper">
+                        <div class="timeline-line"></div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"><i data-lucide="play" size="10"></i></div>
+                            <div class="timeline-date">May 23 - June 19</div>
+                            <div><strong>Start & Scripting</strong></div>
+                            <div style="font-size: 0.9rem; color: #888;">キックオフ・企画・脚本制作</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"><i data-lucide="code" size="10"></i></div>
+                            <div class="timeline-date">July 11</div>
+                            <div><strong>Interim Check</strong></div>
+                            <div style="font-size: 0.9rem; color: #888;">中間発表会 (iti-Setouchi)</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"><i data-lucide="video" size="10"></i></div>
+                            <div class="timeline-date">July 24 - Aug 16</div>
+                            <div><strong>Shooting</strong></div>
+                            <div style="font-size: 0.9rem; color: #888;">撮影本番 (福山エリア)</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"><i data-lucide="check" size="10"></i></div>
+                            <div class="timeline-date" style="color: #fff;">Oct 18</div>
+                            <div style="color: var(--accent); font-size: 1.1rem; font-weight: bold;">FINAL SCREENING
+                            </div>
+                            <div style="font-size: 0.9rem; color: #888;">上映会 (シネマモード)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section reveal">
+            <h2 style="font-size: 2.5rem; margin-bottom: 3rem;">ARE YOU READY?</h2>
+
+            <a href="#" class="btn-primary">
+                ENTRY WITH LINE
+                <i data-lucide="arrow-right"></i>
+            </a>
+
+            <p style="margin-top: 2rem; opacity: 0.6; font-size: 0.9rem;">
+                ※LINE公式アカウントへ移動します。<br>
+                友だち登録後、案内メッセージが届きます。
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>WE PLAY PROJECT 2026 | ORGANIZED BY FUKUYAMA JUNIOR CHAMBER</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Simple Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+</body>
+
+</html>

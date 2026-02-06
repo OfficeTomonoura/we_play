@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 - 案09 v2</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Zen+Old+Mincho:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* 改善点: ホラー感を払拭し、夜明けや青春を感じる配色へ */
+            --bg-color: #0c121c;
+            /* 濃藍 (Deep Indigo) */
+            --text-color: #f3f3f3;
+            --accent-gold: #c3a670;
+            /* 落ち着いた金 */
+            --accent-red: #d1483e;
+            /* 鮮やかな朱 (Vermilion) */
+            --border-color: rgba(195, 166, 112, 0.3);
+            --gradient-overlay: linear-gradient(180deg, rgba(12, 18, 28, 0) 0%, #0c121c 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Shippori Mincho', 'Zen Old Mincho', serif;
+            line-height: 2.2;
+            background-image: radial-gradient(circle at 50% 0%, #1e2a3f, var(--bg-color) 70%);
+            overflow-x: hidden;
+        }
+
+        /* Delicate light effect (Lens flare / Dawn) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(195, 166, 112, 0.15), transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 500;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        /* Vertical Writing Hero */
+        .hero {
+            height: 90vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Subtle texture */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .tategaki-box {
+            writing-mode: vertical-rl;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            height: 60vh;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--text-color);
+            text-shadow: 0 0 20px rgba(195, 166, 112, 0.2);
+        }
+
+        .catch-copy {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.4em;
+            line-height: 2;
+            border-left: 1px solid var(--border-color);
+            /* Appear right in vertical mode */
+            padding-left: 1.5rem;
+        }
+
+        .hero-footer {
+            position: absolute;
+            bottom: 3rem;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            opacity: 0.8;
+            letter-spacing: 0.2em;
+        }
+
+        /* Sections */
+        section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .section-num {
+            position: absolute;
+            top: 4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 6rem;
+            opacity: 0.05;
+            font-family: serif;
+            color: var(--text-color);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            display: inline-block;
+            border-bottom: 1px solid var(--accent-gold);
+            padding-bottom: 1rem;
+            letter-spacing: 0.2em;
+        }
+
+        /* Emotional Text */
+        .emotional-p {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .highlight {
+            background: linear-gradient(transparent 60%, rgba(209, 72, 62, 0.3) 60%);
+        }
+
+        /* Roles with "Card" but elegant */
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        @media (max-width: 700px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .role-item {
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            background: rgba(12, 18, 28, 0.8);
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .role-item:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px rgba(195, 166, 112, 0.1);
+        }
+
+        .role-en {
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .role-jp {
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .role-jp::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        /* Clean Table */
+        .clean-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.05rem;
+        }
+
+        .clean-table th {
+            width: 30%;
+            text-align: left;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-gold);
+            font-weight: normal;
+        }
+
+        .clean-table td {
+            text-align: left;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Flow / Timeline */
+        .story-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .flow-node {
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .flow-node::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            width: 1px;
+            height: 2rem;
+            background: var(--border-color);
+        }
+
+        .flow-node:last-child::after {
+            display: none;
+        }
+
+        .flow-date {
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-title {
+            font-size: 1.3rem;
+        }
+
+        /* Button */
+        .btn-gold {
+            display: inline-block;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 1rem 4rem;
+            margin-top: 4rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gold:hover {
+            background: var(--accent-gold);
+            color: var(--bg-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <div class="tategaki-box">
+            <h1 class="main-title">ぼくらの<br>フィルム<span style="color:var(--accent-red);">革命</span></h1>
+            <div class="catch-copy">
+                この夏、日常を超える。<br>
+                高校生映画制作プロジェクト<br>
+                始動。
+            </div>
+        </div>
+        <div class="hero-footer">
+            PROJECT 2026 / FUKUYAMA CITY
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Message -->
+        <section>
+            <div class="section-num">01</div>
+            <div class="section-header">
+                <span style="color: var(--accent-gold); font-size: 0.8rem; letter-spacing: 0.2em;">INTRODUCTION</span>
+                <h2 class="section-title">物語の始まり</h2>
+            </div>
+            <p class="emotional-p">
+                教室の窓から見える景色は、いつもと同じ。<br>
+                だけど、レンズを通せば世界は変わる。<br>
+                <br>
+                学校も学年も違う仲間たち。<br>
+                プロフェッショナルな大人たち。<br>
+                そして、<span class="highlight">「主役」になる君自身。</span><br>
+                <br>
+                まだ誰も見たことのない、<br>
+                私たちの青春（フィルム）を作ろう。
+            </p>
+        </section>
+
+        <!-- Roles -->
+        <section>
+            <div class="section-num">02</div>
+            <div class="section-header">
+                <h2 class="section-title">役割を選ぶ</h2>
+            </div>
+            <div class="role-grid">
+                <div class="role-item">
+                    <span class="role-en">Director / Script</span>
+                    <div class="role-jp">監督・脚本</div>
+                    <p>世界の創造主となる。物語を紡ぎ、現場の熱狂を生み出す中心人物。</p>
+                </div>
+                <div class="role-item">
+                    <span class="role-en">Actor</span>
+                    <div class="role-jp">役者</div>
+                    <p>誰かの人生を生きる。カメラの前で感情を解き放ち、観客の心を震わせる。</p>
+                </div>
+                <div class="role-item">
+                    <span class="role-en">Editor / PR</span>
+                    <div class="role-jp">編集・発信</div>
+                    <p>時を操る魔術師。映像を繋ぎ合わせ、作品の魅力を世界へ届ける。</p>
+                </div>
+                <div class="role-item">
+                    <span class="role-en">Crew</span>
+                    <div class="role-jp">撮影・技術</div>
+                    <p>光と音の職人。その一瞬の奇跡を、永遠のものとして記録する。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requirements -->
+        <section>
+            <div class="section-num">03</div>
+            <div class="section-header">
+                <h2 class="section-title">募集要項</h2>
+            </div>
+            <table class="clean-table">
+                <tr>
+                    <th>対象</th>
+                    <td>二〇二六年度 高校一年生〜三年生（福山市内）</td>
+                </tr>
+                <tr>
+                    <th>定員</th>
+                    <td>二十名程度</td>
+                </tr>
+                <tr>
+                    <th>参加費</th>
+                    <td>無料</td>
+                </tr>
+                <tr>
+                    <th>応募期限</th>
+                    <td>
+                        第一次：四月三十日<br>
+                        <span style="font-size: 0.9rem; color: #888;">（第二次：五月二十日 ※定員に達し次第終了）</span>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Timeline -->
+        <section>
+            <div class="section-num">04</div>
+            <div class="section-header">
+                <h2 class="section-title">行程</h2>
+            </div>
+            <div class="story-flow">
+                <div class="flow-node">
+                    <div class="flow-date">5.23 - 6.19</div>
+                    <div class="flow-title">第一章：出会いと構想</div>
+                    <div style="font-size:0.9rem; margin-top:0.5rem; color:#aaa;">キックオフ・企画会議</div>
+                </div>
+                <div class="flow-node">
+                    <div class="flow-date">7.24 - 8.16</div>
+                    <div class="flow-title">第二章：熱狂の撮影</div>
+                    <div style="font-size:0.9rem; margin-top:0.5rem; color:#aaa;">福山市内ロケ</div>
+                </div>
+                <div class="flow-node">
+                    <div class="flow-date">10.18</div>
+                    <div class="flow-title" style="color: var(--accent-red);">最終章：上映会</div>
+                    <div style="font-size:0.9rem; margin-top:0.5rem; color:#aaa;">シネマモードにて公開</div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="#" class="btn-gold">LINEで応募する</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>一般社団法人福山青年会議所 | We Play 未来人財育成委員会</p>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

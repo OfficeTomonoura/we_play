@@ -1,0 +1,159 @@
+/* UI Debug Panel Styles */
+#ui-debug-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 15px;
+    z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#ui-debug-panel.minimized {
+    /* transform: translateX(180px); REMOVED: Caused button to go off-screen */
+    width: auto;
+    min-width: 0;
+}
+
+#ui-debug-panel.minimized .debug-controls,
+#ui-debug-panel.minimized div:last-child {
+    display: none;
+}
+
+#ui-debug-panel.minimized .debug-header {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.debug-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+    margin-bottom: 5px;
+}
+
+.debug-title {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.debug-toggle {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 5px;
+}
+
+.debug-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.debug-btn {
+    flex: 1;
+    background: #222;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: 0.2s;
+}
+
+.debug-btn:hover,
+.debug-btn.active {
+    background: #ff4500;
+    /* LP Orange */
+    color: #fff;
+    border-color: #ff4500;
+}
+
+/* Device Simulator Overlay */
+#device-simulator-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #111;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.device-frame {
+    width: 375px;
+    height: 812px;
+    /* iPhone X/12/13 size */
+    background: #000;
+    border-radius: 40px;
+    box-shadow: 0 0 0 12px #333, 0 20px 50px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    position: relative;
+    border: 8px solid #000;
+    /* Bezel */
+}
+
+.device-frame::before {
+    content: '';
+    /* Notch */
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 25px;
+    background: #000;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    z-index: 10;
+}
+
+.device-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+    display: block;
+}
+
+.simulator-close {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid #666;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.simulator-close:hover {
+    background: #666;
+}
