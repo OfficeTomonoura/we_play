@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>選抜者詳細 (ドラフト) | We Play 管理システム</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- INLINED ADMIN.CSS will be injected here -->
+    <style id="admin-css-placeholder">
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --accent: #ff007a;
+            --bg-deep: #050507;
+            --bg-dark: #0f0f13;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
+            --text-dim: #a1a1aa;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-dark);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        .nav-section {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            margin: 1.5rem 0 0.5rem 1rem;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            text-decoration: none;
+            color: var(--text-dim);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        .nav-item-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .nav-item-toggle .toggle-icon {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s var(--easing);
+        }
+
+        .nav-item-toggle.open .toggle-icon {
+            transform: rotate(90deg);
+        }
+
+        .nav-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s var(--easing);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-submenu.open {
+            max-height: 500px;
+            /* 適切な値に制限 */
+            margin-bottom: 0.5rem;
+        }
+
+        /* 階層ごとのインデント設定（アイテム単位） */
+        .level-1 {
+            padding-left: 1rem;
+        }
+
+        .level-2 {
+            padding-left: 2rem !important;
+        }
+
+        .level-3 {
+            padding-left: 3.5rem !important;
+        }
+
+        .submenu-item {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            padding: 0.6rem 1rem;
+            text-decoration: none;
+            transition: color 0.3s;
+            border-bottom: 1px dashed rgba(0, 242, 255, 0.1);
+        }
+
+        .submenu-item:last-child {
+            border-bottom: none;
+        }
+
+        .submenu-item:hover {
+            color: var(--primary);
+        }
+
+        /* アコーディオン内のトグルアイテム（ネスト用） */
+        .nav-submenu .nav-item-toggle {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            background: transparent;
+        }
+
+        .nav-submenu .nav-item-toggle:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-submenu .nav-item-toggle .toggle-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--accent);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 122, 0.1);
+            border-color: var(--accent);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: var(--header-height) 2rem 2rem;
+        }
+
+        /* Top Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(0, 242, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 90;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            width: 300px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .header-search i {
+            color: var(--text-dim);
+            width: 18px;
+        }
+
+        .header-search input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+            width: 100%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(112, 0, 255, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* Content Layout */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .welcome-banner {
+            margin: 2rem 0 3rem;
+        }
+
+        .welcome-banner h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-main), var(--text-dim));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-banner p {
+            color: var(--text-dim);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 2px solid rgba(0, 242, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s var(--easing);
+        }
+
+        .stat-card:hover {
+            border-color: rgba(0, 242, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03));
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color);
+        }
+
+        .stat-info .label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-info .count {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .stat-trend {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .stat-trend.positive {
+            color: #00ff88;
+        }
+
+        /* Charts area */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1.5fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 20px;
+            position: relative;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s var(--easing);
+        }
+
+        .chart-container:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .chart-container canvas {
+            flex: 1;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-container h3 {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        /* Data Table */
+        .table-container {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: border-color 0.3s var(--easing);
+        }
+
+        .table-container:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-all {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-all:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .user-meta .name {
+            display: block;
+            font-weight: 600;
+        }
+
+        .user-meta .email {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .status-badge.new {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .status-badge.reviewed {
+            background: rgba(112, 0, 255, 0.1);
+            color: #bfaaff;
+        }
+
+        .status-badge.selected {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+        }
+
+        .status-badge.rejected {
+            background: rgba(255, 75, 75, 0.1);
+            color: #ff4b4b;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        /* Applicants Grid & Cards */
+        .applicants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .applicant-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s var(--easing);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .applicant-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-status {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+
+        .card-body h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .card-body .email {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-info {
+            display: grid;
+            gap: 0.8rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .info-item i {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+        }
+
+        .info-item .label {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            min-width: 60px;
+        }
+
+        /* Modal Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: #0f0f13;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s var(--easing);
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .detail-section h4 {
+            color: var(--primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .detail-text {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.2rem;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+
+        .admin-select {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1600px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+
+            /* Sidebar Mobile Logic */
+            .sidebar {
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s var(--easing);
+                box-shadow: none;
+                /* Reset */
+            }
+
+            .sidebar.open {
+                transform: translateX(0) !important;
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .top-header {
+                left: 0 !important;
+                width: 100% !important;
+                /* Ensure full width */
+                padding-left: 4rem !important;
+                /* Space for toggler */
+            }
+
+            /* Mobile Menu Toggle Button */
+            .mobile-menu-toggle {
+                display: flex !important;
+                position: fixed;
+                top: 15px;
+                /* Adjust to vertical center of header approx */
+                left: 15px;
+                z-index: 9999;
+                background: var(--bg-dark);
+                border: 1px solid var(--primary);
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        /* Base style for toggle (hidden on desktop) */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s var(--easing);
+        }
+
+        .sidebar-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(15, 15, 19, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            pointer-events: auto;
+            animation: toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 300px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast.success {
+            border-left-color: #00ff88;
+        }
+
+        .toast.error {
+            border-left-color: #ff4b4b;
+        }
+
+        .toast-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .toast.success .toast-icon {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .toast.error .toast-icon {
+            background: rgba(255, 75, 75, 0.2);
+            color: #ff4b4b;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastSlideOut {
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <!-- INTERNAL STYLE FROM selected_detail.html -->
+    <style>
+        .detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .detail-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .info-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .role-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .role-director {
+            background: rgba(112, 0, 255, 0.1);
+            color: #7000ff;
+            border: 1px solid rgba(112, 0, 255, 0.3);
+        }
+
+        .role-actor {
+            background: rgba(255, 0, 122, 0.1);
+            color: #ff007a;
+            border: 1px solid rgba(255, 0, 122, 0.3);
+        }
+
+        .role-producer {
+            background: rgba(255, 234, 0, 0.1);
+            color: #ffea00;
+            border: 1px solid rgba(255, 234, 0, 0.3);
+        }
+
+        .role-props {
+            background: rgba(0, 255, 122, 0.1);
+            color: #00ff7a;
+            border: 1px solid rgba(0, 255, 122, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- STATIC SIDEBAR MOCKED FROM components.js -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">WE PLAY ADMIN</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">メイン</div>
+                <a href="#" class="nav-item"><i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span></a>
+                <a href="#" class="nav-item"><i data-lucide="users"></i> <span>応募者一覧</span></a>
+                <a href="#" class="nav-item"><i data-lucide="user-check"></i> <span>選抜者管理</span></a>
+
+                <div class="nav-section">管理</div>
+                <a href="#" class="nav-item"><i data-lucide="contact"></i> <span>会員リスト</span></a>
+                <a href="#" class="nav-item"><i data-lucide="briefcase"></i> <span>協力者リスト</span></a>
+                <a href="#" class="nav-item"><i data-lucide="bar-chart-2"></i> <span>分析・統計</span></a>
+
+                <div class="nav-section">業務・運用</div>
+                <a href="#" class="nav-item"><i data-lucide="message-circle"></i> <span>LINE公式運用</span></a>
+                <a href="#" class="nav-item"><i data-lucide="file-text"></i> <span>議案・資料</span></a>
+
+                <div class="nav-section">システム</div>
+                <a href="#" class="nav-item"><i data-lucide="book-open"></i> <span>マニュアル</span></a>
+                <a href="#" class="nav-item"><i data-lucide="settings"></i> <span>設定</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn" disabled>
+                    <i data-lucide="log-out"></i> <span>ログアウト</span>
+                </button>
+            </div>
+        </aside>
+
+
+
+        <!-- MAIN CONTENT from selected_detail.html -->
+        <main class="main-content">
+            <div class="detail-container">
+                <div class="detail-header">
+                    <div>
+                        <button onclick="console.log('Close (Mock)')"
+                            style="background:none; border:none; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                            <i data-lucide="arrow-left"></i> 閉じる (無効)
+                        </button>
+                        <h1 id="applicantName" style="font-size: 1.8rem; font-weight: 800; margin:0;">Loading...</h1>
+                    </div>
+                    <div id="statusBadgeContainer">
+                        <!-- Status Badge injected here -->
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <!-- Left Column: Basic Info -->
+                    <div class="detail-section">
+                        <h2
+                            style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="user"></i> 基本情報
+                        </h2>
+
+                        <div class="info-group">
+                            <label class="info-label">ふりがな</label>
+                            <div class="info-value" id="valKana">-</div>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label">学校名 / 学年</label>
+                            <div class="info-value"><span id="valSchool">-</span> <span id="valGrade"
+                                    style="font-size:0.9em; margin-left:0.5rem; color:var(--text-dim);">-</span></div>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label">連絡先 (電話)</label>
+                            <div class="info-value" id="valPhone">-</div>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label">連絡先 (Email)</label>
+                            <div class="info-value" id="valEmail">-</div>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label">緊急連絡先</label>
+                            <div class="info-value">
+                                <span id="valEmergencyContactPhone">-</span>
+                                <span id="valEmergencyContactCategory"
+                                    style="color:var(--text-dim); margin-left:0.5rem;">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Support System -->
+                    <div class="detail-section">
+                        <h2
+                            style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="users"></i> サポート体制
+                        </h2>
+
+                        <div class="info-group">
+                            <label class="info-label">担当サポーター</label>
+                            <div class="info-value" id="valSupporter" style="font-weight:bold;">-</div>
+                        </div>
+
+                        <div class="info-group">
+                            <label class="info-label">サポート期間</label>
+                            <div class="info-value" id="valPeriod">-</div>
+                        </div>
+
+                        <div class="info-group">
+                            <div style="margin-top:0.8rem;">
+                                <label class="info-label" style="font-size:0.8rem;">担当予定</label>
+                                <ul id="valSupporterHistory"
+                                    style="list-style:none; padding:0; margin:0.3rem 0 0 0; font-size:0.85rem; color:var(--text-dim);">
+                                    <!-- Populated by JS -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <hr style="border:0; border-top:1px solid var(--glass-border); margin: 1.5rem 0;">
+
+                        <div style="display: flex; gap: 1rem;">
+                            <!-- Removed Message Button -->
+                            <button class="action-btn" onclick="openEditModal()"
+                                style="flex:1; padding:0.8rem; border-radius:8px; border:1px solid var(--primary); background:rgba(0, 242, 255, 0.1); color:var(--primary); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition: all 0.2s;">
+                                <i data-lucide="edit"></i> 情報編集
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Section: Remarks / Comments -->
+                <div class="detail-section">
+                    <h2
+                        style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="clipboard-list"></i> 備考
+                        </span>
+                        <button onclick="openCommentModal()"
+                            style="padding: 0.5rem 1rem; background: var(--primary); border: none; border-radius: 6px; color: black; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.3rem;">
+                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                            コメントを追加
+                        </button>
+                    </h2>
+                    <div id="commentsContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Comments will be rendered here by JavaScript -->
+                    </div>
+                </div>
+
+
+                <!-- Comment Modal -->
+                <div id="comment-modal" class="modal-overlay" role="dialog" aria-modal="true"
+                    aria-labelledby="commentModalTitle">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="commentModalTitleHeading"
+                                style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
+                                <i data-lucide="message-square"></i> <span id="commentModalTitle">コメントを追加</span>
+                            </h3>
+                            <button class="close-modal" onclick="closeCommentModal()">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="info-group">
+                                <label class="info-label" style="margin-bottom:0.5rem; display:block;">コメント</label>
+                                <textarea id="commentTextarea" class="admin-select"
+                                    style="width:100%; height:150px; font-family:inherit; font-size:0.9rem; resize:vertical;"
+                                    placeholder="コメントを入力してください..." oninput="updateCharCount()"></textarea>
+                                <div
+                                    style="text-align:right; margin-top:0.3rem; font-size:0.85rem; color:var(--text-dim);">
+                                    <span id="charCount">0</span> / 2000文字
+                                </div>
+                            </div>
+
+                            <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
+                                <button onclick="closeCommentModal()"
+                                    style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
+                                <button onclick="saveComment()"
+                                    style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Modal -->
+                <div id="edit-modal" class="modal-overlay" role="dialog" aria-modal="true"
+                    aria-labelledby="editModalTitle">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="editModalTitle"
+                                style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
+                                <i data-lucide="edit-3"></i> 情報編集
+                            </h3>
+                            <button class="close-modal" onclick="closeEditModal()">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+
+                            <div class="info-group">
+                                <label class="info-label" style="margin-bottom:0.5rem; display:block;">担当予定</label>
+                                <div id="editHistoryContainer"
+                                    style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
+                                    <!-- Dynamic List Items -->
+                                </div>
+                                <div style="display:flex; gap:0.5rem; align-items:center;">
+                                    <input type="date" id="newHistoryStart" class="admin-select" style="flex:1;">
+                                    <span style="color:var(--text-dim);">～</span>
+                                    <input type="date" id="newHistoryEnd" class="admin-select" style="flex:1;">
+                                    <select id="newHistoryName" class="admin-select" style="flex:1;">
+                                        <option value="">メンバーを選択</option>
+                                        <!-- Populated by JS -->
+                                    </select>
+                                    <button onclick="addHistoryItem()"
+                                        style="padding:0.6rem; background:var(--primary); border:none; border-radius:4px; cursor:pointer; color:black;">
+                                        <i data-lucide="plus" style="width:16px; height:16px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
+                                <button onclick="closeEditModal()"
+                                    style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
+                                <button onclick="saveEdit()"
+                                    style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- DEBUG PANEL: INSTRUCTION TEMPLATE COPIER -->
+    <!-- 本番環境には適用しないこと / DO NOT COPY TO PRODUCTION -->
+    <div id="instruction-panel-container">
+        <!-- Minimized Button -->
+        <button id="instruction-toggle-btn" onclick="toggleInstructionPanel()"
+            style="position:fixed; bottom:20px; right:20px; background:#00f2ff; border:none; width:40px; height:40px; border-radius:50%; z-index:9999; cursor:pointer; box-shadow:0 2px 10px rgba(0,242,255,0.3); display:flex; align-items:center; justify-content:center; font-size:1.2rem; color:#000;">
+            🤖
+        </button>
+
+        <!-- Expanded Panel -->
+        <div id="instruction-panel"
+            style="display:none; position:fixed; bottom:70px; right:20px; background:rgba(0,0,0,0.9); border:1px solid #00f2ff; padding:15px; border-radius:12px; z-index:9999; width:300px; color:white; font-family:sans-serif; box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+            <h4
+                style="margin:0 0 10px 0; font-size:0.9rem; color:#00f2ff; display:flex; justify-content:space-between; align-items:center;">
+                反映指示くん
+                <button onclick="toggleInstructionPanel()"
+                    style="background:none; border:none; color:#ffff; cursor:pointer;">×</button>
+            </h4>
+            <p style="font-size:0.75rem; color:#aaa; margin-bottom:10px;">
+                現在の変更を本番環境に反映させるための指示テキストをクリップボードにコピーします。
+            </p>
+            <button onclick="copyInstruction()"
+                style="width:100%; padding:8px; background:#00f2ff; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer; transition:opacity 0.2s;">
+                指示をコピー
+            </button>
+            <div id="copy-status"
+                style="font-size:0.7rem; color:#00ff88; margin-top:5px; height:15px; text-align:center;"></div>
+        </div>
+    </div>
+
+    <script>
+        function toggleInstructionPanel() {
+            const panel = document.getElementById('instruction-panel');
+            const btn = document.getElementById('instruction-toggle-btn');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                btn.innerHTML = '×'; // Close icon
+                btn.style.background = '#333';
+                btn.style.color = '#fff';
+            } else {
+                panel.style.display = 'none';
+                btn.innerHTML = '🤖'; // Robot icon
+                btn.style.background = '#00f2ff';
+                btn.style.color = '#000';
+            }
+        }
+
+        function copyInstruction() {
+            const template = `draft/draft.html で確認したデザイン変更を本番環境に適用してください。
+
+1. **CSSの反映**:
+   \`draft.html\` 内の \`<style>\` タグに追加・変更したスタイルがあれば、それを \`assets/css/admin.css\` に追記・統合してください。
+   （既にインライン化されている既存CSSと、新規追加分の差分を見極めてください）
+
+2. **HTML構造の反映**:
+   \`draft.html\` のメインコンテンツ部分（\`<main>\` タグの中身など）を、\`admin/selected_detail.html\` に移植してください。
+   ※ サイドバーやヘッダーなどの共通部品（\`mock\` データや静的HTML）はコピーせず、本番用の動的生成コンポーネント（\`components.js\`）やAPI連携ロジックを維持してください。
+   ※ この「指示コピーパネル（#instruction-panel-container）」は絶対に本番に含めないでください。
+
+3. **JavaScriptの調整**:
+   もしUI操作に関する新しいJavaScriptを追加した場合は、それを \`admin/selected_detail.html\` の本番用スクリプトに組み込んでください。
+   ※ モックデータ部分や、この「指示コピー用パネル」のスクリプトは絶対に本番に含めないでください。
+
+4. **データベース設計の分析と提案**:
+   この \`draft.html\` で表現されているデータ構造と、現在のデータベース設計（\`supabase/migrations\` 等を参照）を比較してください。
+   もし不足しているカラムやテーブル定義があれば、それを補うためのマイグレーションファイルの作成やスキーマ変更も併せて提案・実施してください。`;
+
+            // Clipboard API with Fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(template).then(showSuccess).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
+                    fallbackCopyTextToClipboard(template);
+                });
+            } else {
+                fallbackCopyTextToClipboard(template);
+            }
+
+            function showSuccess() {
+                const status = document.getElementById('copy-status');
+                status.textContent = 'コピーしました！AIに貼り付けて指示してください';
+                status.style.color = '#00ff88';
+                setTimeout(() => { status.textContent = ''; }, 3000);
+            }
+
+            function showFail() {
+                const status = document.getElementById('copy-status');
+                status.textContent = 'コピーに失敗しました';
+                status.style.color = '#ff4b4b';
+            }
+
+            function fallbackCopyTextToClipboard(text) {
+                var textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    var successful = document.execCommand('copy');
+                    if (successful) showSuccess();
+                    else showFail();
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                    showFail();
+                }
+
+                document.body.removeChild(textArea);
+            }
+        }
+    </script>
+    <!-- END DEBUG PANEL -->
+
+    <!-- SCRIPT FOR MOCK DATA AND TOGGLE -->
+    <script>
+        lucide.createIcons();
+
+        // --- Mock Data Rendering ---
+        const MOCK_DATA = {
+            id: "draft-mock-id",
+            full_name: "山田 太郎 (Draft)",
+            full_kana: "やまだ たろう",
+            school_name: "福山あしな高校",
+            grade: "2年生",
+            phone: "090-1234-5678",
+            email: "taro.yamada@example.com",
+            emergency_contact_phone: "090-0000-0000",
+            emergency_contact_category: "(母親の勤務先)",
+            arm: {
+                name: "監督"
+            },
+            period_start: "2026-02-01",
+            period_end: "2026-06-30",
+            supporter_history: [
+                { start: "2026-02-04", end: "2026-02-11", name: "田中 太郎" },
+                { start: "2026-02-12", end: "2026-02-18", name: "鈴木 次郎" },
+                { start: "2026-02-19", end: "2026-02-25", name: "佐藤 浩二" }
+            ],
+            comments: [
+                {
+                    id: "comment-1",
+                    author: "田中 太郎",
+                    author_id: 1,
+                    created_at: "2026-02-05",
+                    current_content: "初回面談を実施しました。映画制作への熱意が感じられ、特に監督志望が強いようです。",
+                    edit_history: []
+                },
+                {
+                    id: "comment-2",
+                    author: "鈴木 次郎",
+                    author_id: 2,
+                    created_at: "2026-02-10",
+                    current_content: "撮影機材の使い方を指導しました。飲み込みが早く、今後の成長が楽しみです。",
+                    edit_history: [
+                        {
+                            content: "撮影機材の使い方を指導しました。",
+                            edited_at: "2026-02-10 10:30"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        const MOCK_MEMBERS = [
+            { id: 1, name: "田中 太郎" },
+            { id: 2, name: "鈴木 次郎" },
+            { id: 3, name: "佐藤 浩二" },
+            { id: 4, name: "高橋 学" },
+            { id: 5, name: "伊藤 美咲" }
+        ];
+
+        // --- Utility Functions ---
+        const utils = {
+            lastFocusedElement: null,
+
+            // Modal Management with Accessibility
+            openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    // Store currently focused element
+                    this.lastFocusedElement = document.activeElement;
+
+                    modal.style.display = 'flex';
+
+                    // Focus first focusable element
+                    setTimeout(() => {
+                        const focusable = modal.querySelectorAll(
+                            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                        );
+                        if (focusable.length > 0) {
+                            focusable[0].focus();
+                        }
+                    }, CONFIG.FOCUS_DELAY);
+
+                    // Add keyboard event listener
+                    this.addModalKeyboardListeners(modalId);
+                    this.refreshIcons();
+                }
+            },
+
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+
+                    // Remove keyboard event listener
+                    this.removeModalKeyboardListeners(modalId);
+
+                    // Restore focus to previous element
+                    if (this.lastFocusedElement) {
+                        this.lastFocusedElement.focus();
+                        this.lastFocusedElement = null;
+                    }
+                }
+            },
+
+            // Keyboard Event Handlers
+            addModalKeyboardListeners(modalId) {
+                const modal = document.getElementById(modalId);
+                if (!modal) return;
+
+                const handleKeyDown = (e) => {
+                    // Close on Escape
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        if (modalId === 'edit-modal') {
+                            closeEditModal();
+                        } else if (modalId === 'comment-modal') {
+                            closeCommentModal();
+                        }
+                    }
+
+                    // Focus trap
+                    if (e.key === 'Tab') {
+                        const focusable = modal.querySelectorAll(
+                            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                        );
+                        const firstFocusable = focusable[0];
+                        const lastFocusable = focusable[focusable.length - 1];
+
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                e.preventDefault();
+                                lastFocusable.focus();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                e.preventDefault();
+                                firstFocusable.focus();
+                            }
+                        }
+                    }
+                };
+
+                modal._keydownHandler = handleKeyDown;
+                document.addEventListener('keydown', handleKeyDown);
+            },
+
+            removeModalKeyboardListeners(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal && modal._keydownHandler) {
+                    document.removeEventListener('keydown', modal._keydownHandler);
+                    delete modal._keydownHandler;
+                }
+            },
+
+            // Date Formatting
+            formatDate(dateStr, format = 'slash') {
+                if (!dateStr) return '-';
+
+                switch (format) {
+                    case 'slash': // 2026-02-08 → 2026/02/08
+                        return dateStr.replace(/-/g, '/');
+                    case 'short': // 2026-02-08 → 02/08
+                        return dateStr.substring(5).replace(/-/g, '/');
+                    default:
+                        return dateStr;
+                }
+            },
+
+            // Icon Refresh (debounced)
+            refreshIcons: (() => {
+                let timeout;
+                return () => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        lucide.createIcons();
+                    }, CONFIG.ICON_REFRESH_DELAY);
+                };
+            })(),
+
+            // HTML Escaping
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        };
+
+        // --- Constants ---
+        const CONFIG = {
+            COMMENT_MAX_LENGTH: 2000,
+            COMMENT_WARNING_LENGTH: 1500,
+            COMMENT_DANGER_LENGTH: 1800,
+            ICON_REFRESH_DELAY: 50,
+            FOCUS_DELAY: 100
+        };
+
+        const CURRENT_USER = { id: 1, name: "田中 太郎" }; // Mock current user
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render Detail
+            renderDetail(MOCK_DATA);
+
+            // Populate Member Select
+            const memberSelect = document.getElementById('newHistoryName');
+            if (memberSelect) {
+                MOCK_MEMBERS.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.name; // For draft, using name as value
+                    opt.textContent = m.name;
+                    memberSelect.appendChild(opt);
+                });
+            }
+        });
+
+        // --- Edit Modal Logic ---
+        function openEditModal() {
+            const modal = document.getElementById('edit-modal');
+
+            // Clear new inputs
+            document.getElementById('newHistoryStart').value = '';
+            document.getElementById('newHistoryEnd').value = '';
+            document.getElementById('newHistoryName').value = '';
+
+            // Render History List
+            const container = document.getElementById('editHistoryContainer');
+            container.innerHTML = '';
+
+            if (MOCK_DATA.supporter_history) {
+                MOCK_DATA.supporter_history.forEach(h => {
+                    const item = createHistoryItem(h.start, h.end, h.name);
+                    container.appendChild(item);
+                });
+            }
+            utils.openModal('edit-modal');
+        }
+
+        function closeEditModal() {
+            utils.closeModal('edit-modal');
+        }
+
+        function saveEdit() {
+            // Gather History Data
+            const container = document.getElementById('editHistoryContainer');
+            const newHistory = [];
+
+            container.querySelectorAll('.history-item').forEach(item => {
+                const start = item.querySelector('.h-start').textContent;
+                const end = item.querySelector('.h-end').textContent;
+                const name = item.querySelector('.h-name').textContent;
+                newHistory.push({ start, end, name });
+            });
+
+            MOCK_DATA.supporter_history = newHistory;
+
+            // Re-render
+            renderDetail(MOCK_DATA);
+
+            // Close
+            closeEditModal();
+
+            // Show toast (Mock)
+            showToast('情報を更新しました', 'success');
+        }
+
+        function createHistoryItem(start, end, name) {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.gap = '0.5rem';
+            div.style.marginBottom = '0.5rem';
+            div.style.padding = '0.5rem';
+            div.style.background = 'rgba(255,255,255,0.05)';
+            div.style.borderRadius = '4px';
+
+            div.innerHTML = `
+                <span class="h-start">${start}</span>
+                <span style="color:var(--text-dim);">～</span>
+                <span class="h-end">${end}</span>
+                <span class="h-name" style="flex:1; margin-left:0.5rem;">${name}</span>
+                <button type="button" onclick="this.parentElement.remove()" style="background:transparent; border:none; color:#ff4b4b; cursor:pointer;">
+                    <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
+                </button>
+            `;
+            return div;
+        }
+
+        function addHistoryItem() {
+            const start = document.getElementById('newHistoryStart').value;
+            const end = document.getElementById('newHistoryEnd').value;
+            const select = document.getElementById('newHistoryName');
+            const name = select.value;
+
+            if (!start || !end || !name) {
+                alert('全ての日付とメンバーを選択してください');
+                return;
+            }
+
+            if (start > end) {
+                alert('開始日は終了日より前の日付にしてください');
+                return;
+            }
+
+            // Check for overlap
+            const container = document.getElementById('editHistoryContainer');
+            let hasOverlap = false;
+
+            container.querySelectorAll('.history-item').forEach(item => {
+                const existingStart = item.querySelector('.h-start').textContent;
+                const existingEnd = item.querySelector('.h-end').textContent;
+
+                // Overlap condition: (StartA <= EndB) and (EndA >= StartB)
+                if (start <= existingEnd && end >= existingStart) {
+                    hasOverlap = true;
+                }
+            });
+
+            if (hasOverlap) {
+                alert('期間が重複している予定があります');
+                return;
+            }
+
+            const item = createHistoryItem(start, end, name);
+            container.appendChild(item);
+
+            // Clear inputs
+            document.getElementById('newHistoryStart').value = '';
+            document.getElementById('newHistoryEnd').value = '';
+            document.getElementById('newHistoryName').value = '';
+
+            utils.refreshIcons();
+        }
+
+        function showToast(message, type = 'success') {
+            // Simple toast implementation for draft
+            const toastContainer = document.createElement('div');
+            toastContainer.style.position = 'fixed';
+            toastContainer.style.bottom = '20px';
+            toastContainer.style.left = '50%';
+            toastContainer.style.transform = 'translateX(-50%)';
+            toastContainer.style.background = type === 'success' ? 'rgba(0, 255, 136, 0.9)' : 'rgba(255, 75, 75, 0.9)';
+            toastContainer.style.color = 'black';
+            toastContainer.style.padding = '10px 20px';
+            toastContainer.style.borderRadius = '50px';
+            toastContainer.style.fontWeight = 'bold';
+            toastContainer.style.zIndex = '10000';
+            toastContainer.textContent = message;
+
+            document.body.appendChild(toastContainer);
+
+            setTimeout(() => {
+                toastContainer.remove();
+            }, 3000);
+        }
+
+        function renderDetail(data) {
+            document.getElementById('applicantName').textContent = data.full_name;
+            document.getElementById('valKana').textContent = data.full_kana || '-';
+            document.getElementById('valSchool').textContent = data.school_name || '-';
+            document.getElementById('valGrade').textContent = data.grade || '-';
+            document.getElementById('valPhone').textContent = data.phone || '-';
+            document.getElementById('valEmail').textContent = data.email || '-';
+            document.getElementById('valEmergencyContactPhone').textContent = data.emergency_contact_phone || '-';
+            document.getElementById('valEmergencyContactCategory').textContent = data.emergency_contact_category || '';
+
+            // Period
+            if (data.period_start && data.period_end) {
+                // Simple formatting yyyy/mm/dd
+                const fmt = (d) => d.replace(/-/g, '/');
+                const periodEl = document.getElementById('valPeriod');
+                if (periodEl) periodEl.textContent = `${fmt(data.period_start)} - ${fmt(data.period_end)}`;
+            }
+
+            // Role Badge
+            const roleName = data.arm?.name || '未定';
+            let roleClass = '';
+            if (roleName.includes('監督')) roleClass = 'role-director';
+            else if (roleName.includes('演者')) roleClass = 'role-actor';
+            else if (roleName.includes('プロデューサー')) roleClass = 'role-producer';
+            else if (roleName.includes('小道具')) roleClass = 'role-props';
+
+            const badgeContainer = document.getElementById('statusBadgeContainer');
+            badgeContainer.innerHTML = `<span class="role-tag ${roleClass}">${roleName}</span>`;
+
+            // Supporter & History - Calculate current supporter from history
+            const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd format
+            let currentSupporter = '未設定';
+
+            if (data.supporter_history && data.supporter_history.length > 0) {
+                const current = data.supporter_history.find(h => h.start <= today && h.end >= today);
+                if (current) {
+                    currentSupporter = current.name;
+                }
+            }
+
+            document.getElementById('valSupporter').textContent = currentSupporter;
+
+            const historyContainer = document.getElementById('valSupporterHistory');
+            if (historyContainer && data.supporter_history) {
+                historyContainer.innerHTML = data.supporter_history.map(h => {
+                    // Simple date format removing year for display as per request example "02/04"
+                    const simpleFmt = (d) => d.substring(5).replace(/-/g, '/');
+                    return `<li style="margin-bottom:0.2rem;">${simpleFmt(h.start)}~${simpleFmt(h.end)}　${h.name}</li>`;
+                }).join('');
+            }
+
+            // Render Comments
+            renderComments(data);
+
+            // Re-render icons
+            utils.refreshIcons();
+        }
+
+        // --- Comment Management ---
+        let currentEditingCommentId = null;
+
+        function renderComments(data) {
+            const container = document.getElementById('commentsContainer');
+            if (!container) return;
+
+            if (!data.comments || data.comments.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-dim); text-align:center; padding:2rem;">コメントはまだありません</div>';
+                return;
+            }
+
+            // Sort by created_at descending (newest first)
+            const sortedComments = [...data.comments].sort((a, b) =>
+                new Date(b.created_at) - new Date(a.created_at)
+            );
+
+            container.innerHTML = sortedComments.map(comment => createCommentCard(comment)).join('');
+            utils.refreshIcons();
+        }
+
+        function createCommentCard(comment) {
+            const canEdit = comment.author_id === CURRENT_USER.id;
+            const hasHistory = comment.edit_history && comment.edit_history.length > 0;
+            const historyId = `history-${comment.id}`;
+
+            return `
+                <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border-left: 3px solid var(--primary);">
+                    <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:0.5rem;">
+                        <div style="font-size:0.85rem; color:var(--text-dim);">
+                            <div><strong style="color:var(--primary);">記入者:</strong> ${comment.author}</div>
+                            <div><strong style="color:var(--primary);">記入日:</strong> ${formatDate(comment.created_at)}</div>
+                        </div>
+                        ${canEdit ? `<button onclick="openEditCommentModal('${comment.id}')" style="padding:0.4rem 0.8rem; background:rgba(255,255,255,0.1); border:1px solid var(--glass-border); color:var(--text-dim); border-radius:4px; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:0.3rem;"><i data-lucide="edit-2" style="width:14px; height:14px;"></i>編集</button>` : ''}
+                    </div>
+                    <div style="color:white; line-height:1.6; white-space:pre-wrap; margin-top:0.8rem;">
+                        ${escapeHtml(comment.current_content)}
+                    </div>
+                    ${hasHistory ? `
+                        <div style="margin-top:1rem;">
+                            <button onclick="toggleHistory('${historyId}')" 
+                                style="padding:0.3rem 0.6rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:4px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; gap:0.3rem;">
+                                <i data-lucide="clock" style="width:12px; height:12px;"></i>
+                                編集履歴を表示 (${comment.edit_history.length}件)
+                            </button>
+                            <div id="${historyId}" style="display:none; margin-top:0.8rem; padding-left:1rem; border-left:2px solid var(--glass-border);">
+                                ${comment.edit_history.map(h => `
+                                    <div style="margin-bottom:0.8rem; padding:0.5rem; background:rgba(0,0,0,0.3); border-radius:4px;">
+                                        <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.3rem;">
+                                            編集日時: ${h.edited_at}
+                                        </div>
+                                        <div style="color:var(--text-dim); font-size:0.9rem; white-space:pre-wrap;">
+                                            ${escapeHtml(h.content)}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function toggleHistory(historyId) {
+            const historyEl = document.getElementById(historyId);
+            if (historyEl) {
+                historyEl.style.display = historyEl.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function formatDate(dateStr) {
+            return dateStr.replace(/-/g, '/');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function openCommentModal() {
+            currentEditingCommentId = null;
+            document.getElementById('commentModalTitle').textContent = 'コメントを追加';
+            document.getElementById('commentTextarea').value = '';
+            utils.openModal('comment-modal');
+            updateCharCount(); // Initialize character count
+        }
+
+        function openEditCommentModal(commentId) {
+            const comment = MOCK_DATA.comments.find(c => c.id === commentId);
+            if (!comment || comment.author_id !== CURRENT_USER.id) {
+                alert('このコメントを編集する権限がありません');
+                return;
+            }
+
+            currentEditingCommentId = commentId;
+            document.getElementById('commentModalTitle').textContent = 'コメントを編集';
+            document.getElementById('commentTextarea').value = comment.current_content;
+            utils.openModal('comment-modal');
+            updateCharCount(); // Initialize character count
+        }
+
+        function updateCharCount() {
+            const textarea = document.getElementById('commentTextarea');
+            const charCountEl = document.getElementById('charCount');
+
+            if (textarea && charCountEl) {
+                const length = textarea.value.length;
+                charCountEl.textContent = length;
+
+                // Visual feedback for approaching limit
+                if (length > 1800) {
+                    charCountEl.style.color = '#ff6b6b';
+                } else if (length > 1500) {
+                    charCountEl.style.color = '#ffd93d';
+                } else {
+                    charCountEl.style.color = 'var(--text-dim)';
+                }
+            }
+        }
+
+        function closeCommentModal() {
+            utils.closeModal('comment-modal');
+            currentEditingCommentId = null;
+        }
+
+        function saveComment() {
+            const content = document.getElementById('commentTextarea').value.trim();
+
+
+            if (!content) {
+                showToast('コメントを入力してください', 'error');
+                return;
+            }
+
+            // Character limit check
+            const MAX_LENGTH = CONFIG.COMMENT_MAX_LENGTH;
+            if (content.length > MAX_LENGTH) {
+                showToast(`コメントは${MAX_LENGTH}文字以内で入力してください（現在: ${content.length}文字）`, 'error');
+                return;
+            }
+
+            if (currentEditingCommentId) {
+                // Edit existing comment
+                const comment = MOCK_DATA.comments.find(c => c.id === currentEditingCommentId);
+                if (comment) {
+                    // Save current content to history
+                    const now = new Date();
+                    const editedAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+                    comment.edit_history.push({
+                        content: comment.current_content,
+                        edited_at: editedAt
+                    });
+
+                    comment.current_content = content;
+                    showToast('コメントを更新しました', 'success');
+                }
+            } else {
+                // Add new comment
+                const now = new Date();
+                const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+                const newComment = {
+                    id: `comment-${Date.now()}`,
+                    author: CURRENT_USER.name,
+                    author_id: CURRENT_USER.id,
+                    created_at: dateStr,
+                    current_content: content,
+                    edit_history: []
+                };
+
+                MOCK_DATA.comments.push(newComment);
+                showToast('コメントを追加しました', 'success');
+            }
+
+            renderComments(MOCK_DATA);
+            closeCommentModal();
+        }
+
+        // Re-render icons
+        lucide.createIcons();
+
+    </script>
+</body>
+
+</html>

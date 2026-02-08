@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>議案・資料一覧 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .meeting-category {
+            margin-bottom: 3rem;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .meeting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .meeting-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meeting-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .meeting-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--glass-border);
+            transition: all 0.3s;
+        }
+
+        .meeting-card:hover::before {
+            background: var(--primary);
+        }
+
+        .meeting-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .meeting-date {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-badge {
+            align-self: flex-start;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            margin-top: 1rem;
+        }
+
+        .meeting-card:hover .status-badge {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* 過去の会議スタイル */
+        .meeting-card.past .meeting-title {
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div id="app-sidebar"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <!-- Profile rendered by components.js -->
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>議案・資料一覧</h1>
+                    <p>理事会および常任理事会の議案・資料を確認できます。</p>
+                </div>
+
+                <!-- 理事会 -->
+                <section class="meeting-category">
+                    <h2 class="category-title">
+                        <i data-lucide="users" style="color: var(--primary);"></i>
+                        理事会
+                    </h2>
+                    <div class="meeting-grid">
+                        <a href="meeting-details.html" class="meeting-card past">
+                            <span class="meeting-title">第06回理事予定者会議</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2025/11/xx
+                            </div>
+                            <span class="status-badge">完了</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card past">
+                            <span class="meeting-title">第07回理事予定者会議</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2025/12/xx
+                            </div>
+                            <span class="status-badge">完了</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card past">
+                            <span class="meeting-title">臨時理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2025/12/xx
+                            </div>
+                            <span class="status-badge">完了</span>
+                        </a>
+                        <!-- Active Example -->
+                        <a href="meeting-details.html" class="meeting-card"
+                            style="border-color: var(--primary); background: rgba(0,242,255,0.03);">
+                            <span class="meeting-title">第01回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/01/19
+                            </div>
+                            <span class="status-badge"
+                                style="background: var(--primary); color: #000; font-weight: 700;">開催済</span>
+                        </a>
+
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第02回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/02/18
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第03回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/03/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第04回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/04/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第05回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/05/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第06回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/06/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第07回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/07/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第08回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/08/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第09回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/09/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第10回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/10/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第11回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/11/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第12回理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/12/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- 常任理事会 -->
+                <section class="meeting-category">
+                    <h2 class="category-title">
+                        <i data-lucide="briefcase" style="color: var(--secondary);"></i>
+                        常任理事会
+                    </h2>
+                    <div class="meeting-grid">
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第01回常任理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/01/xx
+                            </div>
+                            <span class="status-badge">完了</span>
+                        </a>
+                        <a href="meeting-details.html" class="meeting-card">
+                            <span class="meeting-title">第02回常任理事会</span>
+                            <div class="meeting-date"><i data-lucide="calendar" style="width:14px;"></i> 2026/02/xx
+                            </div>
+                            <span class="status-badge">予定</span>
+                        </a>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Init -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-client.js?v=1.1"></script>
+    <script src="components.js?v=jp_fix_v4"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
