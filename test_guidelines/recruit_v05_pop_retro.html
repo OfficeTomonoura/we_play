@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 (Retro Pop)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/lp.css">
+    <link rel="stylesheet" href="../assets/css/debug-panel.css">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           V05: RETRO POP / 80s THEME OVERRIDES
+           ========================================= */
+        :root {
+            --pop-yellow: #fff200;
+            --pop-pink: #ff00cc;
+            --pop-cyan: #00ffff;
+            --pop-blue: #3333ff;
+            --pop-black: #000;
+            --pop-bg: #f0f0f0;
+        }
+
+        body {
+            background-color: var(--pop-bg) !important;
+            color: var(--pop-black) !important;
+            font-family: 'Mochiy Pop One', 'Noto Sans JP', sans-serif !important;
+            background-image:
+                radial-gradient(circle, #ddd 10%, transparent 11%),
+                radial-gradient(circle at 0 0, #ddd 10%, transparent 11%),
+                radial-gradient(circle at 50% 50%, #ddd 10%, transparent 11%),
+                radial-gradient(circle at 100% 100%, #ddd 10%, transparent 11%);
+            background-size: 20px 20px !important;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        .hero-tag {
+            font-family: 'Dela Gothic One', cursive !important;
+            text-transform: uppercase;
+            color: var(--pop-blue) !important;
+            text-shadow: 3px 3px 0 var(--pop-pink);
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 10px;
+            background: var(--pop-yellow);
+            margin: 10px auto;
+            transform: skew(-20deg);
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--pop-cyan) !important;
+            border-bottom: 5px solid var(--pop-black);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg,
+        .hero::after {
+            display: none;
+        }
+
+        .hero::before {
+            /* Zigzag pattern */
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(135deg, var(--pop-black) 25%, transparent 25%) -10px 0,
+                linear-gradient(225deg, var(--pop-black) 25%, transparent 25%) -10px 0,
+                linear-gradient(315deg, var(--pop-black) 25%, transparent 25%),
+                linear-gradient(45deg, var(--pop-black) 25%, transparent 25%);
+            background-size: 20px 20px;
+            background-color: var(--pop-yellow);
+        }
+
+        .hero-tag {
+            background: var(--pop-yellow) !important;
+            color: var(--pop-black) !important;
+            border: 3px solid var(--pop-black) !important;
+            box-shadow: 5px 5px 0 var(--pop-black);
+            transform: rotate(-3deg);
+            display: inline-block;
+            margin-bottom: 1rem;
+            text-shadow: none !important;
+        }
+
+        .hero h1 {
+            font-size: 4rem !important;
+            color: #fff !important;
+            text-shadow: 5px 5px 0 var(--pop-black);
+            -webkit-text-stroke: 2px var(--pop-black);
+        }
+
+        .hero h1 span {
+            color: var(--pop-pink) !important;
+            font-size: 5rem !important;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--pop-yellow) !important;
+            color: var(--pop-black) !important;
+            border: 3px solid var(--pop-black) !important;
+            font-family: 'Dela Gothic One' !important;
+            box-shadow: 8px 8px 0 var(--pop-black) !important;
+            border-radius: 0 !important;
+            transition: 0.1s;
+        }
+
+        .btn-primary:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 var(--pop-black) !important;
+            background: var(--pop-pink) !important;
+            color: #fff !important;
+        }
+
+        /* Cards */
+        .feature-card,
+        .check-item,
+        .p-step,
+        .tab-content,
+        .req-table,
+        details {
+            background: #fff !important;
+            border: 3px solid var(--pop-black) !important;
+            box-shadow: 10px 10px 0 var(--pop-pink) !important;
+            border-radius: 15px !important;
+            padding: 2rem !important;
+            margin-bottom: 2rem;
+            color: var(--pop-black) !important;
+        }
+
+        .feature-card:nth-child(even),
+        .p-step:nth-child(even) {
+            box-shadow: 10px 10px 0 var(--pop-cyan) !important;
+        }
+
+        .check-item {
+            box-shadow: 5px 5px 0 var(--pop-blue) !important;
+        }
+
+        .feature-icon,
+        .check-item i {
+            color: var(--pop-black) !important;
+            background: var(--pop-yellow);
+            border: 2px solid var(--pop-black);
+            border-radius: 50%;
+            padding: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            gap: 1rem !important;
+        }
+
+        .tab-btn {
+            background: #fff !important;
+            border: 3px solid var(--pop-black) !important;
+            color: var(--pop-black) !important;
+            font-family: 'Dela Gothic One' !important;
+            clip-path: none !important;
+            border-radius: 30px !important;
+        }
+
+        .tab-btn.active {
+            background: var(--pop-blue) !important;
+            color: #fff !important;
+            box-shadow: 5px 5px 0 var(--pop-black);
+        }
+
+        .role-desc-list li::before {
+            background: var(--pop-pink) !important;
+            border: 2px solid var(--pop-black);
+            width: 10px;
+            height: 10px;
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 5px dashed var(--pop-black) !important;
+        }
+
+        .t-dot {
+            background: var(--pop-yellow) !important;
+            border: 3px solid var(--pop-black) !important;
+            box-shadow: 3px 3px 0 var(--pop-black);
+            border-radius: 0 !important;
+            transform: rotate(45deg) !important;
+        }
+
+        .t-date {
+            color: var(--pop-blue) !important;
+            font-family: 'Dela Gothic One' !important;
+            text-shadow: 2px 2px 0 #fff;
+        }
+
+        /* Table */
+        .req-table th {
+            background: var(--pop-cyan);
+            border-bottom: 3px solid var(--pop-black) !important;
+            color: var(--pop-black) !important;
+        }
+
+        /* Process */
+        .p-step div:first-child {
+            color: var(--pop-pink) !important;
+            font-family: 'Dela Gothic One' !important;
+            -webkit-text-stroke: 1px var(--pop-black);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--pop-black) !important;
+            color: #fff !important;
+            border-top: 5px solid var(--pop-yellow);
+        }
+
+        footer h3,
+        footer p {
+            color: #fff !important;
+        }
+
+        /* Header */
+        header.header-nav {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-bottom: 3px solid var(--pop-black);
+        }
+
+        .logo-brand {
+            font-family: 'Dela Gothic One' !important;
+            color: var(--pop-black) !important;
+            text-shadow: 2px 2px 0 var(--pop-yellow);
+        }
+
+        /* Mobile */
+        @media(max-width: 600px) {
+            .hero h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .hero h1 span {
+                font-size: 3rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay" style="display:none;"></div>
+
+    <!-- Header -->
+    <header class="header-nav">
+        <div class="container nav-wrapper"
+            style="display: flex; justify-content: space-between; align-items: center; height: 70px;">
+            <div id="header-left">
+                <div class="logo-brand">WE PLAY</div>
+            </div>
+            <nav class="nav-links" id="header-right">
+                <a href="javascript:void(0)" class="btn-login"
+                    style="color:#000; text-decoration:none; font-weight:bold; border:2px solid #000; padding:0.2rem 1rem; border-radius:20px;"
+                    onclick="alert('デザイン確認用ページのため無効化されています')">
+                    <i data-lucide="log-in"></i><span>管理者ログイン</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero text-center">
+            <div class="hero-content">
+                <div class="hero-tag">We Play 未来人財育成委員会</div>
+                <h1>
+                    ぼくらの<br>
+                    <span>フィルム革命</span>
+                </h1>
+                <p
+                    style="background:#fff; padding:1rem; border:3px solid #000; display:inline-block; border-radius:10px; margin-top:2rem; box-shadow:5px 5px 0 #000; color:#000 !important;">
+                    主役は、きみ。<br>
+                    地域と作る高校生映画。
+                </p>
+                <div style="margin-top: 3rem;">
+                    <a href="javascript:void(0)" class="btn-primary"
+                        style="padding: 1rem 3rem; font-size: 1.5rem; text-decoration: none; display:inline-block;"
+                        onclick="alert('デザイン確認用ページのため無効化されています')">参加申し込み!</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Hook -->
+        <section class="section-padding">
+            <div class="container">
+                <h2 style="text-align: center;">福山で“映画づくり”に<br>本気で挑戦する夏</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="video" size="32"></i></div>
+                        <h3>01 君が主役</h3>
+                        <p>高校生が「主役」。あなたのアイディアと情熱が、一本の映画になる。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="mic-2" size="32"></i></div>
+                        <h3>02 PRO!?</h3>
+                        <p>講師 : 福山市出身の新進気鋭の映画監督・ナカモトユウ氏。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="monitor-play" size="32"></i></div>
+                        <h3>03 DEBUT!!</h3>
+                        <p>完成作品は映画館「シネマモード」で上映。大スクリーンで感動を共有しよう。</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; text-align: center;">
+                    <span
+                        style="background:var(--pop-yellow); border:2px solid #000; padding:0.5rem 1rem; font-weight:bold; margin:0.5rem; display:inline-block; box-shadow:3px 3px 0 #000;">期間:
+                        5月 - 10月</span>
+                    <span
+                        style="background:var(--pop-cyan); border:2px solid #000; padding:0.5rem 1rem; font-weight:bold; margin:0.5rem; display:inline-block; box-shadow:3px 3px 0 #000;">費用:
+                        参加無料</span>
+                    <span
+                        style="background:var(--pop-pink); border:2px solid #000; padding:0.5rem 1rem; font-weight:bold; margin:0.5rem; display:inline-block; box-shadow:3px 3px 0 #000; color:#fff;">定員:
+                        20名</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Process -->
+        <section class="section-padding">
+            <div class="container">
+                <h2 style="text-align:center;">プロジェクトの流れ</h2>
+                <div class="process-step-wrap"
+                    style="display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; margin-top:3rem;">
+                    <div class="p-step" style="width:200px;">
+                        <div>01</div>
+                        <h3>企画・脚本</h3>
+                    </div>
+                    <div class="p-step" style="width:200px;">
+                        <div>02</div>
+                        <h3>撮影準備</h3>
+                    </div>
+                    <div class="p-step" style="width:200px;">
+                        <div>03</div>
+                        <h3>撮影本番</h3>
+                    </div>
+                    <div class="p-step" style="width:200px;">
+                        <div>04</div>
+                        <h3>編集・上映</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Roles -->
+        <section class="section-padding">
+            <div class="container">
+                <h2 style="text-align:center;">役割紹介</h2>
+                <div class="tabs" style="justify-content:center;">
+                    <button class="tab-btn active" onclick="openTab('director')">監督・脚本</button>
+                    <button class="tab-btn" onclick="openTab('actor')">役者</button>
+                    <button class="tab-btn" onclick="openTab('crew')">撮影</button>
+                    <button class="tab-btn" onclick="openTab('editor')">編集</button>
+                </div>
+
+                <div id="director" class="tab-content active" style="margin-top:2rem;">
+                    <h3>監督・脚本チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>映画の骨組みである脚本を書き上げる。</li>
+                        <li>衣装やロケ地などを決めてメンバーに指示する。</li>
+                    </ul>
+                </div>
+                <div id="actor" class="tab-content" style="margin-top:2rem;">
+                    <h3>役者チーム</h3>
+                </div>
+                <div id="crew" class="tab-content" style="margin-top:2rem;">
+                    <h3>撮影チーム</h3>
+                </div>
+                <div id="editor" class="tab-content" style="margin-top:2rem;">
+                    <h3>編集チーム</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apply -->
+        <section class="section-padding" style="text-align:center;">
+            <a href="javascript:void(0)" class="btn-primary"
+                style="padding: 1.5rem 5rem; font-size: 1.5rem; text-decoration:none; display:inline-block;"
+                onclick="alert('デザイン確認用ページのため無効化されています')">
+                参加申し込み !!!
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="text-align: center; padding: 3rem 0;">
+            <h3>一般社団法人 福山青年会議所</h3>
+            <p>We Play 未来人財育成委員会</p>
+            <p style="margin-top: 1rem;">&copy; 2026 We Play</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        function openTab(tabName) {
+            var i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+                tabContent[i].style.display = 'none';
+            }
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+    <!-- Debug Panel -->
+    <script src="../assets/js/debug-panel.js"></script>
+</body>
+
+</html>

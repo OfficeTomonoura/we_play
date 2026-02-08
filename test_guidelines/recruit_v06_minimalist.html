@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 (Minimalist)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/lp.css">
+    <link rel="stylesheet" href="../assets/css/debug-panel.css">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           V06: MINIMALIST MONOCHROME THEME OVERRIDES
+           ========================================= */
+        :root {
+            --min-bg: #ffffff;
+            --min-text: #222222;
+            --min-gray: #f4f4f4;
+            --min-border: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--min-bg) !important;
+            color: var(--min-text) !important;
+            font-family: 'Jost', 'Noto Sans JP', sans-serif !important;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        .hero-tag {
+            font-weight: 400 !important;
+            letter-spacing: 0.1em;
+            color: var(--min-text) !important;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 4rem !important;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem !important;
+            text-align: center;
+            border-bottom: 1px solid var(--min-border) !important;
+            padding-bottom: 1rem;
+            margin-bottom: 3rem !important;
+            display: inline-block;
+        }
+
+        .container:has(h2) {
+            text-align: center;
+        }
+
+        p {
+            color: #555 !important;
+            font-size: 1rem;
+        }
+
+        /* Layout */
+        .section-padding {
+            padding: 8rem 0 !important;
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--min-bg) !important;
+            border: none;
+            min-height: 100vh;
+            /* Full screen hero */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-bg,
+        .hero::after {
+            display: none;
+        }
+
+        .hero-tag {
+            background: transparent !important;
+            border: 1px solid var(--min-text) !important;
+            color: var(--min-text) !important;
+            font-size: 0.8rem;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .hero h1 span {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: transparent !important;
+            color: var(--min-text) !important;
+            border: 1px solid var(--min-text) !important;
+            border-radius: 0 !important;
+            padding: 1rem 3rem !important;
+            font-weight: 400 !important;
+            transition: all 0.4s ease;
+            letter-spacing: 0.1em;
+        }
+
+        .btn-primary:hover {
+            background: var(--min-text) !important;
+            color: var(--min-bg) !important;
+        }
+
+        /* Cards & Elements */
+        .feature-card,
+        .check-item,
+        .p-step,
+        .tab-content,
+        .req-table,
+        details,
+        .timeline {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .feature-card {
+            border-top: 1px solid var(--min-border) !important;
+            padding-top: 2rem !important;
+        }
+
+        .feature-icon,
+        .check-item i {
+            background: transparent !important;
+            color: var(--min-text) !important;
+            width: auto;
+            height: auto;
+            margin-bottom: 1rem;
+            border: none !important;
+            padding: 0;
+        }
+
+        /* Tabs */
+        .tabs {
+            justify-content: center !important;
+            border-bottom: 1px solid var(--min-border);
+            margin-bottom: 3rem;
+        }
+
+        .tab-btn {
+            background: transparent !important;
+            border: none !important;
+            color: #999 !important;
+            font-weight: 300;
+            padding: 1rem 2rem !important;
+            margin: 0 !important;
+        }
+
+        .tab-btn.active {
+            color: var(--min-text) !important;
+            border-bottom: 1px solid var(--min-text) !important;
+        }
+
+        .role-desc-list li {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .role-desc-list li::before {
+            content: "—";
+            background: transparent !important;
+            color: var(--min-text);
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            left: 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 1px solid var(--min-border) !important;
+            padding-left: 3rem !important;
+        }
+
+        .t-dot {
+            background: var(--min-bg) !important;
+            border: 1px solid var(--min-text) !important;
+            width: 10px;
+            height: 10px;
+            left: -3.35rem !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .t-date {
+            font-size: 0.9rem !important;
+            color: #999 !important;
+            font-weight: 300;
+        }
+
+        .t-event {
+            padding-bottom: 4rem;
+        }
+
+        /* Table */
+        .req-table th,
+        .req-table td {
+            border-bottom: 1px solid var(--min-border) !important;
+            padding: 1.5rem 0 !important;
+            font-weight: 300;
+        }
+
+        .req-table th {
+            width: 30%;
+            color: #999 !important;
+        }
+
+        /* Process */
+        .p-step div:first-child {
+            font-size: 1.5rem !important;
+            color: var(--min-text) !important;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .apply-steps .step-arrow {
+            color: var(--min-border) !important;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--min-gray) !important;
+            color: var(--min-text) !important;
+            padding: 4rem 0;
+            border: none;
+        }
+
+        footer h3,
+        footer p {
+            color: #777 !important;
+        }
+
+        /* Header */
+        header.header-nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: none;
+        }
+
+        .logo-brand {
+            font-family: 'Jost', sans-serif !important;
+            font-weight: 400 !important;
+            letter-spacing: 0.2em;
+            color: var(--min-text) !important;
+        }
+
+        /* Mobile */
+        @media(max-width: 600px) {
+            h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .section-padding {
+                padding: 4rem 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay" style="display:none;"></div>
+
+    <!-- Header -->
+    <header class="header-nav">
+        <div class="container nav-wrapper"
+            style="display: flex; justify-content: space-between; align-items: center; height: 80px;">
+            <div id="header-left">
+                <div class="logo-brand">WE PLAY</div>
+            </div>
+            <nav class="nav-links" id="header-right">
+                <a href="javascript:void(0)" class="btn-login"
+                    style="color:#555; text-decoration:none; font-size:0.9rem;"
+                    onclick="alert('デザイン確認用ページのため無効化されています')">
+                    LOGIN
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content" style="text-align: center;">
+                <span class="hero-tag">2026 RECRUITMENT</span>
+                <h1>
+                    BOKURA NO<br>
+                    <span>FILM REVOLUTION</span>
+                </h1>
+                <p style="margin-top: 2rem; font-size: 0.9rem; letter-spacing: 0.1em; color: #888;">
+                    ぼくらのフィルム革命 | 未来人財育成委員会
+                </p>
+                <div style="margin-top: 5rem;">
+                    <a href="javascript:void(0)" class="btn-primary" onclick="alert('デザイン確認用ページのため無効化されています')">APPLY
+                        NOW</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Hook -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>CONCEPT</h2>
+                <p
+                    style="text-align: center; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    福山で“映画づくり”に本気で挑戦する夏。<br>
+                    高校生 × 地域 × 映画制作
+                </p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>01. HERO</h3>
+                        <p>高校生が「主役」。あなたのアイディアと情熱が、一本の映画になる。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>02. PROFESSIONAL</h3>
+                        <p>福山市出身の新進気鋭の映画監督・ナカモトユウ氏による直接指導。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>03. DEBUT</h3>
+                        <p>完成作品は映画館「シネマモード」で上映。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Process -->
+        <section class="section-padding" style="background: var(--min-gray);">
+            <div class="container">
+                <h2>PROCESS</h2>
+                <div class="process-step-wrap"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 4rem;">
+                    <div class="p-step">
+                        <div>01</div>
+                        <h3>PLANNING</h3>
+                        <p>企画・脚本</p>
+                    </div>
+                    <div class="p-step">
+                        <div>02</div>
+                        <h3>PREPARATION</h3>
+                        <p>撮影準備</p>
+                    </div>
+                    <div class="p-step">
+                        <div>03</div>
+                        <h3>SHOOTING</h3>
+                        <p>撮影本番</p>
+                    </div>
+                    <div class="p-step">
+                        <div>04</div>
+                        <h3>EDITING</h3>
+                        <p>編集・上映</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Roles -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>ROLES</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab('director')">Director</button>
+                    <button class="tab-btn" onclick="openTab('actor')">Actor</button>
+                    <button class="tab-btn" onclick="openTab('crew')">Crew</button>
+                    <button class="tab-btn" onclick="openTab('editor')">Editor</button>
+                </div>
+
+                <div id="director" class="tab-content active" style="max-width: 800px; margin: 0 auto;">
+                    <h3>監督・脚本チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>映画の骨組みである脚本を書き上げる</li>
+                        <li>衣装やロケ地などを決めてメンバーに指示する</li>
+                    </ul>
+                </div>
+                <!-- Simplified other tabs -->
+                <div id="actor" class="tab-content" style="max-width: 800px; margin: 0 auto; display:none;">
+                    <h3>役者チーム</h3>
+                </div>
+                <div id="crew" class="tab-content" style="max-width: 800px; margin: 0 auto; display:none;">
+                    <h3>撮影チーム</h3>
+                </div>
+                <div id="editor" class="tab-content" style="max-width: 800px; margin: 0 auto; display:none;">
+                    <h3>編集チーム</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Timeline -->
+        <section class="section-padding">
+            <div class="container" style="max-width: 800px;">
+                <h2>SCHEDULE</h2>
+                <div class="timeline">
+                    <div class="t-event">
+                        <div class="t-dot"></div>
+                        <div class="t-date">May - Jun</div>
+                        <h3>KICKOFF</h3>
+                        <p>顔合わせ、企画会議</p>
+                    </div>
+                    <div class="t-event">
+                        <div class="t-dot"></div>
+                        <div class="t-date">Jul - Aug</div>
+                        <h3>SHOOTING</h3>
+                        <p>撮影期間</p>
+                    </div>
+                    <div class="t-event">
+                        <div class="t-dot"></div>
+                        <div class="t-date">Oct</div>
+                        <h3>SCREENING</h3>
+                        <p>完成披露上映会</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apply -->
+        <section class="section-padding" style="text-align: center;">
+            <div class="container">
+                <h2>ENTRY</h2>
+                <div style="margin-top: 4rem;">
+                    <a href="javascript:void(0)" class="btn-primary" onclick="alert('デザイン確認用ページのため無効化されています')">
+                        APPLY NOW
+                    </a>
+                </div>
+                <p style="margin-top: 2rem; font-size: 0.8rem;">Deadline: April 30, 2026</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="text-align: center;">
+            <h3>We Play Future Human Resource Development Committee</h3>
+            <p style="margin-top:2rem; font-size: 0.8rem;">&copy; 2026 We Play</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        function openTab(tabName) {
+            var i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+                tabContent[i].style.display = 'none';
+            }
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+    <!-- Debug Panel -->
+    <script src="../assets/js/debug-panel.js"></script>
+</body>
+
+</html>

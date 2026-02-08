@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 (Swiss Style)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/lp.css">
+    <link rel="stylesheet" href="../assets/css/debug-panel.css">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           V02: SWISS STYLE THEME OVERRIDES
+           ========================================= */
+        :root {
+            --swiss-red: #ff3b30;
+            --swiss-black: #000000;
+            --swiss-white: #ffffff;
+            --swiss-bg: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--swiss-white) !important;
+            color: var(--swiss-black) !important;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif !important;
+            line-height: 1.4 !important;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            padding: 0 4rem;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif !important;
+            font-weight: 900 !important;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            color: var(--swiss-black) !important;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 6rem !important;
+            line-height: 0.9 !important;
+            text-align: left;
+        }
+
+        h1 span {
+            color: var(--swiss-red) !important;
+            display: block;
+        }
+
+        h2 {
+            font-size: 3rem !important;
+            border-top: 4px solid var(--swiss-black);
+            padding-top: 1rem;
+            text-align: left !important;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #333 !important;
+            text-align: left;
+            max-width: 700px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--swiss-white) !important;
+            min-height: 70vh !important;
+            display: flex;
+            align-items: center;
+            padding: 6rem 0;
+        }
+
+        .hero-bg,
+        .hero::after {
+            display: none !important;
+        }
+
+        .hero-tag {
+            background: var(--swiss-black) !important;
+            color: var(--swiss-white) !important;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: none !important;
+        }
+
+        /* Section Styling */
+        .section-padding {
+            padding: 8rem 0 !important;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--swiss-red) !important;
+            color: var(--swiss-white) !important;
+            border: none !important;
+            border-radius: 0 !important;
+            font-weight: 900 !important;
+            padding: 1.5rem 3rem !important;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--swiss-black) !important;
+            transform: translateY(-5px);
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) !important;
+            /* Force 3 columns */
+            gap: 0 !important;
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+        }
+
+        .feature-card {
+            background: #fff !important;
+            border-right: 1px solid #000 !important;
+            border-bottom: 1px solid #000 !important;
+            padding: 3rem 2rem !important;
+            text-align: left !important;
+            border-radius: 0 !important;
+        }
+
+        .feature-icon {
+            background: var(--swiss-red) !important;
+            color: #fff !important;
+            border-radius: 0 !important;
+            margin-bottom: 2rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            justify-content: flex-start !important;
+            gap: 0 !important;
+            border-bottom: 2px solid #000;
+        }
+
+        .tab-btn {
+            background: #eee !important;
+            color: #000 !important;
+            border: 1px solid #ccc !important;
+            border-bottom: none !important;
+            padding: 1rem 3rem !important;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .tab-btn.active {
+            background: var(--swiss-black) !important;
+            color: #fff !important;
+            border-color: #000 !important;
+        }
+
+        .tab-content {
+            background: #fff !important;
+            border: none !important;
+            padding: 3rem 0 0 0 !important;
+            color: #000 !important;
+        }
+
+        .tab-content h3 {
+            border-bottom: none !important;
+            font-size: 2.5rem !important;
+            margin-bottom: 2rem;
+        }
+
+        .role-desc-list {
+            color: #333 !important;
+        }
+
+        .role-desc-list li::before {
+            background: var(--swiss-red) !important;
+            border-radius: 0 !important;
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 4px solid var(--swiss-black) !important;
+            padding-left: 4rem !important;
+        }
+
+        .t-dot {
+            background: var(--swiss-white) !important;
+            border: 4px solid var(--swiss-black) !important;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            left: -4.9rem !important;
+            transform: none !important;
+        }
+
+        .t-date {
+            color: var(--swiss-red) !important;
+            font-size: 2rem !important;
+            font-weight: 900;
+        }
+
+        /* Table */
+        .req-table {
+            border-top: 4px solid #000;
+        }
+
+        .req-table th {
+            color: var(--swiss-black) !important;
+            background: #eee;
+            border-bottom: 1px solid #fff !important;
+            font-size: 1.2rem;
+        }
+
+        .req-table td {
+            color: #333;
+            border-bottom: 1px solid #eee !important;
+        }
+
+        /* Check Item */
+        .check-item {
+            background: #fff !important;
+            border: 4px solid #000 !important;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .check-item:hover {
+            background: var(--swiss-red) !important;
+            color: #fff;
+            border-color: var(--swiss-red) !important;
+        }
+
+        /* Process Flow */
+        .p-step {
+            background: #fff !important;
+            border: none !important;
+            position: relative;
+        }
+
+        .p-step div:first-child {
+            font-size: 5rem !important;
+            color: rgba(0, 0, 0, 0.1) !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            line-height: 1;
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 900;
+        }
+
+        .p-step h3 {
+            margin-top: 3rem !important;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--swiss-black) !important;
+            color: #fff !important;
+            padding: 6rem 0;
+        }
+
+        /* Header */
+        header.header-nav {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-brand {
+            color: #000 !important;
+            font-weight: 900 !important;
+            letter-spacing: -0.05em !important;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            h1 {
+                font-size: 3.5rem !important;
+            }
+
+            h2 {
+                font-size: 2rem !important;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr !important;
+                border: none;
+            }
+
+            .feature-card {
+                border: 1px solid #000 !important;
+                margin-bottom: 1rem;
+            }
+
+            .timeline {
+                padding-left: 2rem !important;
+            }
+
+            .t-dot {
+                left: -2.8rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay" style="display:none;"></div>
+
+    <!-- Header -->
+    <header class="header-nav">
+        <div class="container nav-wrapper"
+            style="display: flex; justify-content: space-between; align-items: center; height: 80px;">
+            <div id="header-left">
+                <div class="logo-brand" style="font-size: 1.5rem;">WE PLAY</div>
+            </div>
+            <nav class="nav-links" id="header-right">
+                <a href="javascript:void(0)" class="btn-login"
+                    style="background:var(--swiss-black); color:#fff; padding:0.5rem 1rem;"
+                    onclick="alert('デザイン確認用ページのため無効化されています')">
+                    <i data-lucide="log-in"></i><span>管理者ログイン</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-content" style="text-align: left; padding: 0;">
+                <span class="hero-tag">We Play 未来人財育成委員会</span>
+                <h1>
+                    ぼくらの<br>
+                    <span>フィルム革命</span>
+                </h1>
+                <p style="margin-top: 2rem;">
+                    主役は、きみ。<br>
+                    <span style="display:block; margin-top:0.5rem; color:#666;">地域と作る高校生映画。</span>
+                </p>
+                <div style="margin-top: 4rem;">
+                    <a href="javascript:void(0)" class="btn-primary" onclick="alert('デザイン確認用ページのため無効化されています')">参加申し込み
+                        →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Hook -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>高校生 × 地域 × 映画制作<br>福山で“映画づくり”に本気で挑戦する夏</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="video" size="32"></i></div>
+                        <h3>01 君が主役</h3>
+                        <p>高校生が「主役」。あなたのアイディアと情熱が、一本の映画になる。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="mic-2" size="32"></i></div>
+                        <h3>02 Professional</h3>
+                        <p>第一線で活躍するプロの映画監督から、直接指導を受けられる貴重な現場。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="monitor-play" size="32"></i></div>
+                        <h3>03 Debut</h3>
+                        <p>完成作品は映画館「シネマモード」で上映。大スクリーンで感動を共有しよう。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Overview (Process) -->
+        <section class="section-padding" style="background: #f0f0f0;">
+            <div class="container">
+                <h2>プロジェクトの流れ</h2>
+                <div class="process-step-wrap" style="display: flex; gap: 2rem; margin-top: 4rem; flex-wrap: wrap;">
+                    <div class="p-step">
+                        <div>01</div>
+                        <h3>企画・脚本</h3>
+                        <p>物語をゼロから生み出すチーム。</p>
+                    </div>
+                    <div class="p-step">
+                        <div>02</div>
+                        <h3>撮影準備</h3>
+                        <p>ロケハン、配役、衣装。</p>
+                    </div>
+                    <div class="p-step">
+                        <div>03</div>
+                        <h3>撮影本番</h3>
+                        <p>夏休みを利用して撮影。</p>
+                    </div>
+                    <div class="p-step">
+                        <div>04</div>
+                        <h3>編集・上映</h3>
+                        <p>映像をつなぎ、感動のフィナーレへ。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Benefits / Persona (Combined Grid) -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>なぜ参加すべきか？</h2>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                    <div class="check-item">福山をとにかく盛り上げたい</div>
+                    <div class="check-item">チームリーダーを経験してみたい</div>
+                    <div class="check-item">人前で表現することに興味がある</div>
+                    <div class="check-item">地場の企業や大人とつながりたい</div>
+                    <div class="check-item">学校外の仲間と何かに挑戦したい</div>
+                    <div class="check-item">一生残る最高の思い出をつくりたい</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Roles -->
+        <section class="section-padding" style="background: #111; color: #fff;">
+            <div class="container">
+                <h2 style="color: #fff; border-top-color: #fff;">役割紹介</h2>
+                <div class="tabs" style="border-bottom-color: #333;">
+                    <button class="tab-btn active"
+                        style="background:#fff !important; color:#000 !important; border-color:#fff !important;"
+                        onclick="openTab('director')">監督・脚本</button>
+                    <button class="tab-btn"
+                        style="background:transparent !important; color:#fff !important; border-color:#333 !important;"
+                        onclick="openTab('actor')">役者</button>
+                    <button class="tab-btn"
+                        style="background:transparent !important; color:#fff !important; border-color:#333 !important;"
+                        onclick="openTab('crew')">撮影チーム</button>
+                    <button class="tab-btn"
+                        style="background:transparent !important; color:#fff !important; border-color:#333 !important;"
+                        onclick="openTab('editor')">編集・発信</button>
+                </div>
+
+                <div id="director" class="tab-content active"
+                    style="background:transparent !important; color:#fff !important;">
+                    <h3 style="color:#fff;">監督・脚本チーム</h3>
+                    <ul class="role-desc-list" style="color:#ccc !important;">
+                        <li>映画の骨組みである脚本を書き上げる。</li>
+                        <li>衣装やロケ地などを決めてメンバーに指示する。</li>
+                        <li>制作の全過程で各チームを指揮し指示を出す。</li>
+                    </ul>
+                </div>
+                <!-- Other tabs simplified for brevity in this variation but functional via JS -->
+                <div id="actor" class="tab-content" style="background:transparent !important; color:#fff !important;">
+                    <h3 style="color:#fff;">役者チーム</h3>
+                </div>
+                <div id="crew" class="tab-content" style="background:transparent !important; color:#fff !important;">
+                    <h3 style="color:#fff;">撮影チーム</h3>
+                </div>
+                <div id="editor" class="tab-content" style="background:transparent !important; color:#fff !important;">
+                    <h3 style="color:#fff;">編集チーム</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Timeline -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>スケジュール</h2>
+                <div class="timeline">
+                    <div class="t-event">
+                        <div class="t-dot"></div>
+                        <div class="t-date">5.23 - 6.19</div>
+                        <h3>キックオフ・企画</h3>
+                        <p>顔合わせ、企画会議、脚本執筆。</p>
+                    </div>
+                    <div class="t-event important">
+                        <div class="t-dot"
+                            style="background:var(--swiss-red) !important; border-color:var(--swiss-red) !important;">
+                        </div>
+                        <div class="t-date" style="color:var(--swiss-red) !important;">7.24 - 8.16</div>
+                        <h3 style="color:var(--swiss-red);">撮影合宿</h3>
+                        <p>撮影期間。最高の夏の思い出を。</p>
+                    </div>
+                    <div class="t-event important">
+                        <div class="t-dot"
+                            style="background:var(--swiss-red) !important; border-color:var(--swiss-red) !important;">
+                        </div>
+                        <div class="t-date" style="color:var(--swiss-red) !important;">10.18</div>
+                        <h3 style="color:var(--swiss-red);">完成披露上映会</h3>
+                        <p>福山駅前シネマモードにて。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Apply -->
+        <section class="section-padding" style="background: var(--swiss-red); color: #fff;">
+            <div class="container" style="text-align: center;">
+                <h2 style="color: #fff; border-color: #fff; text-align: center !important;">応募はこちら</h2>
+                <div style="margin: 4rem 0;">
+                    <a href="javascript:void(0)" class="btn-primary"
+                        style="background: #fff !important; color: var(--swiss-red) !important;"
+                        onclick="alert('デザイン確認用ページのため無効化されています')">
+                        参加申し込み
+                    </a>
+                </div>
+                <p style="color: #fff; font-weight: bold;">応募締切: 2026年4月30日</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <h3>We Play 未来人財育成委員会</h3>
+            <p>広島県福山市西町2-10-1</p>
+            <p style="margin-top:2rem;">&copy; 2026 We Play</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        function openTab(tabName) {
+            var i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+                tabContent[i].style.display = "none";
+            }
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+    <!-- Debug Panel -->
+    <script src="../assets/js/debug-panel.js"></script>
+</body>
+
+</html>

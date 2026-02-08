@@ -25,28 +25,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function checkAuthStatus() {
     // Only run on dashboard pages (pages that use components.js)
-    // We assume login, line_link, and member_registration do NOT use this file.
     if (!window.supabaseClient) return;
 
     const { data: { session } } = await window.supabaseClient.auth.getSession();
     if (!session) {
+        console.log('[Auth] No session found, redirecting to login.');
         window.location.href = 'login.html';
         return;
     }
 
     // Check Member Status
-    const { data: member } = await window.supabaseClient
+    const { data: member, error } = await window.supabaseClient
         .from('members')
-        .select('line_user_id, is_registered')
+        .select('*') // Get all fields to ensure no column missing
         .eq('auth_user_id', session.user.id)
         .maybeSingle();
 
+    if (error) {
+        console.error('[Auth] Member check error:', error);
+        return;
+    }
+
+    console.log('[Auth] Member status:', member);
+
     if (!member || !member.line_user_id) {
+        console.log('[Auth] Missing member or LINE ID. Redirecting to line_link.');
         window.location.href = 'line_link.html';
     } else if (!member.is_registered) {
+        console.log('[Auth] is_registered is false/null. Redirecting to member_registration.', member.is_registered);
         window.location.href = 'member_registration.html';
     }
     // If all good, proceed.
+    console.log('[Auth] Check passed. authorized.');
 }
 
 function renderSidebar() {

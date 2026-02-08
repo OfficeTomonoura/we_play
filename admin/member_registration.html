@@ -254,9 +254,22 @@
 
                 if (authError) throw authError;
 
+                // 3. Verify Update (Double check to prevent redirect loop)
+                const { data: verifyMember, error: verifyError } = await window.supabaseClient
+                    .from('members')
+                    .select('is_registered')
+                    .eq('auth_user_id', session.user.id)
+                    .single();
+
+                if (verifyError) throw verifyError;
+                if (!verifyMember || verifyMember.is_registered !== true) {
+                    throw new Error('登録情報の更新がデータベースに反映されませんでした。もう一度お試しください。');
+                }
+
                 // Success
                 alert('登録が完了しました！ダッシュボードへ移動します。');
-                window.location.href = 'index.html';
+                // Force reload to clear any cache
+                window.location.href = 'index.html?t=' + new Date().getTime();
 
             } catch (err) {
                 console.error(err);

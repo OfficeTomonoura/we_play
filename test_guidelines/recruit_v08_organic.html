@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 (Organic)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Nunito:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/lp.css">
+    <link rel="stylesheet" href="../assets/css/debug-panel.css">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           V08: ORGANIC / NATURE THEME OVERRIDES
+           ========================================= */
+        :root {
+            --org-bg: #f9f7f2;
+            --org-text: #5a5243;
+            --org-green: #8da372;
+            --org-accent: #d4a373;
+            --org-white: #ffffff;
+        }
+
+        body {
+            background-color: var(--org-bg) !important;
+            color: var(--org-text) !important;
+            font-family: 'Kiwi Maru', 'Nunito', serif !important;
+            line-height: 1.8;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e8e4db' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #4a4238 !important;
+        }
+
+        h1 {
+            font-weight: 500 !important;
+            font-size: 3.5rem !important;
+        }
+
+        h2 {
+            text-align: center;
+            border-bottom: 2px dashed var(--org-green) !important;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 3rem !important;
+        }
+
+        div:has(h2) {
+            text-align: center;
+        }
+
+        /* Hero */
+        .hero {
+            background: transparent !important;
+            border: none;
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .hero-bg,
+        .hero::after {
+            display: none;
+        }
+
+        .hero::before {
+            /* Gentle circle behind hero */
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            background: #f0ebe0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .hero-tag {
+            background: var(--org-green) !important;
+            color: #fff !important;
+            border: none !important;
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--org-accent) !important;
+            color: #fff !important;
+            border: none !important;
+            border-radius: 30px !important;
+            padding: 1rem 3rem !important;
+            box-shadow: 0 4px 10px rgba(212, 163, 115, 0.4);
+            font-family: 'Kiwi Maru', serif !important;
+        }
+
+        .btn-primary:hover {
+            background: var(--org-green) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .feature-card,
+        .check-item,
+        .p-step,
+        .tab-content,
+        .req-table,
+        details {
+            background: #fff !important;
+            border: none !important;
+            border-radius: 20px !important;
+            box-shadow: 0 5px 20px rgba(90, 82, 67, 0.05) !important;
+            padding: 2rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon,
+        .check-item i {
+            color: var(--org-green) !important;
+            background: #f0ebe0;
+            border-radius: 50%;
+            padding: 12px;
+        }
+
+        /* Tabs */
+        .tab-btn {
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid transparent !important;
+            color: #999 !important;
+            font-family: 'Kiwi Maru', serif !important;
+        }
+
+        .tab-btn.active {
+            color: var(--org-green) !important;
+            border-bottom: 2px solid var(--org-green) !important;
+        }
+
+        .role-desc-list li::before {
+            background: var(--org-accent) !important;
+            border-radius: 50%;
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 2px dashed var(--org-green) !important;
+        }
+
+        .t-dot {
+            background: #fff !important;
+            border: 2px solid var(--org-green) !important;
+            border-radius: 50%;
+            transform: none !important;
+            left: -3.4rem !important;
+        }
+
+        .t-date {
+            color: var(--org-accent) !important;
+        }
+
+        /* Table */
+        .req-table th {
+            background: #fdfbf7;
+            color: var(--org-text) !important;
+        }
+
+        /* Footer */
+        footer {
+            background: #4a4238 !important;
+            color: #ddd !important;
+            border-top: none;
+            padding: 4rem 0;
+        }
+
+        footer h3,
+        footer p {
+            color: #ddd !important;
+        }
+
+        /* Header */
+        header.header-nav {
+            background: rgba(249, 247, 242, 0.9) !important;
+            border-bottom: none;
+        }
+
+        .logo-brand {
+            color: var(--org-green) !important;
+            font-weight: 500;
+            font-family: 'Nunito', sans-serif !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay" style="display:none;"></div>
+
+    <!-- Header -->
+    <header class="header-nav">
+        <div class="container nav-wrapper"
+            style="display: flex; justify-content: space-between; align-items: center; height: 70px;">
+            <div id="header-left">
+                <div class="logo-brand">WE PLAY</div>
+            </div>
+            <nav class="nav-links" id="header-right">
+                <a href="javascript:void(0)" class="btn-login" style="color:#5a5243; text-decoration:none;"
+                    onclick="alert('デザイン確認用ページのため無効化されています')">
+                    管理者ログイン
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero text-center">
+            <div class="hero-content">
+                <span class="hero-tag">We Play 未来人財育成委員会</span>
+                <br><br>
+                <h1>
+                    ぼくらの<br>
+                    <span>フィルム革命</span>
+                </h1>
+                <p style="margin-top:2rem;">
+                    主役は、きみ。<br>
+                    地域と作る高校生映画。
+                </p>
+                <div style="margin-top: 3rem;">
+                    <a href="javascript:void(0)" class="btn-primary"
+                        onclick="alert('デザイン確認用ページのため無効化されています')">参加申し込み</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Hook -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>高校生 × 地域 × 映画制作</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="video" size="32"></i></div>
+                        <h3>君が主役</h3>
+                        <p>高校生が「主役」。あなたのアイディアと情熱が、一本の映画になる。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="mic-2" size="32"></i></div>
+                        <h3>プロフェッショナル</h3>
+                        <p>福山市出身の新進気鋭の映画監督・ナカモトユウ氏。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Process -->
+        <section class="section-padding" style="background: rgba(141, 163, 114, 0.1);">
+            <div class="container">
+                <h2>プロジェクトの流れ</h2>
+                <div class="process-step-wrap" style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:3rem;">
+                    <div class="p-step">
+                        <div style="font-size:1.5rem; color:var(--org-accent);">01</div>
+                        <h3>企画・脚本</h3>
+                    </div>
+                    <div class="p-step">
+                        <div style="font-size:1.5rem; color:var(--org-accent);">02</div>
+                        <h3>撮影準備</h3>
+                    </div>
+                    <div class="p-step">
+                        <div style="font-size:1.5rem; color:var(--org-accent);">03</div>
+                        <h3>撮影本番</h3>
+                    </div>
+                    <div class="p-step">
+                        <div style="font-size:1.5rem; color:var(--org-accent);">04</div>
+                        <h3>編集・上映</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Roles -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>役割紹介</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab('director')">監督・脚本</button>
+                    <button class="tab-btn" onclick="openTab('actor')">役者</button>
+                    <button class="tab-btn" onclick="openTab('crew')">撮影</button>
+                    <button class="tab-btn" onclick="openTab('editor')">編集</button>
+                </div>
+
+                <div id="director" class="tab-content active" style="margin-top:1rem;">
+                    <h3>監督・脚本チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>映画の骨組みである脚本を書き上げる。</li>
+                        <li>衣装やロケ地などを決めてメンバーに指示する。</li>
+                    </ul>
+                </div>
+                <div id="actor" class="tab-content" style="display:none;">
+                    <h3>役者チーム</h3>
+                </div>
+                <div id="crew" class="tab-content" style="display:none;">
+                    <h3>撮影チーム</h3>
+                </div>
+                <div id="editor" class="tab-content" style="display:none;">
+                    <h3>編集チーム</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apply -->
+        <section class="section-padding" style="text-align: center;">
+            <a href="javascript:void(0)" class="btn-primary"
+                style="padding: 1.5rem 4rem; font-size: 1.2rem; text-decoration:none;"
+                onclick="alert('デザイン確認用ページのため無効化されています')">
+                参加申し込み
+            </a>
+            <p style="margin-top: 1rem; color: #999; font-size: 0.9rem;">2026年4月30日 締切</p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="text-align: center;">
+            <h3>We Play 未来人財育成委員会</h3>
+            <p>&copy; 2026 We Play</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        function openTab(tabName) {
+            var i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+                tabContent[i].style.display = 'none';
+            }
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+    <!-- Debug Panel -->
+    <script src="../assets/js/debug-panel.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>募集要項 | ぼくらのフィルム革命 (Neomorphism)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/lp.css">
+    <link rel="stylesheet" href="../assets/css/debug-panel.css">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           V04: NEOMORPHISM THEME OVERRIDES
+           ========================================= */
+        :root {
+            --neo-bg: #e0e5ec;
+            --neo-shadow-light: #ffffff;
+            --neo-shadow-dark: #a3b1c6;
+            --primary-color: #4a90e2;
+            --text-color: #4d4d4d;
+        }
+
+        body {
+            background-color: var(--neo-bg) !important;
+            color: var(--text-color) !important;
+            font-family: 'Nunito', 'Noto Sans JP', sans-serif !important;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        .hero-tag {
+            color: var(--text-color) !important;
+            font-weight: 800 !important;
+        }
+
+        h1 {
+            text-shadow: 2px 2px 4px var(--neo-shadow-dark), -2px -2px 4px var(--neo-shadow-light);
+        }
+
+        h2 {
+            text-align: center;
+            border: none !important;
+            margin-bottom: 2rem;
+            color: var(--primary-color) !important;
+        }
+
+        /* Neomorph Elements */
+        .neo-box,
+        .feature-card,
+        .check-item,
+        .p-step,
+        .tab-btn,
+        .tab-content,
+        .timeline,
+        .req-table,
+        .apply-steps,
+        details,
+        .container:has(.req-table)
+
+        /* Container of table */
+            {
+            background: var(--neo-bg) !important;
+            border-radius: 20px !important;
+            box-shadow: 9px 9px 16px var(--neo-shadow-dark), -9px -9px 16px var(--neo-shadow-light) !important;
+            border: none !important;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color) !important;
+        }
+
+        /* Inner Pressed Style for some elements */
+        .check-item:hover,
+        .feature-card:hover {
+            box-shadow: inset 6px 6px 10px 0 var(--neo-shadow-dark), inset -6px -6px 10px 0 var(--neo-shadow-light) !important;
+            transform: none !important;
+            /* Neomorph doesn't lift usually */
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--neo-bg) !important;
+            color: var(--primary-color) !important;
+            font-weight: 800;
+            border-radius: 50px !important;
+            border: none !important;
+            box-shadow: 6px 6px 10px 0 var(--neo-shadow-dark), -6px -6px 10px 0 var(--neo-shadow-light) !important;
+            transition: 0.2s;
+        }
+
+        .btn-primary:active,
+        .btn-primary:hover {
+            box-shadow: inset 4px 4px 8px 0 var(--neo-shadow-dark), inset -4px -4px 8px 0 var(--neo-shadow-light) !important;
+            color: var(--primary-color) !important;
+            /* Keep color same */
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--neo-bg) !important;
+            border: none;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-bg,
+        .hero::after {
+            display: none;
+        }
+
+        .hero-tag {
+            background: var(--neo-bg) !important;
+            box-shadow: 5px 5px 10px var(--neo-shadow-dark), -5px -5px 10px var(--neo-shadow-light);
+            border: none !important;
+            border-radius: 10px;
+            padding: 0.5rem 1.5rem;
+            color: var(--primary-color) !important;
+        }
+
+        /* Features */
+        .feature-icon,
+        .check-item i {
+            color: var(--primary-color) !important;
+            background: var(--neo-bg);
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+        }
+
+        /* Tabs */
+        .tabs {
+            gap: 1rem !important;
+        }
+
+        .tab-btn {
+            border-radius: 12px !important;
+            color: #888 !important;
+            clip-path: none !important;
+            margin: 0 !important;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color) !important;
+            box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light) !important;
+        }
+
+        .tab-content {
+            border-radius: 20px !important;
+            margin-top: 2rem;
+        }
+
+        .role-desc-list li::before {
+            background: var(--primary-color) !important;
+            box-shadow: 2px 2px 4px var(--neo-shadow-dark);
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 6px solid var(--neo-bg) !important;
+            box-shadow: inset 2px 2px 5px var(--neo-shadow-dark), inset -2px -2px 5px var(--neo-shadow-light);
+            border-radius: 20px;
+            padding: 2rem !important;
+        }
+
+        .t-dot {
+            background: var(--primary-color) !important;
+            border: 4px solid var(--neo-bg) !important;
+            box-shadow: 3px 3px 6px var(--neo-shadow-dark), -3px -3px 6px var(--neo-shadow-light);
+            border-radius: 50%;
+            left: -2.4rem !important;
+            /* Adjust since we added padding/border radius to timeline container */
+        }
+
+        .t-date {
+            color: var(--primary-color) !important;
+        }
+
+        .t-event {
+            border-bottom: none !important;
+            padding-bottom: 2rem;
+        }
+
+        /* Table */
+        .req-table th {
+            color: var(--primary-color) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .req-table td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Process */
+        .p-step div:first-child {
+            color: var(--primary-color) !important;
+            text-shadow: 2px 2px 4px var(--neo-shadow-dark), -2px -2px 4px var(--neo-shadow-light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--neo-bg) !important;
+            box-shadow: 0 -10px 20px var(--neo-shadow-dark);
+            color: var(--text-color) !important;
+            border: none;
+        }
+
+        footer h3,
+        footer p {
+            color: var(--text-color) !important;
+        }
+
+        /* Header */
+        header.header-nav {
+            background: var(--neo-bg) !important;
+            box-shadow: 0 4px 10px var(--neo-shadow-dark);
+            border: none;
+        }
+
+        .logo-brand {
+            color: var(--primary-color) !important;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px var(--neo-shadow-dark), -2px -2px 4px var(--neo-shadow-light);
+        }
+
+        /* Mobile */
+        @media(max-width: 600px) {
+            .timeline {
+                box-shadow: none;
+                border-left: none;
+                padding-left: 0;
+            }
+
+            .t-dot {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-overlay" style="display:none;"></div>
+
+    <!-- Header -->
+    <header class="header-nav">
+        <div class="container nav-wrapper"
+            style="display: flex; justify-content: space-between; align-items: center; height: 70px;">
+            <div id="header-left">
+                <div class="logo-brand">WE PLAY</div>
+            </div>
+            <nav class="nav-links" id="header-right">
+                <a href="javascript:void(0)" class="btn-login" style="color:#555; text-decoration:none;"
+                    onclick="alert('デザイン確認用ページのため無効化されています')">
+                    <i data-lucide="log-in"></i><span>管理者ログイン</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero text-center">
+            <div class="hero-content">
+                <span class="hero-tag">We Play 未来人財育成委員会</span>
+                <h1 style="font-size: 3.5rem; margin: 2rem 0;">
+                    ぼくらの<br>
+                    <span style="color: var(--primary-color);">フィルム革命</span>
+                </h1>
+                <p>
+                    主役は、きみ。<br>
+                    <span style="font-size: 1.1rem; color: #777; display:block; margin-top:0.5rem;">
+                        地域と作る高校生映画。
+                    </span>
+                </p>
+                <div style="margin-top: 3rem;">
+                    <a href="javascript:void(0)" class="btn-primary"
+                        style="padding: 1rem 3rem; font-size: 1.2rem; text-decoration: none;"
+                        onclick="alert('デザイン確認用ページのため無効化されています')">参加申し込み</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Hook -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>高校生 × 地域 × 映画制作<br>福山で“映画づくり”に本気で挑戦する夏</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="video" size="32"></i></div>
+                        <h3>君が主役</h3>
+                        <p>高校生が「主役」。あなたのアイディアと情熱が、一本の映画になる。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="mic-2" size="32"></i></div>
+                        <h3>プロフェッショナル</h3>
+                        <p>講師 : 福山市出身の新進気鋭の映画監督・ナカモトユウ氏。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Process (Wrapped in Neo Box) -->
+        <section class="section-padding">
+            <div class="container neo-box">
+                <h2>プロジェクトの流れ</h2>
+                <div class="process-step-wrap"
+                    style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center;">
+                    <div class="p-step"
+                        style="box-shadow:none !important; border: 1px solid rgba(0,0,0,0.05) !important;">
+                        <div style="font-family:'Nunito'; font-size:2rem; font-weight:bold;">01</div>
+                        <h3>企画・脚本</h3>
+                    </div>
+                    <div class="p-step"
+                        style="box-shadow:none !important; border: 1px solid rgba(0,0,0,0.05) !important;">
+                        <div style="font-family:'Nunito'; font-size:2rem; font-weight:bold;">02</div>
+                        <h3>撮影準備</h3>
+                    </div>
+                    <div class="p-step"
+                        style="box-shadow:none !important; border: 1px solid rgba(0,0,0,0.05) !important;">
+                        <div style="font-family:'Nunito'; font-size:2rem; font-weight:bold;">03</div>
+                        <h3>撮影本番</h3>
+                    </div>
+                    <div class="p-step"
+                        style="box-shadow:none !important; border: 1px solid rgba(0,0,0,0.05) !important;">
+                        <div style="font-family:'Nunito'; font-size:2rem; font-weight:bold;">04</div>
+                        <h3>編集・上映</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Roles -->
+        <section class="section-padding">
+            <div class="container">
+                <h2>役割紹介</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab('director')">監督・脚本</button>
+                    <button class="tab-btn" onclick="openTab('actor')">役者</button>
+                    <button class="tab-btn" onclick="openTab('crew')">撮影</button>
+                    <button class="tab-btn" onclick="openTab('editor')">編集</button>
+                </div>
+
+                <div id="director" class="tab-content active" style="margin-top:2rem;">
+                    <h3>監督・脚本チーム</h3>
+                    <ul class="role-desc-list">
+                        <li>映画の骨組みである脚本を書き上げる。</li>
+                        <li>衣装やロケ地などを決めてメンバーに指示する。</li>
+                    </ul>
+                </div>
+                <div id="actor" class="tab-content" style="margin-top:2rem;">
+                    <h3>役者チーム</h3>
+                </div>
+                <div id="crew" class="tab-content" style="margin-top:2rem;">
+                    <h3>撮影チーム</h3>
+                </div>
+                <div id="editor" class="tab-content" style="margin-top:2rem;">
+                    <h3>編集チーム</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Safety -->
+        <section class="section-padding">
+            <div class="container neo-box" style="max-width: 800px;">
+                <h2 style="font-size: 1.5rem; text-align:center; margin-bottom: 2rem;">安心・安全への取り組み</h2>
+                <details>
+                    <summary>安全管理体制について</summary>
+                    <div class="details-content"
+                        style="box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light) !important;">
+                        活動中は常に担当者が帯同します。
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- Apply -->
+        <section class="section-padding" style="text-align:center;">
+            <a href="javascript:void(0)" class="btn-primary"
+                style="padding: 1.5rem 5rem; font-size: 1.5rem; text-decoration:none; display:inline-block;"
+                onclick="alert('デザイン確認用ページのため無効化されています')">
+                参加申し込み
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="text-align: center; padding: 3rem 0;">
+            <h3>We Play 未来人財育成委員会</h3>
+            <p>&copy; 2026 We Play</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        function openTab(tabName) {
+            var i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+                tabContent[i].style.display = 'none';
+            }
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+    <!-- Debug Panel -->
+    <script src="../assets/js/debug-panel.js"></script>
+</body>
+
+</html>
