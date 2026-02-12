@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css"> <!-- Reuse main form styles for consistency -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         .login-box {
             max-width: 400px;
@@ -77,92 +77,8 @@
         </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase-client.js"></script>
-    <script>
-        lucide.createIcons();
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorMsg = document.getElementById('loginError');
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-
-            if (!window.supabaseClient) {
-                alert('システムエラー: データベース接続に失敗しました。');
-                return;
-            }
-
-            try {
-                // Disable button
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>認証中...</span>';
-
-                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    throw error;
-                }
-
-                // ログイン成功 -> ステータスチェック
-                const { data: member } = await window.supabaseClient
-                    .from('members')
-                    .select('line_user_id, is_registered')
-                    .eq('auth_user_id', data.session.user.id)
-                    .maybeSingle();
-
-                if (!member || !member.line_user_id) {
-                    // LINE連携がまだ -> 連携画面へ
-                    window.location.href = 'line_link.html';
-                } else if (!member.is_registered) {
-                    // プロフィール未登録 -> 正会員登録画面へ
-                    window.location.href = 'member_registration.html';
-                } else {
-                    // 全て完了 -> ダッシュボード
-                    window.location.href = 'dashboard.html';
-                }
-
-            } catch (err) {
-                console.error('Login error:', err);
-
-                // エラー表示
-                errorMsg.style.display = 'block';
-                errorMsg.textContent = 'メールアドレスまたはパスワードが正しくありません。';
-
-                // アニメーション
-                errorMsg.style.animation = 'none';
-                errorMsg.offsetHeight; /* trigger reflow */
-                errorMsg.style.animation = 'shake 0.5s ease-in-out';
-
-                // Reset button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>ログイン</span><i data-lucide="log-in"></i>';
-                lucide.createIcons();
-            }
-        });
-    </script>
-    <style>
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20%,
-            60% {
-                transform: translateX(-5px);
-            }
-
-            40%,
-            80% {
-                transform: translateX(5px);
-            }
-        }
-    </style>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/admin/login/main.js"></script>
 </body>
 
 </html>

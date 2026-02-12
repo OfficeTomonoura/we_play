@@ -50,7 +50,7 @@ supabase functions deploy notify-applicant --no-verify-jwt
 ```
 
 ## 5. クライアント側の設定
-Webフォーム (`assets/js/form.js`) 側で、送信成功時に関数を呼び出す処理が必要です。
+Webフォーム (`assets/js/form/form.js`) 側で、送信成功時に関数を呼び出す処理が必要です。
 
 ```javascript
 // form.js の送信成功処理内

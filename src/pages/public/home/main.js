@@ -1,6 +1,8 @@
-
-// assets/js/lp.js
-// Logic for handling dynamic UI on the LP (LINE Link, Admin, Application Status)
+import { createIcons, icons } from 'lucide';
+import liff from '@line/liff';
+import { authApi } from '../../../api/auth';
+import { membersApi } from '../../../api/members';
+import { applicantsApi } from '../../../api/applicants';
 
 // State Variables
 let state = {
@@ -12,41 +14,27 @@ let state = {
     adminName: null
 };
 
-// Config (Legacy from index.html)
+// Config
 const LIFF_ID = "2009015373-QGkjtgDJ";
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Initial Render
-    lucide.createIcons();
+    createIcons({ icons });
     renderUI();
 
-    // 1. Check Admin Session (Supabase)
+    // 1. Check Admin Session
     await checkAdminSession();
 
     // 2. Initialize LIFF
     await initLIFF();
 });
 
-/**
- * Check if the user is logged in as Admin via Supabase Auth
- */
 async function checkAdminSession() {
-    if (!window.supabaseClient) {
-        console.warn('Supabase client not initialized.');
-        return;
-    }
-
     try {
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        const session = await authApi.getSession();
         if (session) {
             state.isAdminLoggedIn = true;
-            // Fetch admin user name if possible (from members table)
-            const { data: member } = await window.supabaseClient
-                .from('members')
-                .select('full_name')
-                .eq('auth_user_id', session.user.id)
-                .maybeSingle();
-
+            const member = await membersApi.getByAuthId(session.user.id);
             state.adminName = member ? member.full_name : '管理者';
         } else {
             state.isAdminLoggedIn = false;
@@ -57,9 +45,6 @@ async function checkAdminSession() {
     renderUI();
 }
 
-/**
- * Initialize LIFF and check LINE Login status
- */
 async function initLIFF() {
     try {
         await liff.init({ liffId: LIFF_ID });
@@ -67,8 +52,6 @@ async function initLIFF() {
         if (liff.isLoggedIn()) {
             state.isLineLinked = true;
             state.lineProfile = await liff.getProfile();
-
-            // If logged in, check if they have already applied
             await checkApplicationStatus(state.lineProfile.userId);
         } else {
             state.isLineLinked = false;
@@ -79,18 +62,9 @@ async function initLIFF() {
     renderUI();
 }
 
-/**
- * Check if the LINE User has applied in 'applicants' table
- */
 async function checkApplicationStatus(lineUserId) {
-    if (!window.supabaseClient) return;
-
     try {
-        const { data } = await window.supabaseClient
-            .from('applicants')
-            .select('*')
-            .eq('line_user_id', lineUserId)
-            .maybeSingle();
+        const data = await applicantsApi.getByLineUserId(lineUserId);
 
         if (data) {
             state.hasApplied = true;
@@ -105,14 +79,14 @@ async function checkApplicationStatus(lineUserId) {
 }
 
 /**
- * Actions
+ * Global Handlers (attached to window for HTML compatibility)
  */
-function startLineLogin() {
+window.startLineLogin = () => {
     if (liff.isLoggedIn()) return;
     liff.login();
-}
+};
 
-function logoutLine() {
+window.logoutLine = () => {
     if (liff.isLoggedIn()) {
         if (liff.isInClient()) {
             window.alert('LINEアプリ内ではログアウトできません。');
@@ -121,37 +95,31 @@ function logoutLine() {
         liff.logout();
         window.location.reload();
     }
-}
+};
 
-async function logoutAdmin() {
-    if (window.supabaseClient) {
-        await window.supabaseClient.auth.signOut();
-        window.location.reload();
-    }
-}
+window.logoutAdmin = async () => {
+    await authApi.signOut();
+    window.location.reload();
+};
 
-function openStatusModal() {
+window.openStatusModal = () => {
     const modal = document.getElementById('statusModal');
     if (modal) {
         modal.style.display = 'flex';
         renderApplicantDetails();
     }
-}
+};
 
-function closeStatusModal() {
+window.closeStatusModal = () => {
     const modal = document.getElementById('statusModal');
     if (modal) modal.style.display = 'none';
-}
+};
 
-/**
- * Render Status Modal Content
- */
 function renderApplicantDetails() {
     const container = document.getElementById('applicantDetailsContent');
     if (!container || !state.applicantData) return;
 
     const d = state.applicantData;
-    // Basic rendering of details
     let statusColor = '#a1a1aa';
     if (d.status === '採用' || d.status === '合格') statusColor = '#00f2ff';
     if (d.status === '不採用' || d.status === '不合格') statusColor = '#ff4b4b';
@@ -174,16 +142,13 @@ function renderApplicantDetails() {
     `;
 }
 
-
-/**
- * Core Render Function (Matches dynamic_LP.html logic)
- */
 function renderUI() {
     const headerLeft = document.getElementById('header-left');
     const headerRight = document.getElementById('header-right');
     const ctaBtns = document.querySelectorAll('.btn-primary');
 
-    // 1. Header Left
+    if (!headerLeft || !headerRight) return;
+
     const logoHtml = '<div class="logo-brand">WE PLAY</div>';
 
     if (state.isLineLinked && state.lineProfile) {
@@ -205,11 +170,10 @@ function renderUI() {
         headerLeft.innerHTML = logoHtml;
     }
 
-    // 2. Header Right
     if (state.isAdminLoggedIn) {
         headerRight.innerHTML = `
                 <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
-                    <a href="admin/index.html" class="btn-login">
+                    <a href="admin/dashboard.html" class="btn-login">
                         <i data-lucide="layout-dashboard"></i><span>管理者ポータル</span>
                     </a>
                     <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #aaa;">
@@ -224,30 +188,26 @@ function renderUI() {
                 </a>`;
     }
 
-    // 3. CTA Buttons
     ctaBtns.forEach(btn => {
-        // Skip if inside modal / Skip unrelated buttons
         if (btn.closest('#statusModal')) return;
 
         if (state.hasApplied) {
             btn.textContent = '申し込み状況の確認';
-            btn.onclick = (e) => { e.preventDefault(); openStatusModal(); };
+            btn.onclick = (e) => { e.preventDefault(); window.openStatusModal(); };
             btn.href = "javascript:void(0)";
         } else if (state.isLineLinked) {
-            // Linked but not applied -> Go to Form
             btn.textContent = '参加申し込み';
-            btn.onclick = null; // Default link behavior
+            btn.onclick = null;
             btn.href = "register.html";
         } else {
-            // Not linked -> Show "参加申し込み" but trigger LINE Login
             btn.textContent = '参加申し込み';
             btn.onclick = (e) => {
                 e.preventDefault();
-                startLineLogin();
+                window.startLineLogin();
             };
             btn.href = "javascript:void(0)";
         }
     });
 
-    lucide.createIcons();
+    createIcons({ icons });
 }

@@ -10,33 +10,44 @@
    - **Region**: Tokyo (Japan) を推奨します。
 
 ## 2. データベース（テーブル）の作成
-プロジェクトが作成されたら、以下のファイルの内容を SQL Editor で実行してテーブルを作成します。
+プロジェクトが作成されたら、`supabase/migrations/` 配下の SQL ファイルを **ファイル名の番号順に** 実行してテーブルを作成します。
 
 1. 左サイドバーから **SQL Editor** アイコンをクリックします。
 2. 「New Query」をクリックします。
-3. 以下のファイルの SQL を **順番に** 実行してください。
+3. 以下の順序で SQL の内容をコピー＆ペーストし、実行してください。
 
-### 実行順序
+### 実行順序 (Migrations)
 
-1. **`supabase/schema.sql`**
+1. **`0001_schema.sql`**
    - 基盤となるテーブル（members, applicantsなど）を作成します。
+2. **`0002_update_applicants_contact_info.sql`**
+   - 連絡先情報の追加
+3. **`0003_update_applicants_gender.sql`**
+   - 性別カラムの追加
+4. **`0004_add_line_columns.sql`**
+   - LINE連携用カラムの追加
+5. **`0005_normalize_roles.sql`**
+   - 役職関連の正規化
+6. **`0006_referral_sources.sql`**
+   - 認知経路マスタの作成
+7. **`0007_update_members_registration.sql`**
+   - 会員登録フラグの追加
+8. **`0008_normalize_referral.sql`**
+   - 認知経路の正規化とマスタテーブル名の統一
+9. **`0009_fix_master_data.sql`**
+   - マスタデータの整合性確認と補完
+10. **`0010_add_applicant_management_features.sql`**
+    - 応募者管理機能（緊急連絡先、サポーター管理、コメント）の追加
 
-2. **`supabase/update_applicants.sql`**
-   - applicants テーブルに `phone`, `email` カラムなどを追加します。
+全てのクエリがエラーなく完了すれば、データベースの構築は完了です。
 
-3. **`supabase/update_applicants_gender.sql`**
-   - applicants テーブルに `gender` カラムを追加します。
+### 開発・検証用データ (Seeds)
+**注意**: 本番環境では実行しないでください。テスト環境やローカル開発でのみ使用します。
 
-4. **`supabase/normalize_roles.sql`**
-   - 役職マスタ (`roles`) の作成と、役職希望の中間テーブル (`applicant_role_preferences`) 作成。
-   - applicants テーブルに `assigned_role_id` (決定役職ID) を追加。
+- `supabase/seeds/seed_dummy_applicants_70.sql`: ダミーの応募者データ（70件）
+- `supabase/seeds/seed_dummy_members.sql`: ダミーの会員データ
 
-5. **`supabase/referral_sources.sql`**
-   - 認知経路マスタ (`referral_sources`) の作成。
-   - applicants テーブルに `referral_source_id` (認知経路ID) を追加。
-
-6. **`supabase/update_members_registration.sql`**
-   - members テーブルに `is_registered` カラムを追加。
+これらは必要に応じて SQL Editor で実行してください。
 
 ## 3. クライアントライブラリのセットアップ
 
@@ -63,8 +74,6 @@ window.supabaseClient = supabase;
 ```
 
 ## 4. データベース設計書
-
-本プロジェクトで使用されているデータベース（Supabase / PostgreSQL）のテーブル定義です。
 
 ### 1. `applicants` (応募者テーブル)
 Webフォームからの応募データを格納します。

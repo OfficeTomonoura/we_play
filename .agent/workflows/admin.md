@@ -25,14 +25,14 @@ description: Admin開発モードを起動し、広範囲な対象から編集�
 
 3. ユーザーの選択に応じて、必要なファイルのみを `view_file` で読み込みます。
    - **LP画面**: `index.html`, `assets/css/style.css`
-   - **ダッシュボード**: `admin/index.html`, `assets/js/admin.js`, `admin/components.js`
-   - **ログイン**: `admin/login.html`, `assets/js/supabase-client.js`
+   - **ダッシュボード**: `admin/index.html`, `assets/js/admin/admin.js`, `admin/components.js`
+   - **ログイン**: `admin/login.html`, `assets/js/lib/supabase-client.js`
    - **正会員登録**: `admin/member_registration.html`, `admin/components.js`
-   - **応募フォーム**: `register.html`, `assets/js/form.js`
+   - **応募フォーム**: `register.html`, `assets/js/form/form.js`
    - **LINE連携**: `admin/line_link.html`, `admin/manual_liff.html`
    - **応募者一覧**: `admin/applicants.html`, `admin/components.js`
    - **選抜者**: `admin/selected.html`, `admin/components.js`
-   - **参加者**: `admin/members.html`, `assets/js/members.js`, `admin/components.js`
+   - **参加者**: `admin/members.html`, `assets/js/admin/members.js`, `admin/components.js`
    - **協力者**: `admin/collaborators.html`, `admin/components.js`
    - **統計分析**: `admin/analysis.html`, `assets/js/chart.js` (もしあれば), `admin/components.js`
    - **LINE運用**: `admin/line.html`, `admin/components.js`

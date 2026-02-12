@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>We Play Admin - LINE連携・LIFF実装</title>
+    <title>LINE連携・LIFF実装マニュアル | We Play 管理システム</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         .table-definition {
             margin-bottom: 3rem;
@@ -54,76 +54,51 @@
 </head>
 
 <body>
-    <div class="admin-container">
-        <!-- Sidebar -->
-        <div id="app-sidebar"></div>
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="top-header">
-                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
-                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
-                        未来人財育成委員会 事業ポータル</h1>
-                </div>
-                <div class="user-profile">
-                    <div class="notifications">
-                        <i data-lucide="bell"></i>
-                        <span class="badge"></span>
-                    </div>
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
-                    </div>
-                </div>
-            </header>
+    <div id="app"></div>
 
-            <div class="content-wrapper">
-                <div class="welcome-banner">
-                    <h1>LINE連携・LIFF実装マニュアル</h1>
-                    <p>応募フォームとLINEアカウントを連携し、LINE User IDを取得するための実装ガイドです。</p>
-                </div>
+    <template id="page-template">
+        <section class="table-definition">
+            <h2><i data-lucide="book-open"></i> 1. 概要・目的</h2>
+            <p>
+                ユーザーが応募フォームから登録を行う際、同時にLINE公式アカウントとの連携（LINE User IDの取得）を行う手法について解説します。<br>
+                LIFF (LINE Front-end Framework) を使用することで、ユーザーは個別にIDを入力することなく、安全かつ確実にシステムと連携できます。
+            </p>
+            <div
+                style="background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 0.5rem; font-weight: 700;">
+                    期待される効果</h3>
+                <ul
+                    style="list-style: disc; margin-left: 1.5rem; color: var(--text-main); font-size: 0.95rem; line-height: 1.6;">
+                    <li>応募と同時に <strong>LINE User ID</strong> がデータベースの <code>line_user_id</code> カラムに保存されます。</li>
+                    <li>「同姓同名」の問題を回避し、確実に本人に対してLINEメッセージを送信できます。</li>
+                    <li>将来的に、このIDを使って合否通知などの個別メッセージや一斉配信が可能になります。</li>
+                </ul>
+            </div>
+        </section>
 
-                <section class="table-definition">
-                    <h2><i data-lucide="book-open"></i> 1. 概要・目的</h2>
-                    <p>
-                        ユーザーが応募フォームから登録を行う際、同時にLINE公式アカウントとの連携（LINE User IDの取得）を行う手法について解説します。<br>
-                        LIFF (LINE Front-end Framework) を使用することで、ユーザーは個別にIDを入力することなく、安全かつ確実にシステムと連携できます。
-                    </p>
-                    <div
-                        style="background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-                        <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 0.5rem; font-weight: 700;">
-                            期待される効果</h3>
-                        <ul
-                            style="list-style: disc; margin-left: 1.5rem; color: var(--text-main); font-size: 0.95rem; line-height: 1.6;">
-                            <li>応募と同時に <strong>LINE User ID</strong> がデータベースの <code>line_user_id</code> カラムに保存されます。</li>
-                            <li>「同姓同名」の問題を回避し、確実に本人に対してLINEメッセージを送信できます。</li>
-                            <li>将来的に、このIDを使って合否通知などの個別メッセージや一斉配信が可能になります。</li>
-                        </ul>
-                    </div>
-                </section>
+        <section class="table-definition">
+            <h2><i data-lucide="settings"></i> 2. LINE Developers設定</h2>
+            <p>Messaging APIチャネルとは別に、<strong>LINEログインチャネル</strong>を作成する必要があります。</p>
 
-                <section class="table-definition">
-                    <h2><i data-lucide="settings"></i> 2. LINE Developers設定</h2>
-                    <p>Messaging APIチャネルとは別に、<strong>LINEログインチャネル</strong>を作成する必要があります。</p>
+            <h3 style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">手順</h3>
+            <ol style="margin-left: 1.5rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.8;">
+                <li><a href="https://developers.line.biz/console/" target="_blank" style="color: var(--primary);">LINE
+                        Developers Console</a> で「新規チャネル作成」を選択。</li>
+                <li>チャネルタイプとして <strong>LINEログイン</strong> を選択（Messaging APIではありません）。</li>
+                <li>作成後、<strong>LIFF</strong> タブからLIFFアプリを追加。</li>
+                <li><strong>サイズ</strong>: Full を選択。</li>
+                <li><strong>エンドポイントURL</strong>: 本番環境の応募フォームURL（例: <code>https://.../register.html</code>）。</li>
+                <li><strong>Scope</strong>: <code>openid</code> と <code>profile</code> にチェック。</li>
+                <li>保存して発行された <strong>LIFF ID</strong> を控えます。</li>
+            </ol>
+        </section>
 
-                    <h3 style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">手順</h3>
-                    <ol style="margin-left: 1.5rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.8;">
-                        <li><a href="https://developers.line.biz/console/" target="_blank"
-                                style="color: var(--primary);">LINE Developers Console</a> で「新規チャネル作成」を選択。</li>
-                        <li>チャネルタイプとして <strong>LINEログイン</strong> を選択（Messaging APIではありません）。</li>
-                        <li>作成後、<strong>LIFF</strong> タブからLIFFアプリを追加。</li>
-                        <li><strong>サイズ</strong>: Full を選択。</li>
-                        <li><strong>エンドポイントURL</strong>: 本番環境の応募フォームURL（例: <code>https://.../register.html</code>）。</li>
-                        <li><strong>Scope</strong>: <code>openid</code> と <code>profile</code> にチェック。</li>
-                        <li>保存して発行された <strong>LIFF ID</strong> を控えます。</li>
-                    </ol>
-                </section>
+        <section class="table-definition">
+            <h2><i data-lucide="code"></i> 3. 実装コード</h2>
+            <p><code>register.html</code> に実装されたコードの解説です。</p>
 
-                <section class="table-definition">
-                    <h2><i data-lucide="code"></i> 3. 実装コード</h2>
-                    <p><code>register.html</code> に実装されたコードの解説です。</p>
-
-                    <h3 style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">HTML修正</h3>
-                    <pre><code>&lt;!-- LIFF SDKの読み込み (Head内) --&gt;
+            <h3 style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">HTML修正</h3>
+            <pre><code>&lt;!-- LIFF SDKの読み込み (Head内) --&gt;
 &lt;script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"&gt;&lt;/script&gt;
 
 &lt;!-- フォーム内の隠しフィールド --&gt;
@@ -133,8 +108,8 @@
     ...
 &lt;/form&gt;</code></pre>
 
-                    <h3 style="color: white; font-size: 1.1rem; margin: 1.5rem 0 0.5rem;">JavaScript初期化処理</h3>
-                    <pre><code>document.addEventListener('DOMContentLoaded', async () => {
+            <h3 style="color: white; font-size: 1.1rem; margin: 1.5rem 0 0.5rem;">JavaScript初期化処理</h3>
+            <pre><code>document.addEventListener('DOMContentLoaded', async () => {
     const liffId = "2009015373-QGkjtgDJ"; // 発行したID
     await liff.init({ liffId: liffId });
 
@@ -146,18 +121,11 @@
         // liff.login();
     }
 });</code></pre>
-                </section>
-            </div>
-        </main>
-    </div>
+        </section>
+    </template>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase-client.js"></script>
-    <script src="components.js"></script>
-    
-    <script>
-        lucide.createIcons();
-    </script>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/admin/manual_liff/main.js"></script>
 </body>
 
 </html>

@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css"> <!-- Reuse main form styles -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         .login-box {
@@ -93,130 +93,8 @@
         </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase-client.js"></script>
-    <script>
-        lucide.createIcons();
-
-        // LIFF ID (From manual_liff.html)
-        const LIFF_ID = "2009015373-QGkjtgDJ";
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            // 1. Check Auth Session first
-            if (!window.supabaseClient) {
-                alert('Database connection failed.');
-                return;
-            }
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (!session) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // 2. Initialize LIFF
-            try {
-                await liff.init({ liffId: LIFF_ID });
-
-                // [NEW] Auto-detect login and process link
-                if (liff.isLoggedIn()) {
-                    await processLineLink();
-                }
-            } catch (err) {
-                console.error('LIFF Init failed:', err);
-                alert('LIFFの初期化に失敗しました。');
-            }
-        });
-
-        // Refactored linking logic into a standalone function
-        async function processLineLink() {
-            const btn = document.getElementById('linkBtn');
-            const loadingArea = document.getElementById('loadingArea');
-            const actionArea = document.getElementById('actionArea');
-
-            // Show loading UI
-            if (actionArea) actionArea.style.display = 'none';
-            if (loadingArea) {
-                loadingArea.style.display = 'block';
-                loadingArea.innerHTML = '<p>LINEアカウントを確認中...</p>';
-            }
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '処理中...';
-            }
-
-            try {
-                const profile = await liff.getProfile();
-                const lineUserId = profile.userId;
-
-                const { data: { session } } = await window.supabaseClient.auth.getSession();
-                if (!session) {
-                    // If session is lost (rare but possible), redirect to login
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                console.log('Linking LINE ID:', lineUserId, 'to Auth User:', session.user.id);
-
-                // Upsert into members table
-                const { error } = await window.supabaseClient
-                    .from('members')
-                    .upsert({
-                        auth_user_id: session.user.id,
-                        email: session.user.email,
-                        line_user_id: lineUserId,
-                        // Don't overwrite is_registered if it exists, but upsert might reset it if we don't include it?
-                        // Actually, we should use UPDATE if the record exists? 
-                        // But strictly speaking, if we use upsert with specific columns, it updates/inserts. 
-                        // If we omit other columns, they keep their values on UPDATE, or default on INSERT.
-                        // Wait, Supabase UPSERT needs all Not Null columns on Insert. 
-                        // Ideally we check if it exists first.
-                    }, { onConflict: 'auth_user_id' });
-
-                // To be safe against overwriting 'is_registered' (though it defaults to false), 
-                // let's do a smart update. 
-                // Actually, the previous code was using upsert effectively. 
-                // If the record exists, it updates provided fields.
-
-                if (error) throw error;
-
-                // Success
-                if (loadingArea) loadingArea.innerHTML = '<p>連携成功！移動します...</p>';
-                setTimeout(() => {
-                    window.location.href = 'member_registration.html';
-                }, 1000);
-
-            } catch (err) {
-                console.error('Link Error:', err);
-                alert('連携処理に失敗しました: ' + err.message);
-                // Restore UI if failed (so they can try again or logout)
-                if (actionArea) actionArea.style.display = 'block';
-                if (loadingArea) loadingArea.style.display = 'none';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = 'LINEアカウントと連携する';
-                }
-            }
-        }
-
-        document.getElementById('linkBtn').addEventListener('click', async () => {
-            // Manual click logic (triggers login if needed)
-            if (!liff.isLoggedIn()) {
-                liff.login({ redirectUri: window.location.href });
-                return;
-            }
-            await processLineLink();
-        });
-
-        async function handleLogout() {
-            if (liff.isLoggedIn()) {
-                liff.logout();
-            }
-            if (window.supabaseClient) {
-                await window.supabaseClient.auth.signOut();
-            }
-            window.location.href = 'login.html';
-        }
-    </script>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/admin/line_link/main.js"></script>
 </body>
 
 </html>

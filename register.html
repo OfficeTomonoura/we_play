@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&family=Josefin+Sans:wght@300;700&display=swap"
         rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         /* --- MOVED / MERGED CSS FROM draft_form24_4.html --- */
         body {
@@ -810,172 +810,12 @@
             </div>
             <h2>MISSION START</h2>
             <p>エントリー完了。確認メールを送信しました。</p>
-            <button type="button" class="close-btn" onclick="location.reload()">CLOSE</button>
+            <button type="button" class="close-btn" onclick="window.reloadPage()">CLOSE</button>
         </div>
     </div>
 
-    <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="assets/js/supabase-client.js"></script>
-    <script src="assets/js/form.js"></script>
-    <script>
-        lucide.createIcons();
-
-        // LIFF Initialization & Master Data Load (Preserved Logic)
-        document.addEventListener('DOMContentLoaded', async () => {
-            const liffId = "2009015373-QGkjtgDJ";
-            try {
-                await liff.init({ liffId: liffId });
-
-                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-
-                if (liff.isLoggedIn()) {
-                    setLiffData();
-                    loadMasterData();
-                } else if (!isLocal) {
-                    liff.login();
-                } else {
-                    loadMasterData();
-                }
-            } catch (err) {
-                console.warn('LIFF Initialization failed:', err);
-                if (window.location.hostname === 'localhost') {
-                    loadMasterData();
-                }
-            }
-        });
-
-        async function loadMasterData() {
-            if (!window.supabaseClient) return;
-            try {
-                // Load Schools
-                const { data: schools, error: schoolErr } = await window.supabaseClient
-                    .from('master_school')
-                    .select('id, name')
-                    .order('sort_order', { ascending: true });
-
-                if (schoolErr) throw schoolErr;
-                const schoolSelect = document.getElementById('school');
-                if (schoolSelect) {
-                    let html = '<option value="" disabled selected>選択してください</option>';
-                    schools.forEach(s => {
-                        html += `<option value="${s.id}">${s.name}</option>`;
-                    });
-                    schoolSelect.innerHTML = html;
-                }
-
-                // Load Roles
-                const { data: roles, error: roleError } = await window.supabaseClient
-                    .from('master_role')
-                    .select('id, name')
-                    .order('sort_order', { ascending: true });
-
-                if (roleError) throw roleError;
-
-                const roleSelects = document.querySelectorAll('.role-select');
-                roleSelects.forEach(select => {
-                    let html = '<option value="" disabled selected>選択してください</option>';
-                    roles.forEach(role => {
-                        html += `<option value="${role.id}">${role.name}</option>`;
-                    });
-                    select.innerHTML = html;
-                });
-
-                // Add mutual exclusion logic
-                const updateRoleOptions = () => {
-                    const selectedValues = Array.from(roleSelects).map(s => s.value).filter(v => v);
-
-                    roleSelects.forEach(select => {
-                        const currentValue = select.value;
-                        Array.from(select.options).forEach(option => {
-                            if (!option.value) return; // Skip placeholder
-                            option.disabled = selectedValues.includes(option.value) && option.value !== currentValue;
-                        });
-                    });
-                };
-
-                roleSelects.forEach(select => {
-                    select.addEventListener('change', updateRoleOptions);
-                });
-
-                // Load Referral Sources
-                const { data: referrals, error: refError } = await window.supabaseClient
-                    .from('master_referral_source')
-                    .select('id, name')
-                    .order('sort_order', { ascending: true });
-
-                if (refError) throw refError;
-
-                const refSelect = document.getElementById('referral');
-                if (refSelect) {
-                    let html = '<option value="" disabled selected>選択してください</option>';
-                    referrals.forEach(ref => {
-                        html += `<option value="${ref.id}" data-name="${ref.name}">${ref.name}</option>`;
-                    });
-                    refSelect.innerHTML = html;
-
-                    refSelect.addEventListener('change', () => {
-                        const selectedOption = refSelect.options[refSelect.selectedIndex];
-                        const referralOtherGroup = document.getElementById('referral-other-group');
-                        const referralOtherInput = document.getElementById('referral-other');
-                        const referralOtherBadge = document.getElementById('referral-other-badge');
-
-                        if (selectedOption && selectedOption.getAttribute('data-name') === 'その他') {
-                            if (referralOtherGroup) referralOtherGroup.style.display = 'block';
-                            if (referralOtherInput) referralOtherInput.required = true;
-                            if (referralOtherBadge) referralOtherBadge.style.display = 'inline-block';
-                        } else {
-                            if (referralOtherGroup) referralOtherGroup.style.display = 'none';
-                            if (referralOtherInput) {
-                                referralOtherInput.required = false;
-                                referralOtherInput.value = '';
-                            }
-                            if (referralOtherBadge) referralOtherBadge.style.display = 'none';
-                        }
-                    });
-                }
-            } catch (err) {
-                console.error('Failed to load master data:', err);
-                alert('マスタデータの読み込みに失敗しました。');
-            }
-        }
-
-        async function setLiffData() {
-            try {
-                const profile = await liff.getProfile();
-                const userIdField = document.getElementById('line_user_id');
-                const nameField = document.getElementById('line_display_name');
-                const picField = document.getElementById('line_picture_url');
-
-                if (userIdField) userIdField.value = profile.userId;
-                if (nameField) nameField.value = profile.displayName;
-                if (picField) picField.value = profile.pictureUrl;
-
-                await checkRedirect(profile.userId);
-            } catch (err) {
-                console.error('Error getting profile:', err);
-            }
-        }
-
-        async function checkRedirect(userId) {
-            if (!window.supabaseClient) return;
-            try {
-                const { data, error } = await window.supabaseClient
-                    .from('applicants')
-                    .select('id')
-                    .eq('line_user_id', userId)
-                    .maybeSingle();
-
-                if (data) {
-                    // Already applied
-                    window.location.href = 'index.html';
-                }
-            } catch (e) {
-                console.warn('Check redirect failed', e);
-            }
-        }
-    </script>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/public/register/main.js"></script>
 </body>
 
 </html>

@@ -11,11 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+
     <style>
         .line-composer {
             display: grid;
@@ -657,6 +653,7 @@
             border-radius: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             line-height: 1.4;
@@ -665,339 +662,309 @@
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <div id="app-sidebar"></div>
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="top-header">
-                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
-                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
-                        未来人財育成委員会 事業ポータル</h1>
-                </div>
-                <div class="user-profile">
-                    <div class="notifications">
-                        <i data-lucide="bell"></i>
-                        <span class="badge"></span>
-                    </div>
-                    <div class="avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
-                    </div>
-                </div>
-            </header>
+    <div id="app"></div>
 
-            <div class="content-wrapper">
-                <div class="welcome-banner">
-                    <h1>LINE公式運用</h1>
-                    <p>対外向け・対内向けのLINEメッセージを作成・配信します。</p>
-                </div>
+    <template id="page-template">
 
-                <div class="line-composer">
-                    <!-- Composer Form -->
-                    <div class="composer-form">
-                        <h2
-                            style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-main);">
-                            メッセージ作成</h2>
+        <div class="line-composer">
+            <!-- Composer Form -->
+            <div class="composer-form">
+                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-main);">
+                    メッセージ作成</h2>
 
-                        <!-- Target Selection -->
-                        <div class="form-group">
-                            <label>配信対象</label>
-                            <div class="radio-group">
-                                <div class="radio-option">
-                                    <input type="radio" id="target-external" name="target" value="external" checked>
-                                    <label for="target-external">
-                                        <i data-lucide="users"
-                                            style="width: 20px; height: 20px; margin-bottom: 0.3rem;"></i>
-                                        <div>対外向け</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem;">
-                                            応募者・選抜者</div>
-                                    </label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" id="target-internal" name="target" value="internal">
-                                    <label for="target-internal">
-                                        <i data-lucide="briefcase"
-                                            style="width: 20px; height: 20px; margin-bottom: 0.3rem;"></i>
-                                        <div>対内向け</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem;">正会員
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
+                <!-- Target Selection -->
+                <div class="form-group">
+                    <label>配信対象</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="target-external" name="target" value="external" checked>
+                            <label for="target-external">
+                                <i data-lucide="users" style="width: 20px; height: 20px; margin-bottom: 0.3rem;"></i>
+                                <div>対外向け</div>
+                                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem;">
+                                    応募者・選抜者</div>
+                            </label>
                         </div>
-
-                        <!-- Date Time -->
-                        <div class="form-group">
-                            <label>送信日時指定 <span style="color: var(--accent); margin-left: 0.3rem;">*必須</span></label>
-                            <div style="display: flex; gap: 1rem; margin-bottom: 0.8rem;">
-                                <div class="datetime-input-wrapper" style="flex: 2;">
-                                    <input type="text" id="sendDate" placeholder="日付を選択" required>
-                                    <i data-lucide="calendar"></i>
+                        <div class="radio-option">
+                            <input type="radio" id="target-internal" name="target" value="internal">
+                            <label for="target-internal">
+                                <i data-lucide="briefcase"
+                                    style="width: 20px; height: 20px; margin-bottom: 0.3rem;"></i>
+                                <div>対内向け</div>
+                                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem;">正会員
                                 </div>
-                                <div class="datetime-input-wrapper" style="flex: 1;">
-                                    <input type="text" id="sendTime" placeholder="時間" required>
-                                    <i data-lucide="clock"></i>
-                                </div>
-                            </div>
-
-                            <div id="dateTimeNotice"
-                                style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-                                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
-                                    <i data-lucide="info"
-                                        style="width: 14px; height: 14px; margin-top: 0.2rem; color: var(--primary);"></i>
-                                    <div>
-                                        配信可能時間: 平日 09:30-20:30<br>
-                                        <span
-                                            style="color: var(--accent); font-weight: 600;">※土日祝日、および平日夜間・早朝は配信できません。</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="dateTimeError"
-                                style="font-size: 0.8rem; color: #ff4d4d; margin-top: 0.5rem; display: none; align-items: center; gap: 0.3rem; padding-left: 0.5rem;">
-                                <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
-                                <span>指定できない日時が選択されています</span>
-                            </div>
-                        </div>
-
-                        <!-- Title -->
-                        <div class="form-group">
-                            <label>タイトル</label>
-                            <input type="text" id="messageTitle" placeholder="例: 第2回ワークショップのご案内" maxlength="100">
-                            <div class="char-count"><span id="titleCount">0</span> / 100</div>
-                        </div>
-
-                        <!-- Message Body -->
-                        <div class="form-group">
-                            <label>本文</label>
-                            <textarea id="messageBody"
-                                placeholder="メッセージ本文を入力してください...&#10;&#10;例:&#10;こんにちは！We Play事務局です。&#10;&#10;第2回ワークショップを以下の日程で開催します。&#10;日時: 2026年2月15日(土) 14:00-17:00&#10;場所: 福山市民センター&#10;&#10;ご参加お待ちしております！"
-                                maxlength="5000"></textarea>
-                            <div class="char-count"><span id="bodyCount">0</span> / 5000</div>
-                        </div>
-
-                        <!-- Send Button -->
-                        <button class="send-button" onclick="sendMessage()">
-                            <i data-lucide="check-circle"></i>
-                            メッセージ承認依頼
-                        </button>
-                    </div>
-
-                    <!-- LINE Preview -->
-                    <div class="line-preview">
-                        <div class="preview-container">
-                            <div class="preview-header">
-                                <i data-lucide="smartphone"></i>
-                                <h3>LINEプレビュー</h3>
-                            </div>
-
-                            <div class="line-message-bubble">
-                                <!-- Flex Header -->
-                                <div class="flex-header">
-                                    <div class="flex-header-content">
-                                        <div class="flex-header-icon">
-                                            <i data-lucide="megaphone"
-                                                style="width: 24px; height: 24px; color: white;"></i>
-                                        </div>
-                                        <div class="flex-header-title">We Play 事務局</div>
-                                    </div>
-                                </div>
-
-                                <!-- Flex Body -->
-                                <div class="flex-body">
-                                    <div class="message-title" id="previewTitle">タイトルがここに表示されます</div>
-                                    <div class="message-body" id="previewBody">本文がここに表示されます</div>
-                                </div>
-
-                                <!-- Flex Footer -->
-                                <div class="flex-footer">
-                                    <i data-lucide="calendar"></i>
-                                    <span id="previewDate">--</span>
-                                    <span style="margin: 0 0.3rem;">|</span>
-                                    <i data-lucide="clock"></i>
-                                    <span id="previewTime">--:--</span>
-                                </div>
-                            </div>
-
-                            <div class="message-timestamp">
-                                配信予定
-                            </div>
-
-                            <div
-                                style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px; font-size: 0.85rem; color: var(--text-dim);">
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                    <i data-lucide="info" style="width: 16px; height: 16px;"></i>
-                                    <span style="font-weight: 600;">配信先情報</span>
-                                </div>
-                                <div id="recipientInfo">対外向け: 応募者・選抜者</div>
-                            </div>
+                            </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- Revision Needed Section -->
-                <section class="management-section">
-                    <h2><i data-lucide="alert-circle" style="color: #ff4d4d;"></i> 修正待ちメッセージ</h2>
-                    <div class="management-card">
-                        <table class="mgmt-table">
-                            <thead>
-                                <tr>
-                                    <th>タイトル</th>
-                                    <th>配信対象</th>
-                                    <th>作成者</th>
-                                    <th>修正依頼者</th>
-                                    <th>ステータス</th>
-                                    <th style="text-align: center;">コメント</th>
-                                    <th style="text-align: right;">アクション</th>
-                                </tr>
-                            </thead>
-                            <tbody id="revisionNeededBody">
-                                <tr>
-                                    <td colspan="7" style="text-align:center; opacity:0.5;">データがありません</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- Date Time -->
+                <div class="form-group">
+                    <label>送信日時指定 <span style="color: var(--accent); margin-left: 0.3rem;">*必須</span></label>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 0.8rem;">
+                        <div class="datetime-input-wrapper" style="flex: 2;">
+                            <input type="text" id="sendDate" placeholder="日付を選択" required>
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <div class="datetime-input-wrapper" style="flex: 1;">
+                            <input type="text" id="sendTime" placeholder="時間" required>
+                            <i data-lucide="clock"></i>
+                        </div>
                     </div>
-                </section>
 
-                <!-- Approval Waiting Section -->
-                <section class="management-section">
-                    <h2><i data-lucide="clock" style="color: #ffcc00;"></i> 承認待ちメッセージ</h2>
-                    <div class="management-card">
-                        <table class="mgmt-table">
-                            <thead>
-                                <tr>
-                                    <th>タイトル</th>
-                                    <th>配信対象</th>
-                                    <th>送信予定日</th>
-                                    <th>予定時間</th>
-                                    <th>作成者</th>
-                                    <th>作成日</th>
-                                    <th>ステータス</th>
-                                    <th style="text-align: right;">アクション</th>
-                                </tr>
-                            </thead>
-                            <tbody id="waitingApprovalBody">
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>第1回交流会のお知らせ</td>
-                                    <td>対外向け</td>
-                                    <td>2026/02/10 10:00</td>
-                                    <td><span class="badge-status badge-waiting">承認待ち</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="dateTimeNotice"
+                        style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                            <i data-lucide="info"
+                                style="width: 14px; height: 14px; margin-top: 0.2rem; color: var(--primary);"></i>
+                            <div>
+                                配信可能時間: 平日 09:30-20:30<br>
+                                <span style="color: var(--accent); font-weight: 600;">※土日祝日、および平日夜間・早朝は配信できません。</span>
+                            </div>
+                        </div>
                     </div>
-                </section>
 
-                <!-- Sending Waiting Section -->
-                <section class="management-section">
-                    <h2><i data-lucide="calendar" style="color: var(--primary);"></i> 送信待ちメッセージ</h2>
-                    <div class="management-card">
-                        <table class="mgmt-table">
-                            <thead>
-                                <tr>
-                                    <th>タイトル</th>
-                                    <th>配信対象</th>
-                                    <th>送信予定日</th>
-                                    <th>予定時間</th>
-                                    <th>承認者</th>
-                                    <th>承認日</th>
-                                    <th>承認時間</th>
-                                    <th>ステータス</th>
-                                    <th style="text-align: right;">アクション</th>
-                                </tr>
-                            </thead>
-                            <tbody id="scheduledMessageBody">
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>【重要】最終選考の結果について</td>
-                                    <td>対外向け</td>
-                                    <td>2026/02/05 09:30</td>
-                                    <td><span class="badge-status badge-scheduled">送信待ち</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="dateTimeError"
+                        style="font-size: 0.8rem; color: #ff4d4d; margin-top: 0.5rem; display: none; align-items: center; gap: 0.3rem; padding-left: 0.5rem;">
+                        <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+                        <span>指定できない日時が選択されています</span>
                     </div>
-                </section>
+                </div>
 
-                <!-- Sent Section -->
-                <section class="management-section" style="margin-bottom: 3rem;">
-                    <h2><i data-lucide="check-check" style="color: #00ff7a;"></i> 送信済みメッセージ</h2>
-                    <div class="management-card">
-                        <table class="mgmt-table">
-                            <thead>
-                                <tr>
-                                    <th>タイトル</th>
-                                    <th>配信対象</th>
-                                    <th>送信完了日</th>
-                                    <th>完了時間</th>
-                                    <th>ステータス</th>
-                                    <th style="text-align: right;">アクション</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sentMessageBody">
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>事業ポータル公開のお知らせ</td>
-                                    <td>対内向け</td>
-                                    <td>2026/01/25 18:00</td>
-                                    <td><span class="badge-status badge-sent">送信済み</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                <!-- Title -->
+                <div class="form-group">
+                    <label>タイトル</label>
+                    <input type="text" id="messageTitle" placeholder="例: 第2回ワークショップのご案内" maxlength="100">
+                    <div class="char-count"><span id="titleCount">0</span> / 100</div>
+                </div>
 
-                <!-- Received Messages Section -->
-                <section class="management-section" style="margin-bottom: 3rem;">
-                    <h2><i data-lucide="inbox" style="color: #00f2ff;"></i> 受信メッセージ一覧</h2>
-                    <div class="management-card">
-                        <table class="mgmt-table">
-                            <thead>
-                                <tr>
-                                    <th>LINE User ID</th>
-                                    <th>メッセージ内容</th>
-                                    <th>受信日時</th>
-                                    <th style="text-align: right;">アクション</th>
-                                </tr>
-                            </thead>
-                            <tbody id="receivedMessageBody">
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>U1234567890abcdef1234567890abcdef</td>
-                                    <td>次回のワークショップに参加したいのですが、持ち物はありますか？</td>
-                                    <td>2026/01/29 14:30</td>
-                                    <td style="text-align: right;">
-                                        <button class="action-btn"><i data-lucide="message-square"></i></button>
-                                    </td>
-                                </tr>
-                                <!-- Row 2 -->
-                                <tr>
-                                    <td>U0987654321fedcba0987654321fedcba</td>
-                                    <td>ありがとうございます！楽しみにしています。</td>
-                                    <td>2026/01/29 10:15</td>
-                                    <td style="text-align: right;">
-                                        <button class="action-btn"><i data-lucide="message-square"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                <!-- Message Body -->
+                <div class="form-group">
+                    <label>本文</label>
+                    <textarea id="messageBody"
+                        placeholder="メッセージ本文を入力してください...&#10;&#10;例:&#10;こんにちは！We Play事務局です。&#10;&#10;第2回ワークショップを以下の日程で開催します。&#10;日時: 2026年2月15日(土) 14:00-17:00&#10;場所: 福山市民センター&#10;&#10;ご参加お待ちしております！"
+                        maxlength="5000"></textarea>
+                    <div class="char-count"><span id="bodyCount">0</span> / 5000</div>
+                </div>
+
+                <!-- Send Button -->
+                <button class="send-button" onclick="sendMessage()">
+                    <i data-lucide="check-circle"></i>
+                    メッセージ承認依頼
+                </button>
             </div>
-        </main>
-    </div>
+
+            <!-- LINE Preview -->
+            <div class="line-preview">
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <i data-lucide="smartphone"></i>
+                        <h3>LINEプレビュー</h3>
+                    </div>
+
+                    <div class="line-message-bubble">
+                        <!-- Flex Header -->
+                        <div class="flex-header">
+                            <div class="flex-header-content">
+                                <div class="flex-header-icon">
+                                    <i data-lucide="megaphone" style="width: 24px; height: 24px; color: white;"></i>
+                                </div>
+                                <div class="flex-header-title">We Play 事務局</div>
+                            </div>
+                        </div>
+
+                        <!-- Flex Body -->
+                        <div class="flex-body">
+                            <div class="message-title" id="previewTitle">タイトルがここに表示されます</div>
+                            <div class="message-body" id="previewBody">本文がここに表示されます</div>
+                        </div>
+
+                        <!-- Flex Footer -->
+                        <div class="flex-footer">
+                            <i data-lucide="calendar"></i>
+                            <span id="previewDate">--</span>
+                            <span style="margin: 0 0.3rem;">|</span>
+                            <i data-lucide="clock"></i>
+                            <span id="previewTime">--:--</span>
+                        </div>
+                    </div>
+
+                    <div class="message-timestamp">
+                        配信予定
+                    </div>
+
+                    <div
+                        style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px; font-size: 0.85rem; color: var(--text-dim);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                            <span style="font-weight: 600;">配信先情報</span>
+                        </div>
+                        <div id="recipientInfo">対外向け: 応募者・選抜者</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revision Needed Section -->
+        <section class="management-section">
+            <h2><i data-lucide="alert-circle" style="color: #ff4d4d;"></i> 修正待ちメッセージ</h2>
+            <div class="management-card">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>タイトル</th>
+                            <th>配信対象</th>
+                            <th>作成者</th>
+                            <th>修正依頼者</th>
+                            <th>ステータス</th>
+                            <th style="text-align: center;">コメント</th>
+                            <th style="text-align: right;">アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="revisionNeededBody">
+                        <tr>
+                            <td colspan="7" style="text-align:center; opacity:0.5;">データがありません</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Approval Waiting Section -->
+        <section class="management-section">
+            <h2><i data-lucide="clock" style="color: #ffcc00;"></i> 承認待ちメッセージ</h2>
+            <div class="management-card">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>タイトル</th>
+                            <th>配信対象</th>
+                            <th>送信予定日</th>
+                            <th>予定時間</th>
+                            <th>作成者</th>
+                            <th>作成日</th>
+                            <th>ステータス</th>
+                            <th style="text-align: right;">アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="waitingApprovalBody">
+                        <!-- Row 1 -->
+                        <tr>
+                            <td>第1回交流会のお知らせ</td>
+                            <td>対外向け</td>
+                            <td>2026/02/10 10:00</td>
+                            <td><span class="badge-status badge-waiting">承認待ち</span></td>
+                            <td style="text-align: right;">
+                                <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sending Waiting Section -->
+        <section class="management-section">
+            <h2><i data-lucide="calendar" style="color: var(--primary);"></i> 送信待ちメッセージ</h2>
+            <div class="management-card">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>タイトル</th>
+                            <th>配信対象</th>
+                            <th>送信予定日</th>
+                            <th>予定時間</th>
+                            <th>承認者</th>
+                            <th>承認日</th>
+                            <th>承認時間</th>
+                            <th>ステータス</th>
+                            <th style="text-align: right;">アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduledMessageBody">
+                        <!-- Row 1 -->
+                        <tr>
+                            <td>【重要】最終選考の結果について</td>
+                            <td>対外向け</td>
+                            <td>2026/02/05 09:30</td>
+                            <td><span class="badge-status badge-scheduled">送信待ち</span></td>
+                            <td style="text-align: right;">
+                                <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sent Section -->
+        <section class="management-section" style="margin-bottom: 3rem;">
+            <h2><i data-lucide="check-check" style="color: #00ff7a;"></i> 送信済みメッセージ</h2>
+            <div class="management-card">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>タイトル</th>
+                            <th>配信対象</th>
+                            <th>送信完了日</th>
+                            <th>完了時間</th>
+                            <th>ステータス</th>
+                            <th style="text-align: right;">アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sentMessageBody">
+                        <!-- Row 1 -->
+                        <tr>
+                            <td>事業ポータル公開のお知らせ</td>
+                            <td>対内向け</td>
+                            <td>2026/01/25 18:00</td>
+                            <td><span class="badge-status badge-sent">送信済み</span></td>
+                            <td style="text-align: right;">
+                                <button class="action-btn"><i data-lucide="more-vertical"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Received Messages Section -->
+        <section class="management-section" style="margin-bottom: 3rem;">
+            <h2><i data-lucide="inbox" style="color: #00f2ff;"></i> 受信メッセージ一覧</h2>
+            <div class="management-card">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>LINE User ID</th>
+                            <th>メッセージ内容</th>
+                            <th>受信日時</th>
+                            <th style="text-align: right;">アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receivedMessageBody">
+                        <!-- Row 1 -->
+                        <tr>
+                            <td>U1234567890abcdef1234567890abcdef</td>
+                            <td>次回のワークショップに参加したいのですが、持ち物はありますか？</td>
+                            <td>2026/01/29 14:30</td>
+                            <td style="text-align: right;">
+                                <button class="action-btn"><i data-lucide="message-square"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr>
+                            <td>U0987654321fedcba0987654321fedcba</td>
+                            <td>ありがとうございます！楽しみにしています。</td>
+                            <td>2026/01/29 10:15</td>
+                            <td style="text-align: right;">
+                                <button class="action-btn"><i data-lucide="message-square"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </template>
 
     <!-- Message Detail Modal -->
     <div id="messageDetailModal" class="modal-overlay">
@@ -1238,862 +1205,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase-client.js"></script>
-    <script src="components.js"></script>
-    
-    <script>
-        lucide.createIcons();
-
-        // Update preview in real-time
-        const titleInput = document.getElementById('messageTitle');
-        const bodyInput = document.getElementById('messageBody');
-        const previewTitle = document.getElementById('previewTitle');
-        const previewBody = document.getElementById('previewBody');
-        const previewTime = document.getElementById('previewTime');
-        const previewDate = document.getElementById('previewDate');
-        const titleCount = document.getElementById('titleCount');
-        const bodyCount = document.getElementById('bodyCount');
-        const recipientInfo = document.getElementById('recipientInfo');
-        const dateInput = document.getElementById('sendDate');
-        const timeInput = document.getElementById('sendTime');
-        const dateTimeError = document.getElementById('dateTimeError');
-
-        // 2026 Japanese Holidays
-        const HOLIDAYS_2026 = [
-            '2026-01-01', // 元日
-            '2026-01-12', // 成人の日
-            '2026-02-11', // 建国記念の日
-            '2026-02-23', // 天皇誕生日
-            '2026-03-20', // 春分の日
-            '2026-03-21', // 振替休日 (春分の日が土曜のため振替なしの場合もあるが、一般的なカレンダーに準拠)
-            '2026-04-29', // 昭和の日
-            '2026-05-03', // 憲法記念日
-            '2026-05-04', // みどりの日
-            '2026-05-05', // こどもの日
-            '2026-05-06', // 振替休日
-            '2026-07-20', // 海の日
-            '2026-08-11', // 山の日
-            '2026-09-21', // 敬老の日
-            '2026-09-22', // 国民の休日
-            '2026-09-23', // 秋分の日
-            '2026-10-12', // スポーツの日
-            '2026-11-03', // 文化の日
-            '2026-11-23', // 勤労感謝の日
-        ];
-
-        function isJapaneseHoliday(date) {
-            const dateStr = date.getFullYear() + '-' +
-                String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                String(date.getDate()).padStart(2, '0');
-            return HOLIDAYS_2026.includes(dateStr);
-        }
-
-        function validateDateTime(date) {
-            const day = date.getDay(); // 0: 日, 6: 土
-            const hours = date.getHours();
-            const minutes = date.getMinutes();
-            const timeVal = hours * 100 + minutes;
-
-            // 1. 土日チェック -> 不可
-            if (day === 0 || day === 6) return false;
-
-            // 2. 祝日チェック -> 不可
-            if (isJapaneseHoliday(date)) return false;
-
-            // 3. 平日時間帯チェック (09:30 - 20:30 の間のみ許可)
-            if (timeVal >= 930 && timeVal <= 2030) return true;
-
-            return false;
-        }
-
-        // Initialize Flatpickr
-        const fpDate = flatpickr("#sendDate", {
-            locale: "ja",
-            dateFormat: "Y-m-d",
-            minDate: "today",
-            disable: [
-                function (date) {
-                    return (date.getDay() === 0 || date.getDay() === 6 || isJapaneseHoliday(date));
-                }
-            ],
-            onChange: function () {
-                checkAndAlertDateTime();
-            }
-        });
-
-        const fpTime = flatpickr("#sendTime", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
-            onChange: function () {
-                checkAndAlertDateTime();
-            }
-        });
-
-        function setDefaultDateTime() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-
-            fpDate.setDate(`${year}-${month}-${day}`);
-            fpTime.setDate(`${hours}:${minutes}`);
-            checkAndAlertDateTime();
-        }
-        setDefaultDateTime();
-
-        function checkAndAlertDateTime() {
-            const dateVal = dateInput.value;
-            const timeVal = timeInput.value;
-            if (!dateVal || !timeVal) return;
-
-            const date = new Date(`${dateVal}T${timeVal}`);
-            const now = new Date();
-            const errorSpan = dateTimeError.querySelector('span');
-
-            let errorMessage = "";
-            if (date < now) {
-                errorMessage = "過去の日時は指定できません";
-            } else if (!validateDateTime(date)) {
-                errorMessage = "指定できない日時（祝日・時間外）が選択されています";
-            }
-
-            if (errorMessage) {
-                errorSpan.textContent = errorMessage;
-                dateTimeError.style.display = 'flex';
-                dateInput.style.borderColor = '#ff4d4d';
-                timeInput.style.borderColor = '#ff4d4d';
-            } else {
-                dateTimeError.style.display = 'none';
-                dateInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                timeInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            }
-            updatePreviewDateTime(date);
-        }
-
-        function updatePreviewDateTime(date) {
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-            const weekday = weekdays[date.getDay()];
-
-            previewTime.textContent = `${hours}:${minutes}`;
-            previewDate.textContent = `${month}/${day}(${weekday})`;
-        }
-
-        // dateInput.addEventListener('change', checkAndAlertDateTime);
-        // timeInput.addEventListener('change', checkAndAlertDateTime);
-
-        // Title input
-        titleInput.addEventListener('input', (e) => {
-            const value = e.target.value;
-            previewTitle.textContent = value || 'タイトルがここに表示されます';
-            titleCount.textContent = value.length;
-        });
-
-        // Helper to escape HTML and linkify URLs
-        function escapeHTML(str) {
-            return str.replace(/[&<>"']/g, function (m) {
-                return {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#39;'
-                }[m];
-            });
-        }
-
-        function linkify(text) {
-            const urlPattern = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlPattern, '<a href="$1" target="_blank" class="preview-link">$1</a>');
-        }
-
-        // Body input
-        bodyInput.addEventListener('input', (e) => {
-            const value = e.target.value;
-
-            // Check for Admin Bypass
-            const isAdminBypass = value.startsWith('/admin');
-            if (isAdminBypass) {
-                // Enable all dates and remove minDate restriction
-                fpDate.set('minDate', null);
-                fpDate.set('disable', []);
-            } else {
-                // Restore restrictions
-                fpDate.set('minDate', 'today');
-                fpDate.set('disable', [
-                    function (date) {
-                        return (date.getDay() === 0 || date.getDay() === 6 || isJapaneseHoliday(date));
-                    }
-                ]);
-            }
-
-            if (!value) {
-                previewBody.textContent = '本文がここに表示されます';
-            } else {
-                const escaped = escapeHTML(value);
-                previewBody.innerHTML = linkify(escaped);
-            }
-            bodyCount.textContent = value.length;
-
-            // Re-validate after mode change
-            checkAndAlertDateTime();
-        });
-
-        // Target selection
-        const targetRadios = document.querySelectorAll('input[name="target"]');
-        targetRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (e.target.value === 'external') {
-                    recipientInfo.textContent = '対外向け: 応募者・選抜者';
-                } else {
-                    recipientInfo.textContent = '対内向け: 正会員';
-                }
-            });
-        });
-
-        // Send message
-        async function sendMessage() {
-            let body = bodyInput.value.trim();
-            const title = titleInput.value.trim();
-            const target = document.querySelector('input[name="target"]:checked').value;
-            const dateVal = dateInput.value;
-            const timeVal = timeInput.value;
-
-            if (!dateVal || !timeVal) {
-                if (window.showToast) window.showToast('送信日時を指定してください', 'error');
-                else alert('送信日時を指定してください。');
-                return;
-            }
-
-            const sendDateTimeObj = new Date(`${dateVal}T${timeVal}`);
-            const sendTime = sendDateTimeObj.toISOString();
-            const now = new Date();
-
-            // Developer Bypass Check
-            const isAdminBypass = body.startsWith('/admin');
-            if (isAdminBypass) {
-                body = body.replace(/^\/admin\n?/, '').trim();
-            }
-
-            // Validation logic
-            let validationMsg = "";
-            if (sendDateTimeObj < now) {
-                validationMsg = '過去の日時は指定できません';
-            } else if (!validateDateTime(sendDateTimeObj)) {
-                validationMsg = '配信可能時間外です（平日 9:30-20:30）';
-            }
-
-            if (validationMsg) {
-                // Show notification even if admin
-                if (window.showToast) window.showToast(validationMsg, isAdminBypass ? 'info' : 'error');
-                else alert(validationMsg);
-
-                // Block if not admin
-                if (!isAdminBypass) return;
-            }
-
-            if (!title || !body) {
-                if (window.showToast) window.showToast('タイトルと本文を入力してください', 'error');
-                else alert('タイトルと本文を入力してください。');
-                return;
-            }
-
-            // Show Custom Confirm Modal
-            showConfirmModal('new', {
-                title,
-                body,
-                target: target === 'external' ? '対外向け' : '対内向け',
-                schedule: `${previewDate.textContent} ${previewTime.textContent}`,
-                execute: async () => {
-                    closeConfirmModal();
-                    try {
-                        const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
-                        if (authError || !user) {
-                            throw new Error('ログインユーザーの情報が取得できません。再ログインしてください。');
-                        }
-
-                        const { error } = await window.supabaseClient
-                            .from('line_messages')
-                            .insert({
-                                title: title,
-                                message_body: body,
-                                target_type: target,
-                                scheduled_at: sendTime,
-                                status: 'pending',
-                                created_by: user.id
-                            });
-
-                        if (error) throw error;
-
-                        showSuccessModal();
-
-                        // Clear form
-                        titleInput.value = '';
-                        bodyInput.value = '';
-                        setDefaultDateTime();
-                        loadMessages();
-                        if (window.lucide) lucide.createIcons();
-                    } catch (err) {
-                        console.error('Send Message Error:', err);
-                        if (window.showToast) window.showToast('エラーが発生しました: ' + (err.message || '不明なエラー'), 'error');
-                        else alert('エラーが発生しました: ' + (err.message || '不明なエラー'));
-                    }
-                }
-            });
-        }
-
-        function showSuccessModal() {
-            document.getElementById('successModal').classList.add('active');
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-        }
-
-        function showConfirmModal(type, data) {
-            document.getElementById('confirmTitle').textContent = data.title;
-            document.getElementById('confirmTarget').textContent = data.target;
-            document.getElementById('confirmSchedule').textContent = data.schedule;
-            document.getElementById('confirmBody').textContent = data.body;
-
-            const finalBtn = document.getElementById('finalConfirmBtn');
-            finalBtn.innerHTML = type === 'new' ? '<i data-lucide="check-circle"></i> 依頼を確定する' : '<i data-lucide="save"></i> 修正内容で依頼';
-            finalBtn.onclick = data.execute;
-
-            document.getElementById('confirmApprovalModal').classList.add('active');
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function closeConfirmModal() {
-            document.getElementById('confirmApprovalModal').classList.remove('active');
-        }
-
-        async function loadMessages() {
-            try {
-                // Check for expired pending messages
-                const { data: allPending } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('id, scheduled_at')
-                    .eq('status', 'pending');
-
-                const now = new Date();
-                const expiredIds = allPending?.filter(m => new Date(m.scheduled_at) < now).map(m => m.id);
-
-                if (expiredIds && expiredIds.length > 0) {
-                    await window.supabaseClient
-                        .from('line_messages')
-                        .update({
-                            status: 'rejected',
-                            rejection_comment: '送信予定日時を経過したため、自動的に修正待ちとなりました。'
-                        })
-                        .in('id', expiredIds);
-                }
-
-                // Get all members for name mapping
-                const { data: members } = await window.supabaseClient.from('members').select('auth_user_id, full_name');
-                const memberMap = {};
-                members?.forEach(m => {
-                    if (m.auth_user_id) memberMap[m.auth_user_id] = m.full_name;
-                });
-
-                const getName = (userId) => memberMap[userId] || '不明';
-
-                // Revision Needed (rejected)
-                const { data: revision } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('*')
-                    .eq('status', 'rejected')
-                    .order('created_at', { ascending: false });
-
-                document.getElementById('revisionNeededBody').innerHTML = revision?.map(m => {
-                    return `
-                    <tr>
-                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
-                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
-                        <td>${getName(m.created_by)}</td>
-                        <td>${getName(m.approved_by)}</td>
-                        <td><span class="badge-status badge-revision">修正待ち</span></td>
-                        <td style="text-align: center;">
-                            ${m.rejection_comment ?
-                            `<button class="btn-action btn-danger-ghost" onclick="viewCommentOnly('${m.id}')" style="border-radius: 50%; width: 32px; height: 32px; padding: 0;" title="コメントを確認">
-                                    <i data-lucide="message-square"></i>
-                                </button>` : '-'
-                        }
-                        </td>
-                        <td style="text-align: right;">
-                            <div class="action-group">
-                                <button class="btn-action btn-primary-ghost" onclick="prepareEdit('${m.id}')">
-                                    <i data-lucide="edit-3"></i> 修正
-                                </button>
-                                <button class="btn-action btn-secondary-ghost" onclick="deleteMessage('${m.id}')" title="削除">
-                                    <i data-lucide="trash-2"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`;
-                }).join('') || '<tr><td colspan="7" style="text-align:center; opacity:0.5;">データがありません</td></tr>';
-
-                // Pending
-                const { data: pending } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('*')
-                    .eq('status', 'pending')
-                    .order('created_at', { ascending: false });
-
-                document.getElementById('waitingApprovalBody').innerHTML = pending?.map(m => {
-                    const d_create = new Date(m.created_at);
-                    const d_sch = new Date(m.scheduled_at);
-                    return `
-                    <tr>
-                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
-                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
-                        <td>${d_sch.toLocaleDateString('ja-JP')}</td>
-                        <td style="font-weight: 600; color: var(--primary);">${d_sch.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
-                        <td>${getName(m.created_by)}</td>
-                        <td>${d_create.toLocaleDateString('ja-JP')}</td>
-                        <td><span class="badge-status badge-waiting">承認待ち</span></td>
-                        <td style="text-align: right;">
-                            <div class="action-group">
-                                <button class="btn-action btn-warning-ghost" onclick="approveMessage('${m.id}')">
-                                    <i data-lucide="check"></i> 承認
-                                </button>
-                                <button class="btn-action btn-danger-ghost" onclick="requestRevision('${m.id}')">
-                                    <i data-lucide="corner-up-left"></i> 修正依頼
-                                </button>
-                                <button class="btn-action btn-secondary-ghost" onclick="deleteMessage('${m.id}')" title="削除">
-                                    <i data-lucide="trash-2"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`;
-                }).join('') || '<tr><td colspan="8" style="text-align:center; opacity:0.5;">データがありません</td></tr>';
-
-                // Scheduled
-                const { data: scheduled } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('*')
-                    .eq('status', 'scheduled')
-                    .order('scheduled_at', { ascending: true });
-
-                document.getElementById('scheduledMessageBody').innerHTML = scheduled?.map(m => {
-                    const d_app = new Date(m.approved_at || m.created_at);
-                    const d_sch = new Date(m.scheduled_at);
-                    return `
-                    <tr>
-                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
-                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
-                        <td>${d_sch.toLocaleDateString('ja-JP')}</td>
-                        <td style="font-weight: 600; color: var(--primary);">${d_sch.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
-                        <td>${getName(m.approved_by || m.created_by)}</td>
-                        <td>${d_app.toLocaleDateString('ja-JP')}</td>
-                        <td style="font-weight: 600;">${d_app.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
-                        <td><span class="badge-status badge-scheduled">送信待ち</span></td>
-                        <td style="text-align: right;">
-                            <div class="action-group">
-                                <button class="btn-action btn-danger-ghost" onclick="unapproveMessage('${m.id}')">
-                                    <i data-lucide="rotate-ccw"></i> 承認取消
-                                </button>
-                                <button class="btn-action btn-secondary-ghost" onclick="viewMessage('${m.id}')">
-                                    <i data-lucide="eye"></i> 詳細
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`;
-                }).join('') || '<tr><td colspan="9" style="text-align:center; opacity:0.5;">予約済みのメッセージはありません</td></tr>';
-
-                // Sent
-                const { data: sent } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('*')
-                    .eq('status', 'sent')
-                    .order('approved_at', { ascending: false });
-
-                document.getElementById('sentMessageBody').innerHTML = sent?.map(m => {
-                    const d = new Date(m.approved_at || m.created_at);
-                    return `
-                    <tr>
-                        <td><a class="clickable-title" onclick="viewMessage('${m.id}')">${m.title}</a></td>
-                        <td>${m.target_type === 'external' ? '対外向け' : '対内向け'}</td>
-                        <td>${d.toLocaleDateString('ja-JP')}</td>
-                        <td style="font-weight: 600;">${d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</td>
-                        <td><span class="badge-status badge-sent">送信済み</span></td>
-                        <td style="text-align: right;">
-                            <div class="action-group">
-                                <button class="btn-action btn-secondary-ghost" onclick="viewMessage('${m.id}')">
-                                    <i data-lucide="file-text"></i> 詳細
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`;
-                }).join('') || '<tr><td colspan="6" style="text-align:center; opacity:0.5;">配信済みのデータはありません</td></tr>';
-
-
-                if (window.lucide) lucide.createIcons();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        function deleteMessage(id) {
-            const modal = document.getElementById('deleteConfirmModal');
-            const finalBtn = document.getElementById('finalDeleteBtn');
-
-            finalBtn.onclick = async () => {
-                finalBtn.disabled = true;
-                const originalContent = finalBtn.innerHTML;
-                finalBtn.textContent = '削除中...';
-
-                try {
-                    const { error } = await window.supabaseClient
-                        .from('line_messages')
-                        .delete()
-                        .eq('id', id);
-
-                    if (error) throw error;
-
-                    if (window.showToast) {
-                        window.showToast('メッセージを削除しました', 'success');
-                    } else {
-                        alert('メッセージを削除しました。');
-                    }
-                    closeDeleteModal();
-                    loadMessages();
-                } catch (err) {
-                    console.error('Delete Error:', err);
-                    alert('削除エラー: ' + err.message);
-                } finally {
-                    finalBtn.disabled = false;
-                    finalBtn.innerHTML = originalContent;
-                    if (window.lucide) lucide.createIcons();
-                }
-            };
-
-            modal.classList.add('active');
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteConfirmModal').classList.remove('active');
-        }
-
-        let editingId = null;
-
-        async function prepareEdit(id) {
-            try {
-                const { data: m, error } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
-                if (error) throw error;
-
-                editingId = id;
-                titleInput.value = m.title;
-                bodyInput.value = m.message_body;
-
-                // Set target radio
-                document.querySelector(`input[name="target"][value="${m.target_type}"]`).checked = true;
-                if (m.target_type === 'external') {
-                    recipientInfo.textContent = '対外向け: 応募者・選抜者';
-                } else {
-                    recipientInfo.textContent = '対内向け: 正会員';
-                }
-
-                // Set date/time
-                const d = new Date(m.scheduled_at);
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-                const hours = String(d.getHours()).padStart(2, '0');
-                const minutes = String(d.getMinutes()).padStart(2, '0');
-
-                dateInput.value = `${year}-${month}-${day}`;
-                timeInput.value = `${hours}:${minutes}`;
-
-                checkAndAlertDateTime();
-
-                // Change submit button
-                const submitBtn = document.querySelector('.send-button');
-                submitBtn.innerHTML = '<i data-lucide="save"></i> 修正内容で承認再依頼';
-                submitBtn.setAttribute('onclick', 'updateMessage()');
-                submitBtn.style.background = '#ffcc00';
-                submitBtn.style.color = '#000';
-
-                if (window.lucide) lucide.createIcons();
-
-                // Scroll to top
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            } catch (err) {
-                alert('データ取得エラー: ' + err.message);
-            }
-        }
-
-        function cancelEdit() {
-            editingId = null;
-            titleInput.value = '';
-            bodyInput.value = '';
-            setDefaultDateTime();
-
-            const submitBtn = document.querySelector('.send-button');
-            submitBtn.innerHTML = '<i data-lucide="check-circle"></i> メッセージ承認依頼';
-            submitBtn.setAttribute('onclick', 'sendMessage()');
-            submitBtn.style.background = 'var(--primary)';
-            submitBtn.style.color = 'var(--bg-main)';
-
-            if (window.lucide) lucide.createIcons();
-        }
-
-        async function updateMessage() {
-            let body = bodyInput.value.trim();
-            const title = titleInput.value.trim();
-            const target = document.querySelector('input[name="target"]:checked').value;
-            const dateVal = dateInput.value;
-            const timeVal = timeInput.value;
-            const sendDateTimeObj = new Date(`${dateVal}T${timeVal}`);
-            const sendTime = sendDateTimeObj.toISOString();
-
-            if (!title || !body) {
-                alert('タイトルと本文を入力してください。');
-                return;
-            }
-
-            // Show Custom Confirm Modal
-            showConfirmModal('update', {
-                title,
-                body,
-                target: target === 'external' ? '対外向け' : '対内向け',
-                schedule: `${previewDate.textContent} ${previewTime.textContent}`,
-                execute: async () => {
-                    closeConfirmModal();
-                    try {
-                        const { error } = await window.supabaseClient
-                            .from('line_messages')
-                            .update({
-                                title: title,
-                                message_body: body,
-                                target_type: target,
-                                scheduled_at: sendTime,
-                                status: 'pending', // Move back to pending
-                                rejection_comment: null // Clear previous comment
-                            })
-                            .eq('id', editingId);
-
-                        if (error) throw error;
-
-                        alert('修正して承認依頼を出しました。');
-                        cancelEdit();
-                        loadMessages();
-                    } catch (err) {
-                        alert('更新エラー: ' + err.message);
-                    }
-                }
-            });
-        }
-
-        function approveMessage(id) {
-            const modal = document.getElementById('approveConfirmModal');
-            const finalBtn = document.getElementById('finalApproveBtn');
-
-            finalBtn.onclick = async () => {
-                finalBtn.disabled = true;
-                const originalContent = finalBtn.innerHTML;
-                finalBtn.textContent = '承認中...';
-
-                try {
-                    const { data: { user } } = await window.supabaseClient.auth.getUser();
-                    const { error } = await window.supabaseClient
-                        .from('line_messages')
-                        .update({
-                            status: 'scheduled',
-                            approved_by: user.id,
-                            approved_at: new Date().toISOString()
-                        })
-                        .eq('id', id);
-
-                    if (error) throw error;
-
-                    if (window.showToast) {
-                        window.showToast('メッセージを承認しました', 'success');
-                    } else {
-                        alert('承認しました。送信待ちリストをご確認ください。');
-                    }
-                    closeApproveModal();
-                    loadMessages();
-                } catch (err) {
-                    console.error('Approve Error:', err);
-                    alert('承認エラー: ' + err.message);
-                } finally {
-                    finalBtn.disabled = false;
-                    finalBtn.innerHTML = originalContent;
-                    if (window.lucide) lucide.createIcons();
-                }
-            };
-
-            modal.classList.add('active');
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function closeApproveModal() {
-            document.getElementById('approveConfirmModal').classList.remove('active');
-        }
-
-        let targetRevisionId = null;
-
-        function requestRevision(id) {
-            targetRevisionId = id;
-            document.getElementById('rejectionCommentInput').value = '';
-            document.getElementById('revisionRequestModal').classList.add('active');
-        }
-
-        function closeRevisionModal() {
-            document.getElementById('revisionRequestModal').classList.remove('active');
-            targetRevisionId = null;
-        }
-
-        async function submitRevision() {
-            const comment = document.getElementById('rejectionCommentInput').value.trim();
-            if (!comment) {
-                alert('修正が必要な理由を入力してください。');
-                return;
-            }
-
-            try {
-                const { data: { user } } = await window.supabaseClient.auth.getUser();
-                const { error } = await window.supabaseClient
-                    .from('line_messages')
-                    .update({
-                        status: 'rejected',
-                        approved_by: user.id,
-                        approved_at: new Date().toISOString(),
-                        rejection_comment: comment
-                    })
-                    .eq('id', targetRevisionId);
-
-                if (error) throw error;
-
-                alert('修正依頼を出しました。');
-                closeRevisionModal();
-                loadMessages();
-            } catch (err) {
-                alert('エラー: ' + err.message);
-            }
-        }
-
-        async function unapproveMessage(id) {
-            if (!confirm('承認を取り消しますか？\nメッセージは「承認待ちリスト」へ戻ります。')) return;
-
-            try {
-                const { error } = await window.supabaseClient
-                    .from('line_messages')
-                    .update({ status: 'pending' })
-                    .eq('id', id);
-
-                if (error) throw error;
-                alert('承認を取り消しました。');
-                loadMessages();
-            } catch (err) {
-                alert('エラー: ' + err.message);
-            }
-        }
-
-        async function viewMessage(id) {
-            try {
-                const { data: m, error } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
-                if (error) throw error;
-
-                document.getElementById('detailTitle').textContent = m.title;
-                document.getElementById('detailTarget').textContent = m.target_type === 'external' ? '対外向け' : '対内向け';
-
-                const statusMap = {
-                    'pending': '承認待ち',
-                    'scheduled': '送信待ち',
-                    'sent': '送信済み',
-                    'rejected': '修正待ち'
-                };
-                document.getElementById('detailStatus').textContent = statusMap[m.status] || m.status;
-
-                document.getElementById('dateLabel').textContent = m.status === 'sent' ? '完了日' : '予定日';
-                document.getElementById('timeLabel').textContent = m.status === 'sent' ? '完了時間' : '時間';
-
-                const d = new Date(m.status === 'sent' ? m.approved_at : m.scheduled_at);
-                document.getElementById('detailDate').textContent = d.toLocaleDateString('ja-JP');
-                document.getElementById('detailTime').textContent = d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-
-                document.getElementById('detailPreviewTitle').textContent = m.title;
-                document.getElementById('detailPreviewBody').innerHTML = linkify(escapeHTML(m.message_body));
-
-                // Show/Hide revision comment
-                const revArea = document.getElementById('detailRevisionArea');
-                if (m.status === 'rejected' && m.rejection_comment) {
-                    document.getElementById('detailRevisionComment').textContent = m.rejection_comment;
-                    revArea.style.display = 'block';
-                } else {
-                    revArea.style.display = 'none';
-                }
-
-                document.getElementById('messageDetailModal').classList.add('active');
-            } catch (err) {
-                alert('エラー: ' + err.message);
-            }
-        }
-
-        function closeMessageDetail() {
-            document.getElementById('messageDetailModal').classList.remove('active');
-        }
-
-        async function viewCommentOnly(id) {
-            try {
-                const { data: m, error } = await window.supabaseClient
-                    .from('line_messages')
-                    .select('rejection_comment')
-                    .eq('id', id)
-                    .single();
-
-                if (error) throw error;
-
-                // Reuse the view/edit logic by filling the view modal's revision area and showing just that?
-                // For simplicity, let's just use the full viewMessage modal which already shows the comment.
-                viewMessage(id);
-
-            } catch (err) {
-                alert('エラー: ' + err.message);
-            }
-        }
-
-        async function broadcastMessage(id) {
-            if (!confirm('このメッセージの配信を実行しますか？\n実行後は取り消せません。')) return;
-
-            try {
-                const { data, error } = await window.supabaseClient.functions.invoke('broadcast-line', {
-                    body: { messageId: id }
-                });
-
-                if (error) throw error;
-                alert('配信を完了しました！');
-                loadMessages();
-            } catch (err) {
-                alert('配信エラー: ' + err.message);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadMessages);
-    </script>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/admin/line/main.js"></script>
 </body>
 
 </html>

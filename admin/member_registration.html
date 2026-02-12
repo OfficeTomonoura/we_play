@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         .login-box {
             max-width: 600px;
@@ -105,7 +105,7 @@
                     <label for="organization">主たる所属（委員会名など） <span style="color:var(--primary)">*</span></label>
                     <div class="input-wrapper">
                         <select id="organization" name="organization_id" required
-                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; appearance: none; outline: none;">
                             <option value="" style="color: black;">読み込み中...</option>
                         </select>
                         <span class="focus-border"></span>
@@ -118,7 +118,7 @@
                     <label for="position">役職 <span style="color:var(--primary)">*</span></label>
                     <div class="input-wrapper">
                         <select id="position" name="position_id" required
-                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; outline: none;">
+                            style="width: 100%; background: transparent; border: none; color: white; padding: 1rem; -webkit-appearance: none; appearance: none; outline: none;">
                             <option value="" style="color: black;">読み込み中...</option>
                         </select>
                         <span class="focus-border"></span>
@@ -156,131 +156,8 @@
         </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase-client.js"></script>
-    <script>
-        lucide.createIcons();
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            if (!window.supabaseClient) return;
-
-            // Check Session
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (!session) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Fill Email
-            document.getElementById('email').value = session.user.email;
-
-            // Load Master Data
-            try {
-                const [orgRes, posRes] = await Promise.all([
-                    window.supabaseClient.from('master_organization').select('id, name').order('sort_order'),
-                    window.supabaseClient.from('master_position').select('id, name').order('sort_order')
-                ]);
-
-                populateSelect('organization', orgRes.data || []);
-                populateSelect('position', posRes.data || []);
-
-            } catch (err) {
-                console.error('Master load error:', err);
-                alert('マスターデータの読み込みに失敗しました。');
-            }
-        });
-
-        function populateSelect(elementId, items) {
-            const select = document.getElementById(elementId);
-            if (!select) return;
-            select.innerHTML = '<option value="" style="color: black;">選択してください</option>';
-            items.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.id;
-                opt.textContent = item.name;
-                opt.style.color = 'black'; // Ensure visibility
-                select.appendChild(opt);
-            });
-        }
-
-        document.getElementById('memberForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const errorMsg = document.getElementById('errorMsg');
-
-            errorMsg.style.display = 'none';
-            btn.disabled = true;
-            btn.innerHTML = '<span>登録中...</span>';
-
-            try {
-                const { data: { session } } = await window.supabaseClient.auth.getSession();
-                if (!session) throw new Error('セッションが切れました。再ログインしてください。');
-
-                // Validate Password
-                const newPass = document.getElementById('newPassword').value;
-                const confirmPass = document.getElementById('confirmPassword').value;
-
-                if (newPass !== confirmPass) {
-                    throw new Error('パスワードが一致しません。');
-                }
-
-                // Prepare Data
-                const formData = {
-                    auth_user_id: session.user.id,
-                    email: session.user.email,
-                    full_name: document.getElementById('fullName').value,
-                    full_kana: document.getElementById('fullKana').value,
-                    high_school: document.getElementById('highSchool').value,
-                    organization_id: document.getElementById('organization').value,
-                    position_id: document.getElementById('position').value,
-                    // project_role_id removed
-                    is_staff: true,
-                    is_registered: true, // Registration Complete
-                    updated_at: new Date()
-                };
-
-                // Update Profile
-                const { error: updateError } = await window.supabaseClient
-                    .from('members')
-                    .update(formData)
-                    .eq('auth_user_id', session.user.id);
-
-                if (updateError) throw updateError;
-
-                // 2. Update Auth Password
-                const { error: authError } = await window.supabaseClient.auth.updateUser({
-                    password: newPass
-                });
-
-                if (authError) throw authError;
-
-                // 3. Verify Update (Double check to prevent redirect loop)
-                const { data: verifyMember, error: verifyError } = await window.supabaseClient
-                    .from('members')
-                    .select('is_registered')
-                    .eq('auth_user_id', session.user.id)
-                    .single();
-
-                if (verifyError) throw verifyError;
-                if (!verifyMember || verifyMember.is_registered !== true) {
-                    throw new Error('登録情報の更新がデータベースに反映されませんでした。もう一度お試しください。');
-                }
-
-                // Success
-                alert('登録が完了しました！ダッシュボードへ移動します。');
-                // Force reload to clear any cache
-                window.location.href = 'index.html?t=' + new Date().getTime();
-
-            } catch (err) {
-                console.error(err);
-                errorMsg.textContent = err.message || '登録に失敗しました。';
-                errorMsg.style.display = 'block';
-                btn.disabled = false;
-                btn.innerHTML = '<span>登録して開始</span><i data-lucide="arrow-right"></i>';
-                lucide.createIcons();
-            }
-        });
-    </script>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/admin/member_registration/main.js"></script>
 </body>
 
 </html>

@@ -11,12 +11,11 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin.css?v=1.1">
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         .detail-container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 2rem;
         }
 
         .detail-header {
@@ -67,7 +66,6 @@
             font-weight: bold;
         }
 
-        /* Status Colors (Same as selected.html) */
         .role-director {
             background: rgba(112, 0, 255, 0.1);
             color: #7000ff;
@@ -95,789 +93,189 @@
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar (Optional, maybe minimal or back button)-->
-        <!-- Sidebar removed for detail view -->
-        <!-- <div id="app-sidebar"></div> -->
+    <div id="app"></div>
 
-        <main class="main-content">
-            <div class="detail-container">
-                <div class="detail-header">
-                    <div>
-                        <button onclick="window.close()"
-                            style="background:none; border:none; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                            <i data-lucide="arrow-left"></i> 閉じる
-                        </button>
-                        <h1 id="applicantName" style="font-size: 1.8rem; font-weight: 800; margin:0;">Loading...</h1>
-                    </div>
-                    <div id="statusBadgeContainer">
-                        <!-- Status Badge injected here -->
-                    </div>
+    <template id="page-template">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div>
+                    <button onclick="window.history.back()"
+                        style="background:none; border:none; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                        <i data-lucide="arrow-left"></i> 戻る
+                    </button>
+                    <h1 id="applicantName" style="font-size: 1.8rem; font-weight: 800; margin:0;">Loading...</h1>
                 </div>
-
-                <div class="detail-grid">
-                    <!-- Left Column: Basic Info -->
-                    <div class="detail-section">
-                        <h2
-                            style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
-                            <i data-lucide="user"></i> 基本情報
-                        </h2>
-
-                        <div class="info-group">
-                            <label class="info-label">ふりがな</label>
-                            <div class="info-value" id="valKana">-</div>
-                        </div>
-                        <div class="info-group">
-                            <label class="info-label">学校名 / 学年</label>
-                            <div class="info-value"><span id="valSchool">-</span> <span id="valGrade"
-                                    style="font-size:0.9em; margin-left:0.5rem; color:var(--text-dim);">-</span></div>
-                        </div>
-                        <div class="info-group">
-                            <label class="info-label">連絡先 (電話)</label>
-                            <div class="info-value" id="valPhone">-</div>
-                        </div>
-                        <div class="info-group">
-                            <label class="info-label">連絡先 (Email)</label>
-                            <div class="info-value" id="valEmail">-</div>
-                        </div>
-                        <div class="info-group">
-                            <label class="info-label">緊急連絡先</label>
-                            <div class="info-value">
-                                <span id="valEmergencyContactPhone">-</span>
-                                <span id="valEmergencyContactCategory"
-                                    style="color:var(--text-dim); margin-left:0.5rem;"></span>
-                            </div>
-                        </div>
-                        <div class="info-group">
-                            <label class="info-label">現在の配属役職</label>
-                            <div class="info-value" id="valRole">-</div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Selection Info -->
-                    <div class="detail-section">
-                        <h2
-                            style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
-                            <i data-lucide="users"></i> サポート体制
-                        </h2>
-
-                        <div class="info-group">
-                            <label class="info-label">担当サポーター</label>
-                            <div class="info-value" id="valSupporter" style="font-weight:bold;">-</div>
-                        </div>
-
-                        <div class="info-group">
-                            <label class="info-label">サポート期間</label>
-                            <div class="info-value" id="valPeriod">-</div>
-                        </div>
-
-                        <div class="info-group">
-                            <div style="margin-top:0.8rem;">
-                                <label class="info-label" style="font-size:0.8rem;">担当予定</label>
-                                <ul id="valSupporterHistory"
-                                    style="list-style:none; padding:0; margin:0.3rem 0 0 0; font-size:0.85rem; color:var(--text-dim);">
-                                    <!-- Populated by JS -->
-                                </ul>
-                            </div>
-                        </div>
-
-                        <hr style="border:0; border-top:1px solid var(--glass-border); margin: 1.5rem 0;">
-
-                        <div style="display: flex; gap: 1rem;">
-                            <button class="action-btn" onclick="openEditModal()"
-                                style="flex:1; padding:0.8rem; border-radius:8px; border:1px solid var(--primary); background:rgba(0, 242, 255, 0.1); color:var(--primary); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition: all 0.2s;">
-                                <i data-lucide="edit"></i> 情報編集
-                            </button>
-                        </div>
-                    </div>
+                <div id="statusBadgeContainer">
+                    <!-- Status Badge injected here -->
                 </div>
+            </div>
 
-                <!-- Bottom Section: Remarks / Comments -->
+            <div class="detail-grid">
+                <!-- Left Column: Basic Info -->
                 <div class="detail-section">
                     <h2
-                        style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; justify-content: space-between;">
-                        <span style="display: flex; align-items: center; gap: 0.5rem;">
-                            <i data-lucide="clipboard-list"></i> 備考
-                        </span>
-                        <button onclick="openCommentModal()"
-                            style="padding: 0.5rem 1rem; background: var(--primary); border: none; border-radius: 6px; color: black; font-weight: bold; cursor:pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.3rem;">
-                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
-                            コメントを追加
-                        </button>
+                        style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="user"></i> 基本情報
                     </h2>
-                    <div id="commentsContainer" style="display: flex; flex-direction: column; gap: 1rem;">
-                        <!-- Comments will be rendered here by JavaScript -->
+
+                    <div class="info-group">
+                        <label class="info-label">ふりがな</label>
+                        <div class="info-value" id="valKana">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">学校名 / 学年</label>
+                        <div class="info-value"><span id="valSchool">-</span> <span id="valGrade"
+                                style="font-size:0.9em; margin-left:0.5rem; color:var(--text-dim);">-</span></div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">連絡先 (電話)</label>
+                        <div class="info-value" id="valPhone">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">連絡先 (Email)</label>
+                        <div class="info-value" id="valEmail">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">緊急連絡先</label>
+                        <div class="info-value">
+                            <span id="valEmergencyContactPhone">-</span>
+                            <span id="valEmergencyContactCategory"
+                                style="color:var(--text-dim); margin-left:0.5rem;"></span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">現在の配属役職</label>
+                        <div class="info-value" id="valRole">-</div>
                     </div>
                 </div>
 
-            </div>
-            <!-- Comment Modal -->
-            <div id="comment-modal" class="modal-overlay" role="dialog" aria-modal="true"
-                aria-labelledby="commentModalTitle">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 id="commentModalTitleHeading"
-                            style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
-                            <i data-lucide="message-square"></i> <span id="commentModalTitle">コメントを追加</span>
-                        </h3>
-                        <button class="close-modal" onclick="closeCommentModal()">
-                            <i data-lucide="x"></i>
+                <!-- Right Column: Selection Info -->
+                <div class="detail-section">
+                    <h2
+                        style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="users"></i> サポート体制
+                    </h2>
+
+                    <div class="info-group">
+                        <label class="info-label">担当サポーター</label>
+                        <div class="info-value" id="valSupporter" style="font-weight:bold;">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <label class="info-label">サポート期間</label>
+                        <div class="info-value" id="valPeriod">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div style="margin-top:0.8rem;">
+                            <label class="info-label" style="font-size:0.8rem;">担当予定</label>
+                            <ul id="valSupporterHistory"
+                                style="list-style:none; padding:0; margin:0.3rem 0 0 0; font-size:0.85rem; color:var(--text-dim);">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 1.5rem 0;">
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="action-btn" onclick="openEditModal()"
+                            style="flex:1; padding:0.8rem; border-radius:8px; border:1px solid var(--primary); background:rgba(0, 242, 255, 0.1); color:var(--primary); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition: all 0.2s;">
+                            <i data-lucide="edit"></i> 情報編集
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="info-group">
-                            <label class="info-label" style="margin-bottom:0.5rem; display:block;">コメント</label>
-                            <textarea id="commentTextarea" class="admin-select"
-                                style="width:100%; height:150px; font-family:inherit; font-size:0.9rem; resize:vertical;"
-                                placeholder="コメントを入力してください..." oninput="updateCharCount()"></textarea>
-                            <div style="text-align:right; margin-top:0.3rem; font-size:0.85rem; color:var(--text-dim);">
-                                <span id="charCount">0</span> / 2000文字
-                            </div>
-                        </div>
-
-                        <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
-                            <button onclick="closeCommentModal()"
-                                style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
-                            <button onclick="saveComment()"
-                                style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <!-- Edit Modal -->
-            <div id="edit-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 id="editModalTitle"
-                            style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
-                            <i data-lucide="edit-3"></i> 情報編集
-                        </h3>
-                        <button class="close-modal" onclick="closeEditModal()">
-                            <i data-lucide="x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="info-group">
-                            <label class="info-label" style="margin-bottom:0.5rem; display:block;">担当予定</label>
-                            <div id="editHistoryContainer"
-                                style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
-                                <!-- Dynamic List Items -->
-                            </div>
-                            <div style="display:flex; gap:0.5rem; align-items:center;">
-                                <input type="date" id="newHistoryStart" class="admin-select" style="flex:1;">
-                                <span style="color:var(--text-dim);">～</span>
-                                <input type="date" id="newHistoryEnd" class="admin-select" style="flex:1;">
-                                <select id="newHistoryName" class="admin-select" style="flex:1;">
-                                    <option value="">メンバーを選択</option>
-                                    <!-- Populated by JS -->
-                                </select>
-                                <button onclick="addHistoryItem()"
-                                    style="padding:0.6rem; background:var(--primary); border:none; border-radius:4px; cursor:pointer; color:black;">
-                                    <i data-lucide="plus" style="width:16px; height:16px;"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
-                            <button onclick="closeEditModal()"
-                                style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
-                            <button onclick="saveEdit()"
-                                style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
-                        </div>
-                    </div>
+            <!-- Bottom Section: Remarks / Comments -->
+            <div class="detail-section">
+                <h2
+                    style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; justify-content: space-between;">
+                    <span style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="clipboard-list"></i> 備考
+                    </span>
+                    <button onclick="openCommentModal()"
+                        style="padding: 0.5rem 1rem; background: var(--primary); border: none; border-radius: 6px; color: black; font-weight: bold; cursor:pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.3rem;">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        コメントを追加
+                    </button>
+                </h2>
+                <div id="commentsContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Comments will be rendered here by JavaScript -->
                 </div>
             </div>
-        </main>
+        </div>
+    </template>
+
+    <!-- Modals -->
+    <div id="comment-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="commentModalTitleHeading"
+                    style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i data-lucide="message-square"></i> <span id="commentModalTitle">コメントを追加</span>
+                </h3>
+                <button class="close-modal" onclick="closeCommentModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group">
+                    <label class="info-label" style="margin-bottom:0.5rem; display:block;">コメント</label>
+                    <textarea id="commentTextarea" class="admin-select"
+                        style="width:100%; height:150px; font-family:inherit; font-size:0.9rem; resize:vertical;"
+                        placeholder="コメントを入力してください..." oninput="updateCharCount()"></textarea>
+                    <div style="text-align:right; margin-top:0.3rem; font-size:0.85rem; color:var(--text-dim);">
+                        <span id="charCount">0</span> / 2000文字
+                    </div>
+                </div>
+                <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
+                    <button onclick="closeCommentModal()"
+                        style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
+                    <button onclick="saveComment()"
+                        style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase-client.js?v=1.1"></script>
-    <script src="components.js?v=jp_fix_v4"></script>
-    <!-- Reuse sidebar logic if needed, though we might want to hide sidebar in detail view? Let's keep consistency for now. -->
-
-    <script>
-        // Constants
-        const CONFIG = {
-            COMMENT_MAX_LENGTH: 2000,
-            COMMENT_WARNING_LENGTH: 1500,
-            COMMENT_DANGER_LENGTH: 1800,
-            ICON_REFRESH_DELAY: 50,
-            FOCUS_DELAY: 100
-        };
-
-        // Utility Functions
-        const utils = {
-            lastFocusedElement: null,
-
-            formatDate(dateString) {
-                if (!dateString) return '-';
-                const date = new Date(dateString);
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}/${month}/${day}`;
-            },
-
-            openModal(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    this.lastFocusedElement = document.activeElement;
-                    modal.style.display = 'flex';
-                    setTimeout(() => {
-                        const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                        if (focusable.length > 0) focusable[0].focus();
-                    }, CONFIG.FOCUS_DELAY);
-                    this.addModalKeyboardListeners(modalId);
-                }
-            },
-
-            closeModal(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.style.display = 'none';
-                    this.removeModalKeyboardListeners(modalId);
-                    if (this.lastFocusedElement) {
-                        this.lastFocusedElement.focus();
-                        this.lastFocusedElement = null;
-                    }
-                }
-            },
-
-            refreshIcons: (() => {
-                let timeout;
-                return () => {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                        lucide.createIcons();
-                    }, CONFIG.ICON_REFRESH_DELAY);
-                };
-            })(),
-
-            escapeHtml(text) {
-                if (!text) return '';
-                return text.replace(/[&<>"']/g, function (m) {
-                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-                });
-            },
-
-            addModalKeyboardListeners(modalId) {
-                const modal = document.getElementById(modalId);
-                if (!modal) return;
-                const handleKeyDown = (e) => {
-                    if (e.key === 'Escape') {
-                        e.preventDefault();
-                        if (modalId === 'edit-modal') closeEditModal();
-                        else if (modalId === 'comment-modal') closeCommentModal();
-                    }
-                    if (e.key === 'Tab') {
-                        const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                        if (focusable.length === 0) return;
-                        const first = focusable[0];
-                        const last = focusable[focusable.length - 1];
-                        if (e.shiftKey && document.activeElement === first) {
-                            e.preventDefault();
-                            last.focus();
-                        } else if (!e.shiftKey && document.activeElement === last) {
-                            e.preventDefault();
-                            first.focus();
-                        }
-                    }
-                };
-                modal._keydownHandler = handleKeyDown;
-                document.addEventListener('keydown', handleKeyDown);
-            },
-
-            removeModalKeyboardListeners(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal && modal._keydownHandler) {
-                    document.removeEventListener('keydown', modal._keydownHandler);
-                    delete modal._keydownHandler;
-                }
-            },
-
-            showToast(message, type = 'info') {
-                // Simple alert for now, can be improved to a toast UI
-                alert(message);
-            }
-        };
-
-        // State
-        let currentApplicantId = null;
-        let currentUser = null;
-        let allMembers = [];
-        let editingCommentId = null;
-
-        // Initialization
-        document.addEventListener('DOMContentLoaded', async () => {
-            lucide.createIcons();
-
-            const params = new URLSearchParams(window.location.search);
-            let id = params.get('id');
-
-            if (!id) {
-                console.warn('ID missing in URL, checking sessionStorage...');
-                id = sessionStorage.getItem('selected_applicant_id');
-            }
-
-            if (!id) {
-                console.error('ID missing.');
-                alert('IDが指定されていません。\nウィンドウを閉じます。');
-                window.close();
-                return;
-            }
-
-            currentApplicantId = id;
-            console.log('Resolved ID:', id);
-
-            try {
-                if (!window.supabaseClient) throw new Error('Supabase client not initialized');
-
-                // Get Current User
-                const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
-                if (authError) console.warn('Auth Error:', authError);
-
-                // Fetch current user details from members table if possible, or just use auth user
-                if (user) {
-                    const { data: memberData } = await window.supabaseClient
-                        .from('members')
-                        .select('id, full_name')
-                        .eq('id', user.id) // Assuming auth.uid matches members.id or needs mapping
-                        .single();
-
-                    currentUser = {
-                        id: user.id,
-                        name: memberData ? memberData.full_name : (user.email || 'Unknown User')
-                    };
-                } else {
-                    // Fallback for development/testing if no auth
-                    currentUser = { id: 'dummy-admin', name: '管理者(Guest)' };
-                }
-
-                await fetchMembers();
-                await fetchApplicantDetails(id);
-
-            } catch (err) {
-                console.error(err);
-                alert('データの読み込みに失敗しました: ' + err.message);
-            }
-        });
-
-        async function fetchMembers() {
-            try {
-                const { data, error } = await window.supabaseClient
-                    .from('members')
-                    .select('id, full_name')
-                    .order('full_name');
-                if (error) throw error;
-                allMembers = data || [];
-            } catch (err) {
-                console.error('Failed to fetch members:', err);
-            }
-        }
-
-        async function fetchApplicantDetails(id) {
-            // Fetch Applicant with related data
-            // Note: Supabase structure might need adjustment for joins if tables rely on UUIDs
-
-            // 1. Basic Info & Role
-            const { data: applicant, error: applicantError } = await window.supabaseClient
-                .from('applicants')
-                .select('*, arm:master_role!assigned_role_id(name)')
-                .eq('id', id)
-                .single();
-
-            if (applicantError) throw applicantError;
-            if (!applicant) throw new Error('データが見つかりませんでした。');
-
-            // 2. Supporter Schedules
-            const { data: schedules, error: scheduleError } = await window.supabaseClient
-                .from('supporter_schedules')
-                .select('*')
-                .eq('applicant_id', id)
-                .order('start_date', { ascending: true });
-
-            if (scheduleError) console.error('Schedule fetch error:', scheduleError);
-
-            // 3. Comments
-            const { data: comments, error: commentError } = await window.supabaseClient
-                .from('applicant_comments')
-                .select('*')
-                .eq('applicant_id', id)
-                .order('created_at', { ascending: false });
-
-            if (commentError) console.error('Comment fetch error:', commentError);
-
-            // Combine data
-            const fullData = {
-                ...applicant,
-                supporter_schedules: schedules || [],
-                comments: comments || []
-            };
-
-            renderDetail(fullData);
-        }
-
-        function renderDetail(data) {
-            // Basic Info
-            document.getElementById('applicantName').textContent = data.full_name;
-            document.getElementById('valKana').textContent = data.full_kana || '-';
-            document.getElementById('valSchool').textContent = data.school_name || '-';
-            document.getElementById('valGrade').textContent = data.grade || '-';
-            document.getElementById('valPhone').textContent = data.phone || '-';
-            document.getElementById('valEmail').textContent = data.email || '-';
-
-            // Emergency Contact (Split fields)
-            document.getElementById('valEmergencyContactPhone').textContent = data.emergency_contact_phone || '-';
-            document.getElementById('valEmergencyContactCategory').textContent = data.emergency_contact_category || '';
-
-            // Role Badge
-            const roleName = data.arm?.name || '未定';
-            let roleClass = '';
-            if (roleName.includes('監督')) roleClass = 'role-director';
-            else if (roleName.includes('演者')) roleClass = 'role-actor';
-            else if (roleName.includes('プロデューサー')) roleClass = 'role-producer';
-            else if (roleName.includes('小道具')) roleClass = 'role-props';
-
-            const badgeContainer = document.getElementById('statusBadgeContainer');
-            badgeContainer.innerHTML = `<span class="role-tag ${roleClass}">${roleName}</span>`;
-            document.getElementById('valRole').textContent = roleName;
-
-            // Support System
-            renderSupportSystem(data);
-
-            // Comments
-            renderComments(data.comments);
-
-            // Re-render icons
-            lucide.createIcons();
-        }
-
-        function renderSupportSystem(data) {
-            // Calculate Current Supporter
-            const today = new Date();
-            // today.setHours(0, 0, 0, 0); // Keep time for more precision if needed, or normalize for date-only cmp
-
-            let currentSchedule = null;
-
-            if (data.supporter_schedules && data.supporter_schedules.length > 0) {
-                // Sort by start_date desc (newest first)
-                const sorted = [...data.supporter_schedules].sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
-
-                // 1. Try to find a schedule that covers TODAY
-                currentSchedule = sorted.find(s => {
-                    const start = new Date(s.start_date);
-                    const end = new Date(s.end_date);
-                    // Normalize comparison coverage
-                    start.setHours(0, 0, 0, 0);
-                    end.setHours(23, 59, 59, 999);
-                    return start <= today && today <= end;
-                });
-
-                // 2. Fallback: If no active schedule, show the latest one (most recent start date)
-                if (!currentSchedule) {
-                    currentSchedule = sorted[0];
-                }
-            }
-
-            // Render Supporter Name
-            const supporterValEl = document.getElementById('valSupporter');
-            if (currentSchedule) {
-                supporterValEl.textContent = currentSchedule.supporter_name || '担当あり';
-                supporterValEl.style.color = 'white';
-            } else {
-                supporterValEl.textContent = '未定';
-                supporterValEl.style.color = 'var(--text-dim)';
-            }
-
-            // Render Support Period (from the SAME schedule item if exists, otherwise from apllicant period?)
-            // The requirement says "support period also auto display". 
-            // If we selected a schedule, we should probably show THAT schedule's period.
-            // But there is also `data.period_start` on the applicant table itself (from migration).
-            // Let's prioritize the specific schedule period if we found a "current" one.
-
-            const periodValEl = document.getElementById('valPeriod');
-            if (currentSchedule && currentSchedule.start_date && currentSchedule.end_date) {
-                periodValEl.textContent = `${utils.formatDate(currentSchedule.start_date)} - ${utils.formatDate(currentSchedule.end_date)}`;
-            } else if (data.period_start && data.period_end) {
-                // Fallback to applicant's global period if no specific schedule or schedule has no dates
-                periodValEl.textContent = `${utils.formatDate(data.period_start)} - ${utils.formatDate(data.period_end)}`;
-            } else {
-                periodValEl.textContent = '未設定';
-            }
-
-            // History List
-            const historyList = document.getElementById('valSupporterHistory');
-            historyList.innerHTML = '';
-
-            if (data.supporter_schedules && data.supporter_schedules.length > 0) {
-                // Sort descending for display
-                const sortedSchedules = [...data.supporter_schedules].sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
-
-                sortedSchedules.forEach(schedule => {
-                    const li = document.createElement('li');
-                    // Highlight if this is the one currently displayed as "Current"
-                    const isCurrent = currentSchedule && currentSchedule.id === schedule.id;
-                    const style = isCurrent ? 'color: var(--primary); font-weight:bold;' : '';
-
-                    li.innerHTML = `<span style="${style}">${utils.formatDate(schedule.start_date)} ~ ${utils.formatDate(schedule.end_date)} : ${utils.escapeHtml(schedule.supporter_name)}</span>`;
-                    historyList.appendChild(li);
-                });
-            } else {
-                historyList.innerHTML = '<li>履歴なし</li>';
-            }
-        }
-
-        function renderComments(comments) {
-            const container = document.getElementById('commentsContainer');
-            if (!container) return;
-
-            if (!comments || comments.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-dim); text-align:center; padding:2rem;">コメントはまだありません</div>';
-                return;
-            }
-
-            container.innerHTML = comments.map(comment => createCommentCard(comment)).join('');
-            utils.refreshIcons();
-        }
-
-        function createCommentCard(comment) {
-            // Check if current user is author (Simple check for now)
-            // Real implementation should match IDs.
-            const canEdit = currentUser && (comment.author_id === currentUser.id || currentUser.id === 'dummy-admin');
-
-            return `
-                <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border-left: 3px solid var(--primary);">
-                    <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:0.5rem;">
-                        <div style="font-size:0.85rem; color:var(--text-dim);">
-                            <div><strong style="color:var(--primary);">記入者:</strong> ${utils.escapeHtml(comment.author_name)}</div>
-                            <div><strong style="color:var(--primary);">記入日:</strong> ${utils.formatDate(comment.created_at)}</div>
-                        </div>
-                        ${canEdit ? `<button onclick="openEditCommentModal('${comment.id}')" style="padding:0.4rem 0.8rem; background:rgba(255,255,255,0.1); border:1px solid var(--glass-border); color:var(--text-dim); border-radius:4px; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:0.3rem;"><i data-lucide="edit-2" style="width:14px; height:14px;"></i>編集</button>` : ''}
+    <div id="edit-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editModalTitleHeading"
+                    style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i data-lucide="edit-3"></i> 情報編集
+                </h3>
+                <button class="close-modal" onclick="closeEditModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group">
+                    <label class="info-label" style="margin-bottom:0.5rem; display:block;">担当予定</label>
+                    <div id="editHistoryContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
                     </div>
-                    <div style="color:white; line-height:1.6; white-space:pre-wrap; margin-top:0.8rem;">${utils.escapeHtml(comment.content)}</div>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <input type="date" id="newHistoryStart" class="admin-select" style="flex:1;">
+                        <span style="color:var(--text-dim);">～</span>
+                        <input type="date" id="newHistoryEnd" class="admin-select" style="flex:1;">
+                        <select id="newHistoryName" class="admin-select" style="flex:1;">
+                            <option value="">メンバーを選択</option>
+                        </select>
+                        <button onclick="addHistoryItem()"
+                            style="padding:0.6rem; background:var(--primary); border:none; border-radius:4px; cursor:pointer; color:black;">
+                            <i data-lucide="plus" style="width:16px; height:16px;"></i>
+                        </button>
+                    </div>
                 </div>
-            `;
-        }
+                <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
+                    <button onclick="closeEditModal()"
+                        style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
+                    <button onclick="saveEdit()"
+                        style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // --- Modal & Action Functions ---
-
-        // Comment Functions
-        function openCommentModal() {
-            editingCommentId = null;
-            const titleEl = document.getElementById('commentModalTitle');
-            if (titleEl) titleEl.textContent = 'コメントを追加';
-
-            const textarea = document.getElementById('commentTextarea');
-            if (textarea) {
-                textarea.value = '';
-                updateCharCount();
-            }
-            utils.openModal('comment-modal');
-        }
-
-        async function openEditCommentModal(commentId) {
-            try {
-                const { data: comment, error } = await window.supabaseClient
-                    .from('applicant_comments')
-                    .select('*')
-                    .eq('id', commentId)
-                    .single();
-
-                if (error || !comment) throw new Error('コメントの取得に失敗しました');
-
-                editingCommentId = commentId;
-                document.getElementById('commentModalTitle').textContent = 'コメントを編集';
-                const textarea = document.getElementById('commentTextarea');
-                textarea.value = comment.content;
-                updateCharCount();
-
-                utils.openModal('comment-modal');
-            } catch (err) {
-                utils.showToast(err.message, 'error');
-            }
-        }
-
-        function closeCommentModal() {
-            utils.closeModal('comment-modal');
-            editingCommentId = null;
-        }
-
-        function updateCharCount() {
-            const textarea = document.getElementById('commentTextarea');
-            const charCountEl = document.getElementById('charCount');
-            if (textarea && charCountEl) {
-                const length = textarea.value.length;
-                charCountEl.textContent = length;
-                if (length > CONFIG.COMMENT_DANGER_LENGTH) charCountEl.style.color = '#ff6b6b';
-                else if (length > CONFIG.COMMENT_WARNING_LENGTH) charCountEl.style.color = '#ffd93d';
-                else charCountEl.style.color = 'var(--text-dim)';
-            }
-        }
-
-        async function saveComment() {
-            const textarea = document.getElementById('commentTextarea');
-            const content = textarea.value.trim();
-
-            if (!content) {
-                utils.showToast('コメントを入力してください', 'error');
-                return;
-            }
-            if (content.length > CONFIG.COMMENT_MAX_LENGTH) {
-                utils.showToast(`文字数が多すぎます (${content.length}/${CONFIG.COMMENT_MAX_LENGTH})`, 'error');
-                return;
-            }
-
-            try {
-                if (editingCommentId) {
-                    // Update
-                    const { error } = await window.supabaseClient
-                        .from('applicant_comments')
-                        .update({ content: content })
-                        .eq('id', editingCommentId);
-                    if (error) throw error;
-                    utils.showToast('コメントを更新しました', 'success');
-                } else {
-                    // Insert
-                    const { error } = await window.supabaseClient
-                        .from('applicant_comments')
-                        .insert({
-                            applicant_id: currentApplicantId,
-                            author_name: currentUser.name,
-                            author_id: currentUser.id, // Can be null if using dummy
-                            content: content
-                        });
-                    if (error) throw error;
-                    utils.showToast('コメントを追加しました', 'success');
-                }
-
-                closeCommentModal();
-                await fetchApplicantDetails(currentApplicantId); // Refresh
-
-            } catch (err) {
-                console.error(err);
-                utils.showToast('保存に失敗しました: ' + err.message, 'error');
-            }
-        }
-
-        // Support History Functions
-        async function openEditModal() {
-            // Populate member select
-            const select = document.getElementById('newHistoryName');
-            select.innerHTML = '<option value="">メンバーを選択</option>';
-            allMembers.forEach(m => {
-                const opt = document.createElement('option');
-                opt.value = m.full_name; // Store name as value for simplicity in this schema
-                opt.textContent = m.full_name;
-                select.appendChild(opt);
-            });
-
-            // Load current schedules into temp state for editing? 
-            // Ideally we edit directly or reload list.
-            // For simplicity, let's just fetch and render the list for deletion/viewing.
-            await renderEditModalHistory();
-
-            utils.openModal('edit-modal');
-        }
-
-        function closeEditModal() {
-            utils.closeModal('edit-modal');
-        }
-
-        async function renderEditModalHistory() {
-            const container = document.getElementById('editHistoryContainer');
-            container.innerHTML = '読み込み中...';
-
-            const { data: schedules, error } = await window.supabaseClient
-                .from('supporter_schedules')
-                .select('*')
-                .eq('applicant_id', currentApplicantId)
-                .order('start_date', { ascending: true });
-
-            if (error) {
-                container.innerHTML = 'エラーが発生しました';
-                return;
-            }
-
-            container.innerHTML = '';
-            if (schedules.length === 0) {
-                container.innerHTML = '<div style="padding:0.5rem; color:var(--text-dim);">履歴はありません</div>';
-                return;
-            }
-
-            schedules.forEach(item => {
-                const div = document.createElement('div');
-                div.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:0.5rem; border-bottom:1px solid var(--glass-border);";
-                div.innerHTML = `
-                    <span>${utils.formatDate(item.start_date)} ~ ${utils.formatDate(item.end_date)} : ${utils.escapeHtml(item.supporter_name)}</span>
-                    <button onclick="deleteHistoryItem('${item.id}')" style="color:#ff6b6b; background:none; border:none; cursor:pointer;">
-                        <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
-                    </button>
-                 `;
-                container.appendChild(div);
-            });
-            lucide.createIcons();
-        }
-
-        async function addHistoryItem() {
-            const start = document.getElementById('newHistoryStart').value;
-            const end = document.getElementById('newHistoryEnd').value;
-            const name = document.getElementById('newHistoryName').value;
-
-            if (!start || !end || !name) {
-                utils.showToast('全ての項目を入力してください');
-                return;
-            }
-            if (new Date(start) > new Date(end)) {
-                utils.showToast('開始日は終了日より前である必要があります');
-                return;
-            }
-
-            try {
-                const { error } = await window.supabaseClient
-                    .from('supporter_schedules')
-                    .insert({
-                        applicant_id: currentApplicantId,
-                        supporter_name: name,
-                        start_date: start,
-                        end_date: end
-                    });
-
-                if (error) throw error;
-
-                // Reset inputs
-                document.getElementById('newHistoryStart').value = '';
-                document.getElementById('newHistoryEnd').value = '';
-                document.getElementById('newHistoryName').value = '';
-
-                await renderEditModalHistory(); // Refresh list inside modal
-
-            } catch (err) {
-                console.error(err);
-                utils.showToast('追加に失敗しました: ' + err.message);
-            }
-        }
-
-        async function deleteHistoryItem(id) {
-            if (!confirm('この予定を削除してもよろしいですか？')) return;
-            try {
-                const { error } = await window.supabaseClient
-                    .from('supporter_schedules')
-                    .delete()
-                    .eq('id', id);
-                if (error) throw error;
-                await renderEditModalHistory();
-            } catch (err) {
-                utils.showToast('削除に失敗しました: ' + err.message);
-            }
-        }
-
-        async function saveEdit() {
-            // Since we save items immediately in this UI pattern, "Save" just closes and refreshes main view
-            closeEditModal();
-            await fetchApplicantDetails(currentApplicantId);
-        }
-    </script>
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/pages/admin/selected_detail/main.js"></script>
 </body>
 
 </html>
