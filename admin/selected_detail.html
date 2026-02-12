@@ -556,21 +556,54 @@
         function renderSupportSystem(data) {
             // Calculate Current Supporter
             const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            // today.setHours(0, 0, 0, 0); // Keep time for more precision if needed, or normalize for date-only cmp
 
-            const currentSchedule = data.supporter_schedules.find(s => {
-                const start = new Date(s.start_date);
-                const end = new Date(s.end_date);
-                return today >= start && today <= end;
-            });
+            let currentSchedule = null;
 
-            document.getElementById('valSupporter').textContent = currentSchedule ? currentSchedule.supporter_name : '未設定';
+            if (data.supporter_schedules && data.supporter_schedules.length > 0) {
+                // Sort by start_date desc (newest first)
+                const sorted = [...data.supporter_schedules].sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
 
-            // Support Period
-            if (data.period_start && data.period_end) {
-                document.getElementById('valPeriod').textContent = `${utils.formatDate(data.period_start)} - ${utils.formatDate(data.period_end)}`;
+                // 1. Try to find a schedule that covers TODAY
+                currentSchedule = sorted.find(s => {
+                    const start = new Date(s.start_date);
+                    const end = new Date(s.end_date);
+                    // Normalize comparison coverage
+                    start.setHours(0, 0, 0, 0);
+                    end.setHours(23, 59, 59, 999);
+                    return start <= today && today <= end;
+                });
+
+                // 2. Fallback: If no active schedule, show the latest one (most recent start date)
+                if (!currentSchedule) {
+                    currentSchedule = sorted[0];
+                }
+            }
+
+            // Render Supporter Name
+            const supporterValEl = document.getElementById('valSupporter');
+            if (currentSchedule) {
+                supporterValEl.textContent = currentSchedule.supporter_name || '担当あり';
+                supporterValEl.style.color = 'white';
             } else {
-                document.getElementById('valPeriod').textContent = '未設定';
+                supporterValEl.textContent = '未定';
+                supporterValEl.style.color = 'var(--text-dim)';
+            }
+
+            // Render Support Period (from the SAME schedule item if exists, otherwise from apllicant period?)
+            // The requirement says "support period also auto display". 
+            // If we selected a schedule, we should probably show THAT schedule's period.
+            // But there is also `data.period_start` on the applicant table itself (from migration).
+            // Let's prioritize the specific schedule period if we found a "current" one.
+
+            const periodValEl = document.getElementById('valPeriod');
+            if (currentSchedule && currentSchedule.start_date && currentSchedule.end_date) {
+                periodValEl.textContent = `${utils.formatDate(currentSchedule.start_date)} - ${utils.formatDate(currentSchedule.end_date)}`;
+            } else if (data.period_start && data.period_end) {
+                // Fallback to applicant's global period if no specific schedule or schedule has no dates
+                periodValEl.textContent = `${utils.formatDate(data.period_start)} - ${utils.formatDate(data.period_end)}`;
+            } else {
+                periodValEl.textContent = '未設定';
             }
 
             // History List
@@ -578,13 +611,16 @@
             historyList.innerHTML = '';
 
             if (data.supporter_schedules && data.supporter_schedules.length > 0) {
-                // Sort descending for display? Original logic was just listing them.
-                // Let's sort by start date descending
+                // Sort descending for display
                 const sortedSchedules = [...data.supporter_schedules].sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
 
                 sortedSchedules.forEach(schedule => {
                     const li = document.createElement('li');
-                    li.textContent = `${utils.formatDate(schedule.start_date)}~${utils.formatDate(schedule.end_date)} ${schedule.supporter_name}`;
+                    // Highlight if this is the one currently displayed as "Current"
+                    const isCurrent = currentSchedule && currentSchedule.id === schedule.id;
+                    const style = isCurrent ? 'color: var(--primary); font-weight:bold;' : '';
+
+                    li.innerHTML = `<span style="${style}">${utils.formatDate(schedule.start_date)} ~ ${utils.formatDate(schedule.end_date)} : ${utils.escapeHtml(schedule.supporter_name)}</span>`;
                     historyList.appendChild(li);
                 });
             } else {

@@ -1,0 +1,22 @@
+# --- Dangerous / should never be deployed ---
+**/*.db
+**/dummy.db
+
+# Backups
+**/*backup*.html
+**/*_backup_*.html
+**/*_backup*.html
+**/*backup_prev*.html
+**/*_prev*.html
+
+# Seed / dev-only tools
+**/seed_dummy_*.html
+**/seed_dummy_*.sql
+
+# Local experiments
+test_*/
+sandbox/
+archive/
+
+# Internal documents (if not public)
+assets/docs/

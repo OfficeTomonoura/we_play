@@ -13,13 +13,56 @@
     <link rel="stylesheet" href="../assets/css/admin.css?v=1.1">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Interaction Improvements */
         .data-table tbody tr {
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, transform 0.1s ease;
         }
 
         .data-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .data-table tbody tr:active {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(0.995);
+        }
+
+        /* Pagination Controls */
+        .page-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #current-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -56,23 +99,20 @@
                 <!-- Filters area -->
                 <div class="filters-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
                     <div class="filter-group">
-                        <select class="admin-select">
+                        <select id="filter-role" class="admin-select" onchange="resetAndFetch()">
                             <option value="">すべての役職</option>
-                            <option value="director">監督</option>
-                            <option value="actor">演者</option>
-                            <option value="props">小道具</option>
-                            <option value="producer">プロデューサー</option>
+                            <!-- Roles injected by JS -->
                         </select>
                     </div>
                     <div class="filter-group">
-                        <select class="admin-select">
+                        <select id="filter-supporter" class="admin-select" onchange="resetAndFetch()">
                             <option value="">サポーター有無</option>
                             <option value="assigned">割当済み</option>
                             <option value="pending">未割当</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <select class="admin-select">
+                        <select id="filter-limit" class="admin-select" onchange="resetAndFetch()">
                             <option value="20">20件表示</option>
                             <option value="50">50件表示</option>
                             <option value="100">100件表示</option>
@@ -94,126 +134,26 @@
                                 <th>役職</th>
                                 <th>電話番号 / 緊急連絡先</th>
                                 <th>サポーター / 期間</th>
-                                <th style="text-align: right;">アクション</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Row 1 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">やまだ
-                                            たろう</span>
-                                        <span class="name">山田 太郎</span>
-                                        <span class="email">福山中学校</span>
-                                    </div>
-                                </td>
-                                <td>2年生</td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);">監督</span>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">090-1234-5678</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">緊急: 090-8765-4321
-                                            (母親)</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">田中 健太</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">2026/02 -
-                                            2026/06</span>
-                                    </div>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <!-- Row 2 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">さとう
-                                            はなこ</span>
-                                        <span class="name">佐藤 花子</span>
-                                        <span class="email">福山高校</span>
-                                    </div>
-                                </td>
-                                <td>1年生</td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">演者</span>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">080-8765-4321</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">緊急: 080-1111-2222
-                                            (父親)</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">鈴木 美咲</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">2026/02 -
-                                            2026/06</span>
-                                    </div>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <!-- Row 3 -->
-                            <tr>
-                                <td>
-                                    <div class="user-meta">
-                                        <span class="furigana"
-                                            style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">たなか
-                                            いちろう</span>
-                                        <span class="name">田中 一郎</span>
-                                        <span class="email">備後中学校</span>
-                                    </div>
-                                </td>
-                                <td>3年生</td>
-                                <td><span class="status-badge"
-                                        style="background: rgba(255, 234, 0, 0.1); color: #ffea00; border: 1px solid rgba(255, 234, 0, 0.3);">プロデューサー</span>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">090-5555-4444</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">緊急: 090-6666-7777
-                                            (母親勤務先)</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <span style="color: var(--text-main);">伊藤 健一</span>
-                                        <span style="font-size: 0.85rem; color: var(--text-dim);">2026/02 -
-                                            2026/06</span>
-                                    </div>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="action-btn"><i data-lucide="more-vertical"></i></button>
-                                </td>
-                            </tr>
+                            <!-- Data injected by JS -->
                         </tbody>
                     </table>
 
                     <div class="table-footer"
                         style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
                         <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
-                            全 12 件中 1 - 12 件を表示
+                            全 0 件中 0 件を表示
                         </div>
                         <div class="pagination" style="display: flex; gap: 0.5rem;">
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
-                                    data-lucide="chevron-left" style="width: 16px;"></i></button>
-                            <button class="page-btn active"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary); cursor: pointer;">1</button>
-                            <button class="page-btn"
-                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
-                                    data-lucide="chevron-right" style="width: 16px;"></i></button>
+                            <button id="prev-btn" class="page-btn" onclick="prevPage()">
+                                <i data-lucide="chevron-left" style="width: 16px;"></i>
+                            </button>
+                            <span id="current-page">1</span>
+                            <button id="next-btn" class="page-btn" onclick="nextPage()">
+                                <i data-lucide="chevron-right" style="width: 16px;"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -221,109 +161,278 @@
         </main>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../assets/js/supabase-client.js?v=1.1"></script>
     <script src="components.js?v=jp_fix_v4"></script>
 
     <script>
-        lucide.createIcons();
+        // Configuration
+        const CONFIG = {
+            STATUS_FILTER: '採用',
+            ROLES: {
+                DIRECTOR: { name: '監督', styles: 'background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);' },
+                ACTOR: { name: '演者', styles: 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);' },
+                PRODUCER: { name: 'プロデューサー', styles: 'background: rgba(255, 234, 0, 0.1); color: #ffea00; border: 1px solid rgba(255, 234, 0, 0.3);' },
+                PROPS: { name: '小道具', styles: 'background: rgba(0, 255, 122, 0.1); color: #00ff7a; border: 1px solid rgba(0, 255, 122, 0.3);' },
+                DEFAULT: { name: '未定', styles: 'background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3);' }
+            }
+        };
 
-        document.addEventListener('DOMContentLoaded', fetchSelectedApplicants);
+        // Utility: XSS Protection
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
-        async function fetchSelectedApplicants() {
-            const tbody = document.querySelector('.data-table tbody');
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+        // State Management
+        let currentPage = 1;
+        let totalCount = 0;
+
+        function resetAndFetch() {
+            currentPage = 1;
+            fetchSelectedApplicants();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchSelectedApplicants();
+            }
+        }
+
+        function nextPage() {
+            const limit = parseInt(document.getElementById('filter-limit').value) || 20;
+            const maxPage = Math.ceil(totalCount / limit);
+            if (currentPage < maxPage) {
+                currentPage++;
+                fetchSelectedApplicants();
+            }
+        }
+
+        // Fetch Roles for Filter
+        async function fetchRoles() {
+            const select = document.getElementById('filter-role');
+            if (!select) return;
 
             try {
-                // Fetch applicants with status '採用' (Hired/Selected)
-                // Also join master_role to get the name of the assigned role
                 const { data, error } = await window.supabaseClient
+                    .from('master_role')
+                    .select('name')
+                    .order('id');
+
+                if (error) throw error;
+
+                // Clear and set default (Keep "All" option)
+                select.innerHTML = '<option value="">すべての役職</option>';
+
+                if (data && data.length > 0) {
+                    const uniqueRoles = [...new Set(data.filter(r => r.name).map(r => r.name))];
+                    uniqueRoles.forEach(roleName => {
+                        const option = document.createElement('option');
+                        option.value = roleName;
+                        option.textContent = roleName;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (err) {
+                console.error('Error fetching roles:', err);
+            }
+        }
+
+        // Data Fetching
+        async function fetchSelectedApplicants() {
+            const tbody = document.querySelector('.data-table tbody');
+            const resultInfo = document.querySelector('.results-info');
+            const roleFilter = document.getElementById('filter-role').value;
+            const supporterFilter = document.getElementById('filter-supporter').value;
+            const limit = parseInt(document.getElementById('filter-limit').value) || 20;
+
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+
+            try {
+                // Fetch basic data
+                // Note: Filtering by joined table (roles) is done client-side for simplicity in this version,
+                // as Supabase JS client inner join filtering syntax can be complex.
+                let query = window.supabaseClient
                     .from('applicants')
-                    .select('*, arm:master_role!assigned_role_id(name)')
-                    .eq('status', '採用')
+                    .select('*, arm:master_role!assigned_role_id(name), supporter_schedules(*)')
+                    .eq('status', CONFIG.STATUS_FILTER)
                     .order('created_at', { ascending: false });
+
+                const { data, error } = await query;
 
                 if (error) {
                     console.error('Supabase query error:', error);
                     throw error;
                 }
 
-                tbody.innerHTML = '';
+                // Client-side Filtering
+                let filteredData = data || [];
 
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">採用者はまだいません。</td></tr>';
-                    return;
+                if (roleFilter) {
+                    filteredData = filteredData.filter(item => item.arm?.name?.includes(roleFilter));
                 }
 
-                data.forEach(item => {
+                if (supporterFilter === 'assigned') {
+                    filteredData = filteredData.filter(item => item.supporter_schedules && item.supporter_schedules.length > 0);
+                } else if (supporterFilter === 'pending') {
+                    filteredData = filteredData.filter(item => !item.supporter_schedules || item.supporter_schedules.length === 0);
+                }
+
+                totalCount = filteredData.length;
+
+                // Pagination Slice
+                const start = (currentPage - 1) * limit;
+                const end = start + limit;
+                const displayData = filteredData.slice(start, end);
+
+                tbody.innerHTML = '';
+
+                // Update Pagination Controls
+                const currentPageSpan = document.getElementById('current-page');
+                if (currentPageSpan) currentPageSpan.textContent = currentPage;
+
+                const prevBtn = document.getElementById('prev-btn');
+                if (prevBtn) {
+                    prevBtn.disabled = currentPage === 1;
+                    prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+                }
+
+                const nextBtn = document.getElementById('next-btn');
+                if (nextBtn) {
+                    const maxPage = Math.ceil(totalCount / limit) || 1;
+                    nextBtn.disabled = currentPage >= maxPage;
+                    nextBtn.style.opacity = currentPage >= maxPage ? '0.5' : '1';
+                }
+
+                // Update Results Info
+                if (resultInfo) {
+                    if (totalCount === 0) {
+                        resultInfo.textContent = '全 0 件中 0 件を表示';
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem;">該当するデータはありません。</td></tr>';
+                        return;
+                    }
+                    const showStart = start + 1;
+                    const showEnd = Math.min(end, totalCount);
+                    resultInfo.textContent = `全 ${totalCount} 件中 ${showStart} - ${showEnd} 件を表示`;
+                }
+
+                // Optimization: Use DocumentFragment
+                const fragment = document.createDocumentFragment();
+
+                displayData.forEach(item => {
                     const tr = document.createElement('tr');
                     tr.dataset.id = item.id;
-                    tr.onclick = function () {
-                        const id = this.dataset.id;
-                        console.log('Clicked row ID:', id);
-                        if (id) {
-                            // URL parameter loss workaround: use sessionStorage
-                            sessionStorage.setItem('selected_applicant_id', id);
-                            window.open(`selected_detail.html?id=${id}`, '_blank');
-                        } else {
-                            console.error('ID is missing for this item:', item);
-                            alert('エラー: IDが取得できませんでした。');
-                        }
+                    tr.onclick = function (e) {
+                        // ID persistence
+                        sessionStorage.setItem('selected_applicant_id', item.id);
+                        window.open(`selected_detail.html?id=${item.id}`, '_blank');
                     };
 
-                    // Role Badge Style
+                    // Determine Role Style
                     const roleName = item.arm?.name || '未定';
-                    let roleStyle = 'background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3);';
-                    if (roleName.includes('監督')) {
-                        roleStyle = 'background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);';
-                    } else if (roleName.includes('演者')) {
-                        roleStyle = 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);';
-                    } else if (roleName.includes('プロデューサー')) {
-                        roleStyle = 'background: rgba(255, 234, 0, 0.1); color: #ffea00; border: 1px solid rgba(255, 234, 0, 0.3);';
-                    } else if (roleName.includes('小道具')) {
-                        roleStyle = 'background: rgba(0, 255, 122, 0.1); color: #00ff7a; border: 1px solid rgba(0, 255, 122, 0.3);';
+                    let roleStyle = CONFIG.ROLES.DEFAULT.styles;
+                    if (roleName.includes('監督')) roleStyle = CONFIG.ROLES.DIRECTOR.styles;
+                    else if (roleName.includes('演者')) roleStyle = CONFIG.ROLES.ACTOR.styles;
+                    else if (roleName.includes('プロデューサー')) roleStyle = CONFIG.ROLES.PRODUCER.styles;
+                    else if (roleName.includes('小道具')) roleStyle = CONFIG.ROLES.PROPS.styles;
+
+                    // Emergency Contact Logic
+                    let contactHtml = `<span style="color: var(--text-main);">${escapeHtml(item.phone || '-')}</span>`;
+                    if (item.emergency_contact_phone) {
+                        contactHtml += `<span style="font-size: 0.85rem; color: var(--text-dim); display:block; margin-top:0.2rem;">緊急: ${escapeHtml(item.emergency_contact_phone)} (${escapeHtml(item.emergency_contact_category || '関係なし')})</span>`;
+                    }
+
+                    // Supporter Logic
+                    let supporterHtml = '<span style="color: var(--text-dim); font-size: 0.9rem;">未定</span>';
+                    let schedulePeriod = '';
+
+                    if (item.supporter_schedules && item.supporter_schedules.length > 0) {
+                        // Find CURRENT active supporter first
+                        const now = new Date();
+                        // Normalize now to YYYY-MM-DD for comparison if needed, but Date compare is fine
+
+                        // Sort by start_date desc to prioritize latest
+                        const schedules = item.supporter_schedules.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
+                        // Try to find one that is active NOW (start <= now <= end)
+                        let targetSchedule = schedules.find(s => {
+                            const start = new Date(s.start_date);
+                            const end = new Date(s.end_date);
+                            // Adjust dates to cover the full day
+                            start.setHours(0, 0, 0, 0);
+                            end.setHours(23, 59, 59, 999);
+                            return start <= now && now <= end;
+                        });
+
+                        // If no active supporter, fallback to the latest one (most recent start date)
+                        if (!targetSchedule) {
+                            targetSchedule = schedules[0];
+                        }
+
+                        if (targetSchedule) {
+                            // If it's a past schedule, maybe show differently? 
+                            // For now, just show it but if it's past, maybe the period string will indicate it.
+
+                            const supporterName = targetSchedule.supporter_name || '担当あり';
+                            supporterHtml = `<span style="color: var(--text-main);">${escapeHtml(supporterName)}</span>`;
+
+                            if (targetSchedule.start_date && targetSchedule.end_date) {
+                                const start = new Date(targetSchedule.start_date).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit' });
+                                const end = new Date(targetSchedule.end_date).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit' });
+                                schedulePeriod = `<span style="font-size: 0.85rem; color: var(--text-dim);">${start} - ${end}</span>`;
+                            }
+                        }
                     }
 
                     tr.innerHTML = `
                         <td>
                             <div class="user-meta">
-                                <span class="furigana" style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">${item.full_kana || ''}</span>
-                                <span class="name">${item.full_name || '未設定'}</span>
-                                <span class="email">${item.school_name || ''}</span>
+                                <span class="furigana" style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">${escapeHtml(item.full_kana || '')}</span>
+                                <span class="name">${escapeHtml(item.full_name || '未設定')}</span>
+                                <span class="email">${escapeHtml(item.school_name || '')}</span>
                             </div>
                         </td>
-                        <td>${item.grade || '-'}</td>
-                        <td><span class="status-badge" style="${roleStyle}">${roleName}</span></td>
+                        <td>${escapeHtml(item.grade || '-')}</td>
+                        <td><span class="status-badge" style="${roleStyle}">${escapeHtml(roleName)}</span></td>
                         <td>
                             <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <span style="color: var(--text-main);">${item.phone || '-'}</span>
-                                <span style="font-size: 0.85rem; color: var(--text-dim);">${item.email || ''}</span>
+                                ${contactHtml}
                             </div>
                         </td>
                         <td>
                             <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <span style="color: var(--text-dim); font-size: 0.9rem;">未定</span>
+                                ${supporterHtml}
+                                ${schedulePeriod}
                             </div>
-                        </td>
-                        <td style="text-align: right;">
-                            <button class="action-btn"><i data-lucide="more-vertical"></i></button>
                         </td>
                     `;
-                    tbody.appendChild(tr);
+                    fragment.appendChild(tr);
                 });
 
-                // Update count
-                const resultInfo = document.querySelector('.results-info');
-                if (resultInfo) resultInfo.textContent = `全 ${data.length} 件を表示`;
-
+                tbody.appendChild(fragment);
                 lucide.createIcons();
 
             } catch (err) {
                 console.error('Error fetching selected applicants:', err);
                 const msg = err.message || '不明なエラー';
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #ff007a;">データの取得に失敗しました。<br><small>${msg}</small></td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem; color: #ff007a;">データの取得に失敗しました。<br><small>${escapeHtml(msg)}</small></td></tr>`;
             }
         }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            fetchRoles();
+            fetchSelectedApplicants();
+        });
+
     </script>
 </body>
 

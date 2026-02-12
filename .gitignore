@@ -7,3 +7,7 @@ build/
 .next/
 .vercel/
 *.log
+
+# Added by user request
+*.db
+sandbox/

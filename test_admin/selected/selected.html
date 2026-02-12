@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>選抜者一覧 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --accent: #ff007a;
+            --bg-deep: #050507;
+            --bg-dark: #0f0f13;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
+            --text-dim: #a1a1aa;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-dark);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        .nav-section {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            margin: 1.5rem 0 0.5rem 1rem;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            text-decoration: none;
+            color: var(--text-dim);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--accent);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 122, 0.1);
+            border-color: var(--accent);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: var(--header-height) 2rem 2rem;
+        }
+
+        /* Top Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(0, 242, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 90;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            width: 300px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .header-search i {
+            color: var(--text-dim);
+            width: 18px;
+        }
+
+        .header-search input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+            width: 100%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(112, 0, 255, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* Content Layout */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+        }
+
+        /* Dashboard Sections */
+        .welcome-banner {
+            margin: 2rem 0 3rem;
+        }
+
+        .welcome-banner h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-main), var(--text-dim));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-banner p {
+            color: var(--text-dim);
+        }
+
+        /* Data Table */
+        .table-container {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: border-color 0.3s var(--easing);
+        }
+
+        .table-container:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table tbody tr {
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .data-table tbody tr:active {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(0.995);
+        }
+
+        .user-meta .name {
+            display: block;
+            font-weight: 600;
+        }
+
+        .user-meta .email {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .admin-select {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1600px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s var(--easing);
+                box-shadow: none;
+            }
+
+            .sidebar.open {
+                transform: translateX(0) !important;
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .top-header {
+                left: 0 !important;
+                width: 100% !important;
+                padding-left: 4rem !important;
+            }
+
+            .mobile-menu-toggle {
+                display: flex !important;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 9999;
+                background: var(--bg-dark);
+                border: 1px solid var(--primary);
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s var(--easing);
+        }
+
+        .sidebar-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+
+    <!-- Reflector Debug Panel Styles -->
+    <style>
+        /* Reflector (Debug Panel) Styles */
+        #reflector-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            z-index: 10000;
+            width: 300px;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #reflector-panel.minimized {
+            width: auto;
+            padding: 10px;
+            border-radius: 50px;
+        }
+
+        #reflector-panel.minimized .panel-content {
+            display: none;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: move;
+        }
+
+        .panel-title {
+            color: #00f2ff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: #00f2ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00f2ff;
+        }
+
+        .minimize-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .minimize-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .control-label {
+            color: #a1a1aa;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-button {
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            color: #00f2ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-button:hover {
+            background: rgba(0, 242, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+
+        .action-button.danger {
+            background: rgba(255, 0, 122, 0.1);
+            border-color: rgba(255, 0, 122, 0.3);
+            color: #ff007a;
+        }
+
+        .action-button.danger:hover {
+            background: rgba(255, 0, 122, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 122, 0.2);
+        }
+
+        .instruction-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        /* Mock specific styles for Draft */
+        .mock-info {
+            font-size: 0.7rem;
+            color: #a1a1aa;
+            margin-top: 5px;
+            text-align: right;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div id="app-sidebar"></div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3px; height: 18px; background: var(--primary); border-radius: 2px;"></div>
+                    <h1 style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px;">We Play
+                        未来人財育成委員会 事業ポータル</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="avatar">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=7000ff&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="welcome-banner">
+                    <h1>選抜者一覧</h1>
+                    <p>選抜された参加者の情報を管理します。行をクリックすると詳細を表示します。</p>
+                </div>
+
+                <!-- Filters area -->
+                <div class="filters-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <div class="filter-group">
+                        <select id="filter-role" class="admin-select" onchange="resetAndFetch()">
+                            <option value="">すべての役職</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="filter-supporter" class="admin-select" onchange="resetAndFetch()">
+                            <option value="">サポーター有無</option>
+                            <option value="assigned">割当済み</option>
+                            <option value="pending">未割当</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="filter-limit" class="admin-select" onchange="resetAndFetch()">
+                            <option value="20">20件表示</option>
+                            <option value="50">50件表示</option>
+                            <option value="100">100件表示</option>
+                        </select>
+                    </div>
+                    <button class="export-btn"
+                        style="margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1.2rem; border-radius: 12px; cursor: pointer;">
+                        <i data-lucide="download"></i> エクスポート
+                    </button>
+                </div>
+
+                <!-- Selected Participants Table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>氏名 / 学校</th>
+                                <th>学年</th>
+                                <th>役職</th>
+                                <th>電話番号 / 緊急連絡先</th>
+                                <th>サポーター / 期間</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+
+                    <div class="table-footer"
+                        style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+                        <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
+                            全 0 件中 0 件を表示
+                        </div>
+                        <div class="pagination" style="display: flex; gap: 0.5rem;">
+                            <button id="prev-btn" class="page-btn" onclick="prevPage()"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
+                                    data-lucide="chevron-left" style="width: 16px;"></i></button>
+                            <span id="current-page"
+                                style="display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary);">1</span>
+                            <button id="next-btn" class="page-btn" onclick="nextPage()"
+                                style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: white; cursor: pointer;"><i
+                                    data-lucide="chevron-right" style="width: 16px;"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Reflector Panel (Debug Tool) -->
+    <div id="reflector-panel">
+        <div class="panel-header">
+            <div class="panel-title">反映指示くん (Reflector)</div>
+            <button class="minimize-btn" onclick="toggleReflector()">−</button>
+        </div>
+        <div class="panel-content">
+            <div class="instruction-box">
+                現在ドラフトモードです。<br>
+                変更を確認後、「反映指示」を出してください。
+            </div>
+            <div class="control-group">
+                <span class="control-label">AI REFLECTION PROMPT</span>
+                <textarea id="reflection-prompt"
+                    style="width:100%; height:80px; background:rgba(0,0,0,0.5); border:1px solid #333; color:#aaa; font-size:0.8rem; padding:8px; border-radius:4px; margin-bottom:8px; resize:none; font-family:monospace;"
+                    readonly>test_admin/selected/selected.html で検証した変更を admin/selected.html (本番環境) に反映してください。
+検証環境でインライン化されたリソース (CSS/JS) は元に戻し、機能追加・修正部分（HTML構造、ロジック）のみを移植してください。</textarea>
+                <button class="action-button" onclick="copyPrompt()">
+                    <i data-lucide="copy"></i> 指示をコピー
+                </button>
+                <button class="action-button danger" onclick="fetchSelectedApplicants()">
+                    <i data-lucide="refresh-cw"></i> データを再取得
+                </button>
+            </div>
+            <div class="mock-info">
+                Mode: Draft / Test Environment
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration
+        const CONFIG = {
+            SUPABASE_URL: 'https://tfqtvzknqlxnwosowrbi.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmcXR2emtucWx4bndvc293cmJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3MzE1MTEsImV4cCI6MjA4NTMwNzUxMX0.GOE4xWP9CCtwq6xUflyaF4U9lOylTys09Be1P0yMku4',
+            STATUS_FILTER: '採用',
+            ROLES: {
+                DIRECTOR: { name: '監督', styles: 'background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3);' },
+                ACTOR: { name: '演者', styles: 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);' },
+                PRODUCER: { name: 'プロデューサー', styles: 'background: rgba(255, 234, 0, 0.1); color: #ffea00; border: 1px solid rgba(255, 234, 0, 0.3);' },
+                PROPS: { name: '小道具', styles: 'background: rgba(0, 255, 122, 0.1); color: #00ff7a; border: 1px solid rgba(0, 255, 122, 0.3);' },
+                DEFAULT: { name: '未定', styles: 'background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3);' }
+            }
+        };
+
+        // Utility: XSS Protection
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initialize Supabase Client
+        window.supabaseClient = null;
+        if (typeof createClient !== 'undefined') {
+            window.supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        } else if (window.supabase && typeof window.supabase.createClient === 'function') {
+            window.supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        }
+
+        // Inline Components Logic (Sidebar & Header)
+        function renderSidebar() {
+            const sidebarPlaceholder = document.getElementById('app-sidebar');
+            if (!sidebarPlaceholder) return;
+
+            ensureMobileToggle();
+
+            const sidebarHTML = `
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <div class="logo">
+                             <span class="logo-text">WE PLAY ADMIN</span>
+                        </div>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <div class="nav-section">メイン</div>
+                        <a href="../../admin/dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> <span>ダッシュボード</span></a>
+                        <a href="../../admin/applicants.html" class="nav-item"><i data-lucide="users"></i> <span>応募者一覧</span></a>
+                        <a href="#" class="nav-item active"><i data-lucide="user-check"></i> <span>選抜者管理</span></a>
+                        
+                        <div class="nav-section">管理</div>
+                        <a href="../../admin/members.html" class="nav-item"><i data-lucide="contact"></i> <span>会員リスト</span></a>
+                        <a href="../../admin/collaborators.html" class="nav-item"><i data-lucide="briefcase"></i> <span>協力者リスト</span></a>
+                        <a href="../../admin/analysis.html" class="nav-item"><i data-lucide="bar-chart-2"></i> <span>分析・統計</span></a>
+                        
+                        <div class="nav-section">業務・運用</div>
+                        <a href="../../admin/line.html" class="nav-item"><i data-lucide="message-circle"></i> <span>LINE公式運用</span></a>
+                        <a href="../../admin/meetings.html" class="nav-item"><i data-lucide="file-text"></i> <span>議案・資料</span></a>
+
+                        <div class="nav-section">システム</div>
+                        <a href="../../admin/manual_liff.html" class="nav-item"><i data-lucide="book-open"></i> <span>マニュアル</span></a>
+                        <a href="../../admin/settings.html" class="nav-item"><i data-lucide="settings"></i> <span>設定</span></a>
+                    </nav>
+                    <div class="sidebar-footer">
+                        <button class="logout-btn" onclick="handleLogout()">
+                            <i data-lucide="log-out"></i> <span>ログアウト</span>
+                        </button>
+                    </div>
+                </aside>
+            `;
+            sidebarPlaceholder.outerHTML = sidebarHTML;
+            if (window.lucide) window.lucide.createIcons();
+            initMobileMenuClose();
+        }
+
+        // Logout Handler (Mock)
+        window.handleLogout = async function () {
+            if (window.supabaseClient) {
+                await window.supabaseClient.auth.signOut();
+            }
+            window.location.href = '../../admin/login.html';
+        };
+
+        function ensureMobileToggle() {
+            const existing = document.querySelector('.mobile-menu-toggle');
+            if (existing) existing.remove();
+
+            const toggleBtn = document.createElement('div');
+            toggleBtn.className = 'mobile-menu-toggle';
+            toggleBtn.style.cssText = 'display:flex !important; position:fixed; top:15px; left:15px; z-index:2147483647; background:#0f0f13; border:1px solid #00f2ff; color:white; width:40px; height:40px; border-radius:8px; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.5);';
+            toggleBtn.innerHTML = '<i data-lucide="menu" style="width:24px; height:24px;"></i>';
+            document.body.appendChild(toggleBtn);
+
+            const overlay = document.querySelector('.sidebar-overlay') || document.createElement('div');
+            if (!overlay.parentNode) {
+                overlay.className = 'sidebar-overlay';
+                document.body.appendChild(overlay);
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                const s = document.querySelector('.sidebar');
+                if (s) {
+                    s.classList.toggle('open');
+                    if (s.classList.contains('open')) overlay.classList.add('visible');
+                    else overlay.classList.remove('visible');
+                }
+            });
+
+            overlay.addEventListener('click', () => {
+                const s = document.querySelector('.sidebar');
+                if (s) s.classList.remove('open');
+                overlay.classList.remove('visible');
+            });
+        }
+
+        function initMobileMenuClose() {
+            // simplified
+        }
+    </script>
+
+    <script>
+        // Fetch Roles for Filter
+        async function fetchRoles() {
+            const select = document.getElementById('filter-role');
+            if (!select) return;
+
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('master_role')
+                    .select('name')
+                    .order('id');
+
+                if (error) throw error;
+
+                // Clear and set default
+                select.innerHTML = '<option value="">すべての役職</option>';
+
+                if (data && data.length > 0) {
+                    const uniqueRoles = [...new Set(data.filter(r => r.name).map(r => r.name))];
+                    uniqueRoles.forEach(roleName => {
+                        const option = document.createElement('option');
+                        option.value = roleName;
+                        option.textContent = roleName;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (err) {
+                console.error('Error fetching roles:', err);
+            }
+        }
+
+        // Main Application Logic
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            fetchRoles();
+            fetchSelectedApplicants();
+        });
+
+        // Reflector Toggle
+        function toggleReflector() {
+            const panel = document.getElementById('reflector-panel');
+            const btn = document.querySelector('.minimize-btn');
+            panel.classList.toggle('minimized');
+            btn.textContent = panel.classList.contains('minimized') ? '+' : '−';
+        }
+
+        // Copy Prompt
+        // Copy Prompt
+        function copyPrompt() {
+            const promptText = document.getElementById('reflection-prompt');
+            const textToCopy = promptText.value;
+
+            // Try Modern API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert('指示をクリップボードにコピーしました！\nAIチャットに貼り付けて実行してください。');
+                }).catch(err => {
+                    console.error('Failed to copy with Clipboard API:', err);
+                    fallbackCopyProp(promptText);
+                });
+            } else {
+                fallbackCopyProp(promptText);
+            }
+        }
+
+        function fallbackCopyProp(textArea) {
+            try {
+                textArea.select();
+                textArea.setSelectionRange(0, 99999); // For mobile devices
+                document.execCommand('copy');
+                alert('指示をクリップボードにコピーしました！\nAIチャットに貼り付けて実行してください。');
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                alert('コピーに失敗しました。手動でコピーしてください。');
+            }
+        }
+
+        // Draggable Reflector
+        const panel = document.getElementById('reflector-panel');
+        const header = panel.querySelector('.panel-header');
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        header.addEventListener("mousedown", dragStart);
+        document.addEventListener("mouseup", dragEnd);
+        document.addEventListener("mousemove", drag);
+
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            if (e.target === header || e.target.parentNode === header) {
+                isDragging = true;
+            }
+        }
+
+        function dragEnd() {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                panel.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+            }
+        }
+
+        // State Management
+        let currentPage = 1;
+        let totalCount = 0;
+
+        function resetAndFetch() {
+            currentPage = 1;
+            fetchSelectedApplicants();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchSelectedApplicants();
+            }
+        }
+
+        function nextPage() {
+            const limit = parseInt(document.getElementById('filter-limit').value) || 20;
+            const maxPage = Math.ceil(totalCount / limit);
+            if (currentPage < maxPage) {
+                currentPage++;
+                fetchSelectedApplicants();
+            }
+        }
+
+        // Data Fetching
+        async function fetchSelectedApplicants() {
+            const tbody = document.querySelector('.data-table tbody');
+            const resultInfo = document.querySelector('.results-info');
+            const roleFilter = document.getElementById('filter-role').value;
+            const supporterFilter = document.getElementById('filter-supporter').value;
+            const limit = parseInt(document.getElementById('filter-limit').value) || 20;
+
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading...</td></tr>';
+
+            // Pagination Calculations
+            const from = (currentPage - 1) * limit;
+            const to = from + limit - 1;
+
+            try {
+                // Fetch basic data (filtering by joined table is complex in Supabase, so we filter client-side for roles)
+                let query = window.supabaseClient
+                    .from('applicants')
+                    .select('*, arm:master_role!assigned_role_id(name), supporter_schedules(*)')
+                    .eq('status', CONFIG.STATUS_FILTER)
+                    .order('created_at', { ascending: false });
+
+                const { data, error } = await query;
+
+                if (error) {
+                    console.error('Supabase query error:', error);
+                    throw error;
+                }
+
+                // Client-side Filtering
+                let filteredData = data || [];
+
+                if (roleFilter) {
+                    filteredData = filteredData.filter(item => item.arm?.name?.includes(roleFilter));
+                }
+
+                if (supporterFilter === 'assigned') {
+                    filteredData = filteredData.filter(item => item.supporter_schedules && item.supporter_schedules.length > 0);
+                } else if (supporterFilter === 'pending') {
+                    filteredData = filteredData.filter(item => !item.supporter_schedules || item.supporter_schedules.length === 0);
+                }
+
+                totalCount = filteredData.length;
+
+                // Pagination Slice
+                const start = (currentPage - 1) * limit;
+                const end = start + limit;
+                const displayData = filteredData.slice(start, end);
+
+                tbody.innerHTML = '';
+
+                // Update Pagination Controls
+                const currentPageSpan = document.getElementById('current-page');
+                if (currentPageSpan) currentPageSpan.textContent = currentPage;
+
+                const maxPage = Math.ceil(totalCount / limit) || 1;
+
+                const prevBtn = document.getElementById('prev-btn');
+                if (prevBtn) {
+                    prevBtn.disabled = currentPage === 1;
+                    prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+                }
+
+                const nextBtn = document.getElementById('next-btn');
+                if (nextBtn) {
+                    nextBtn.disabled = currentPage === maxPage;
+                    nextBtn.style.opacity = currentPage === maxPage ? '0.5' : '1';
+                }
+
+                if (resultInfo) {
+                    const displayStart = totalCount === 0 ? 0 : start + 1;
+                    const displayEnd = Math.min(end, totalCount);
+                    resultInfo.textContent = `全 ${totalCount} 件中 ${displayStart} - ${displayEnd} 件を表示`;
+                }
+
+                if (!displayData || displayData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">条件に一致する採用者は見つかりませんでした。</td></tr>';
+                    return;
+                }
+
+                // Use DocumentFragment for performance
+                const fragment = document.createDocumentFragment();
+
+                displayData.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.dataset.id = item.id;
+                    tr.onclick = function () {
+                        const id = this.dataset.id;
+                        if (id) {
+                            sessionStorage.setItem('selected_applicant_id', id);
+                            // Link to draft detail page just in case, but usually we test this listing page itself
+                            window.open(`selected_detail.html?id=${id}`, '_blank');
+                        } else {
+                            alert('エラー: IDが取得できませんでした。');
+                        }
+                    };
+
+                    // Role Badge Style
+                    const roleName = item.arm?.name || '未定';
+                    let roleStyle = CONFIG.ROLES.DEFAULT.styles;
+
+                    if (roleName.includes(CONFIG.ROLES.DIRECTOR.name)) roleStyle = CONFIG.ROLES.DIRECTOR.styles;
+                    else if (roleName.includes(CONFIG.ROLES.ACTOR.name)) roleStyle = CONFIG.ROLES.ACTOR.styles;
+                    else if (roleName.includes(CONFIG.ROLES.PRODUCER.name)) roleStyle = CONFIG.ROLES.PRODUCER.styles;
+                    else if (roleName.includes(CONFIG.ROLES.PROPS.name)) roleStyle = CONFIG.ROLES.PROPS.styles;
+
+                    // Emergency Contact Logic
+                    let emergencyInfo = '';
+                    if (item.emergency_contact_phone) {
+                        const cat = item.emergency_contact_category ? ` (${escapeHtml(item.emergency_contact_category)})` : '';
+                        emergencyInfo = `<span style="font-size: 0.85rem; color: var(--text-dim);">緊急: ${escapeHtml(item.emergency_contact_phone)}${cat}</span>`;
+                    } else {
+                        emergencyInfo = `<span style="font-size: 0.85rem; color: var(--text-dim);">-</span>`;
+                    }
+
+                    // Supporter Logic
+                    let supporterName = '未定';
+                    let schedulePeriod = '未定';
+
+                    if (item.supporter_schedules && item.supporter_schedules.length > 0) {
+                        // Sort by start_date desc to get latest
+                        const schedules = item.supporter_schedules.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+                        const latest = schedules[0];
+                        supporterName = latest.supporter_name || '未定';
+                        if (latest.start_date && latest.end_date) {
+                            const start = new Date(latest.start_date).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit' });
+                            const end = new Date(latest.end_date).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit' });
+                            schedulePeriod = `${start} - ${end}`;
+                        }
+                    }
+
+                    tr.innerHTML = `
+                        <td>
+                            <div class="user-meta">
+                                <span class="furigana" style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.2rem;">${escapeHtml(item.full_kana || '')}</span>
+                                <span class="name">${escapeHtml(item.full_name || '未設定')}</span>
+                                <span class="email">${escapeHtml(item.school_name || '')}</span>
+                            </div>
+                        </td>
+                        <td>${escapeHtml(item.grade || '-')}</td>
+                        <td><span class="status-badge" style="${roleStyle}">${escapeHtml(roleName)}</span></td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <span style="color: var(--text-main);">${escapeHtml(item.phone || '-')}</span>
+                                ${emergencyInfo}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <span style="color: var(--text-main);">${escapeHtml(supporterName)}</span>
+                                <span style="font-size: 0.85rem; color: var(--text-dim);">${escapeHtml(schedulePeriod)}</span>
+                            </div>
+                        </td>
+
+                    `;
+                    fragment.appendChild(tr);
+                });
+
+                tbody.appendChild(fragment);
+
+                lucide.createIcons();
+
+            } catch (err) {
+                console.error('Error fetching selected applicants:', err);
+                const msg = err.message || '不明なエラー';
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #ff007a;">データの取得に失敗しました。<br><small>${escapeHtml(msg)}</small></td></tr>`;
+            }
+        }
+    </script>
+</body>
+
+</html>
