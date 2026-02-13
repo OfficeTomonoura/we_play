@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Page Preview | We Play</title>
+    <script>
+        // Production Guard: localhost以外では動作させない
+        if (!["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+            document.documentElement.innerHTML = "";
+            window.location.href = "/"; // 強制リダイレクトまたは終了
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0b0f;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --text: #ffffff;
+            --text-dim: #a1a1aa;
+            --border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            color: var(--text-dim);
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: "";
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(to right, var(--border), transparent);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .link-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(0, 242, 255, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .link-card:hover::before {
+            opacity: 1;
+        }
+
+        .link-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .link-url {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-family: monospace;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-dim);
+        }
+
+        .notice {
+            margin-top: 80px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 75, 75, 0.05);
+            border: 1px solid rgba(255, 75, 75, 0.2);
+            font-size: 0.85rem;
+            color: #ff8888;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notice svg {
+            flex-shrink: 0;
+        }
+
+        .auth-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #666;
+        }
+
+        .status-dot.active {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .auth-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .auth-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .auth-form input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .auth-form input:focus {
+            border-color: var(--primary);
+        }
+
+        .auth-form label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .id-generator {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .id-generator input {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: var(--primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary-auth {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .btn-outline-auth {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline-auth:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Component Gallery</h1>
+            <p>We Play プロジェクト 画面リンク集 (Developer Only)</p>
+        </header>
+
+        <!-- Dev Auth Section -->
+        <div class="auth-panel" id="dev-auth-panel" style="display: none;">
+            <div class="section-title" style="margin-bottom: 5px;">Dev Quick Auth</div>
+            <div class="auth-status">
+                <div id="auth-dot" class="status-dot"></div>
+                <span id="auth-label">Checking session...</span>
+            </div>
+
+            <div class="auth-form">
+                <div>
+                    <label>Developer Email</label>
+                    <input type="email" id="dev-email" placeholder="dev@example.com">
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="dev-password" placeholder="••••••••">
+                </div>
+                <button id="btn-login" class="btn btn-primary-auth">Login</button>
+                <button id="btn-logout" class="btn btn-outline-auth">Logout</button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin: 0;">※認証情報はブラウザのlocalStorageにのみ保存され、コードには残りません。
+            </p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Public Pages</div>
+            <div class="links-grid">
+                <a href="/index.html" class="link-card">
+                    <span class="link-title">Landing Page</span>
+                    <span class="link-url">/index.html</span>
+                </a>
+                <a href="/register.html" class="link-card">
+                    <span class="link-title">Registration Form</span>
+                    <span class="link-url">/register.html</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Admin Pages</div>
+            <div class="links-grid">
+                <a href="/admin/login.html" class="link-card">
+                    <span class="link-title">Admin Login</span>
+                    <span class="link-url">/admin/login.html</span>
+                </a>
+                <a href="/admin/dashboard.html" class="link-card">
+                    <span class="link-title">Dashboard</span>
+                    <span class="link-url">/admin/dashboard.html</span>
+                </a>
+                <a href="/admin/applicants.html" class="link-card">
+                    <span class="link-title">Applicants List</span>
+                    <span class="link-url">/admin/applicants.html</span>
+                </a>
+                <a href="/admin/selected.html" class="link-card">
+                    <span class="link-title">Selected Management</span>
+                    <span class="link-url">/admin/selected.html</span>
+                </a>
+                <a href="/admin/members.html" class="link-card">
+                    <span class="link-title">Members List</span>
+                    <span class="link-url">/admin/members.html</span>
+                </a>
+                <a href="/admin/collaborators.html" class="link-card">
+                    <span class="link-title">Collaborators</span>
+                    <span class="link-url">/admin/collaborators.html</span>
+                </a>
+                <a href="/admin/meetings.html" class="link-card">
+                    <span class="link-title">Meetings & Docs</span>
+                    <span class="link-url">/admin/meetings.html</span>
+                </a>
+                <a href="/admin/analysis.html" class="link-card">
+                    <span class="link-title">Analysis & Stats</span>
+                    <span class="link-url">/admin/analysis.html</span>
+                </a>
+                <a href="/admin/line.html" class="link-card">
+                    <span class="link-title">LINE Official</span>
+                    <span class="link-url">/admin/line.html</span>
+                </a>
+                <a href="/admin/settings.html" class="link-card">
+                    <span class="link-title">Settings</span>
+                    <span class="link-url">/admin/settings.html</span>
+                </a>
+                <a href="/admin/database.html" class="link-card">
+                    <span class="link-title">System Database</span>
+                    <span class="link-url">/admin/database.html</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Deep Links (Dynamic ID)</div>
+
+            <div class="id-generator">
+                <div style="flex-shrink: 0;">
+                    <label style="display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 4px;">Target
+                        UUID (Applicant/Member/Meeting ID)</label>
+                    <div style="font-size: 0.8rem; color: var(--primary); font-weight: 600;">Sample ID Setup</div>
+                </div>
+                <input type="text" id="target-id"
+                    placeholder="Paste UUID here (e.g. 550e8400-e29b-41d4-a716-446655440000)">
+            </div>
+
+            <div class="links-grid">
+                <a href="/admin/selected_detail.html?id=" id="link-selected" class="link-card deep-link">
+                    <span class="link-title">Selected Detail</span>
+                    <span class="link-url">/admin/selected_detail.html?id=<span class="current-id">...</span></span>
+                    <span class="badge">Detail View</span>
+                </a>
+                <a href="/admin/meeting-details.html?id=" id="link-meeting" class="link-card deep-link">
+                    <span class="link-title">Meeting Details</span>
+                    <span class="link-url">/admin/meeting-details.html?id=<span class="current-id">...</span></span>
+                    <span class="badge">Detail View</span>
+                </a>
+                <a href="/admin/agenda-item-details.html?id=" id="link-agenda" class="link-card deep-link">
+                    <span class="link-title">Agenda Item</span>
+                    <span class="link-url">/admin/agenda-item-details.html?id=<span class="current-id">...</span></span>
+                    <span class="badge">Detail View</span>
+                </a>
+                <a href="/admin/selected_detail.html?id=00000000-0000-0000-0000-000000000000" class="link-card">
+                    <span class="link-title">Empty Detail (Test)</span>
+                    <span class="link-url">ID: zeroes</span>
+                    <span class="badge">Layout Check</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="notice">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>このページは開発専用です。.vercelignore によりデプロイから除外され、localhost 以外では動作しません。</span>
+        </div>
+    </div>
+    <script type="module">
+        import { authApi } from '../src/api/auth.js';
+
+        const panel = document.getElementById('dev-auth-panel');
+        const dot = document.getElementById('auth-dot');
+        const label = document.getElementById('auth-label');
+        const emailInput = document.getElementById('dev-email');
+        const passInput = document.getElementById('dev-password');
+        const loginBtn = document.getElementById('btn-login');
+        const logoutBtn = document.getElementById('btn-logout');
+
+        if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+            panel.style.display = 'flex';
+        }
+
+        emailInput.value = localStorage.getItem('dev_auth_email') || '';
+        passInput.value = localStorage.getItem('dev_auth_pass') || '';
+
+        emailInput.addEventListener('change', (e) => localStorage.setItem('dev_auth_email', e.target.value));
+        passInput.addEventListener('change', (e) => localStorage.setItem('dev_auth_pass', e.target.value));
+
+        async function updateStatus() {
+            try {
+                const session = await authApi.getSession();
+                if (session) {
+                    dot.classList.add('active');
+                    label.textContent = `Logged in: ${session.user.email}`;
+                    loginBtn.disabled = true;
+                    logoutBtn.disabled = false;
+                } else {
+                    dot.classList.remove('active');
+                    label.textContent = 'Not logged in';
+                    loginBtn.disabled = false;
+                    logoutBtn.disabled = true;
+                }
+            } catch (e) {
+                label.textContent = 'Auth error';
+            }
+        }
+
+        loginBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const pass = passInput.value;
+            if (!email || !pass) return alert('Enter credentials');
+
+            loginBtn.disabled = true;
+            try {
+                await authApi.signInWithPassword(email, pass);
+                await updateStatus();
+            } catch (e) {
+                alert('Login failed');
+            } finally {
+                loginBtn.disabled = false;
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            if (!confirm('Logout?')) return;
+            try {
+                await authApi.signOut();
+                await updateStatus();
+            } catch (e) {
+                alert('Logout failed');
+            }
+        });
+
+        // Deep Link Dynamic ID Handler
+        const targetIdInput = document.getElementById('target-id');
+        const deepLinks = document.querySelectorAll('.deep-link');
+        const idDisplays = document.querySelectorAll('.current-id');
+
+        function updateDeepLinks() {
+            const id = targetIdInput.value.trim();
+            localStorage.setItem('dev_target_id', id);
+
+            deepLinks.forEach(link => {
+                const base = link.getAttribute('href').split('?')[0];
+                link.setAttribute('href', `${base}?id=${id}`);
+            });
+
+            idDisplays.forEach(display => {
+                display.textContent = id || '...';
+            });
+        }
+
+        targetIdInput.value = localStorage.getItem('dev_target_id') || '';
+        targetIdInput.addEventListener('input', updateDeepLinks);
+        updateDeepLinks();
+
+        updateStatus();
+    </script>
+</body>
+
+</html>
