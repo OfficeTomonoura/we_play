@@ -1,0 +1,14 @@
+:root {
+    --primary: #00f2ff;
+    --secondary: #7000ff;
+    --accent: #ff007a;
+    --bg-deep: #050507;
+    --bg-dark: #0f0f13;
+    --bg-card: rgba(255, 255, 255, 0.03);
+    --text-main: #ffffff;
+    --text-dim: #a1a1aa;
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --sidebar-width: 260px;
+    --header-height: 70px;
+    --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}

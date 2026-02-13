@@ -1,3 +1,4 @@
+import '../../../styles/admin/index.js';
 import { createIcons, icons } from 'lucide';
 import { membersApi } from '../../../api/members';
 import { masterApi } from '../../../api/master';

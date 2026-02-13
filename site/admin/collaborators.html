@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>協力者一覧 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    
+
+    <style>
+        .data-table tbody tr {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Improved Modal Styling */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 25, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 242, 255, 0.05);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.4s var(--easing);
+        }
+
+        .modal-header {
+            padding: 2.22rem 2.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-inner {
+            padding: 2.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar for Modal Inner */
+        .modal-inner::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .modal-inner::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 0.6rem;
+            padding-left: 0.2rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 0.9rem 1.2rem;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            background: rgba(0, 242, 255, 0.03);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group select::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.85rem;
+        }
+
+        .modal-actions {
+            padding: 1.5rem 2.5rem 2.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-actions .primary-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 14px;
+            font-weight: 800;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- App Root -->
+    <div id="app"></div>
+
+    <!-- Page Content Template -->
+    <template id="page-template">
+        <!-- Filters area -->
+        <div class="filters-row" style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center;">
+            <div class="filter-group">
+                <select id="categoryFilter" class="admin-select">
+                    <option value="">すべてのカテゴリー</option>
+                    <option value="filming">撮影・映像</option>
+                    <option value="venue">会場提供</option>
+                    <option value="instructor">講師</option>
+                    <option value="sponsorship">協賛</option>
+                    <option value="promotion">広報協力</option>
+                </select>
+            </div>
+            <button id="addCollaboratorBtn" class="primary-btn"
+                style="display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="plus"></i> 新規登録
+            </button>
+            <button class="export-btn"
+                style="margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1.2rem; border-radius: 12px; cursor: pointer;">
+                <i data-lucide="download"></i> エクスポート
+            </button>
+        </div>
+
+        <!-- Collaborators Table -->
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>会社名</th>
+                        <th>担当者</th>
+                        <th>電話番号</th>
+                        <th>メールアドレス</th>
+                        <th>協力カテゴリー</th>
+                        <th style="text-align: right;">アクション</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic Content -->
+                </tbody>
+            </table>
+
+            <div class="table-footer"
+                style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+                <div class="results-info" style="font-size: 0.9rem; color: var(--text-dim);">
+                    全 <span id="totalCount">0</span> 件を表示
+                </div>
+                <div class="pagination" style="display: flex; gap: 0.5rem;">
+                    <button class="page-btn active"
+                        style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary); background: rgba(0, 242, 255, 0.1); color: var(--primary); cursor: pointer;">1</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Collaborator Modal (Inside Template to keep together) -->
+        <div id="collaboratorModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i data-lucide="user-plus" style="color: var(--primary);"></i> 協力者の新規登録</h2>
+                    <button class="close-modal" onclick="closeModal()"><i data-lucide="x"></i></button>
+                </div>
+                <form id="collaboratorForm">
+                    <div class="modal-inner">
+                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>会社名・団体名</label>
+                                <input type="text" name="company_name" placeholder="〇〇株式会社" required>
+                            </div>
+                            <div class="form-group">
+                                <label>会社名（ふりがな）</label>
+                                <input type="text" name="company_kana" placeholder="まるまるかぶしきがいしゃ">
+                            </div>
+                            <div class="form-group">
+                                <label>協力カテゴリー</label>
+                                <select name="category" required>
+                                    <option value="filming">撮影・映像</option>
+                                    <option value="venue">会場提供</option>
+                                    <option value="instructor">講師</option>
+                                    <option value="sponsorship">協賛</option>
+                                    <option value="promotion">広報協力</option>
+                                    <option value="other">その他</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>担当者名</label>
+                                <input type="text" name="contact_name" placeholder="山田 太郎" required>
+                            </div>
+                            <div class="form-group">
+                                <label>担当者（ふりがな）</label>
+                                <input type="text" name="contact_kana" placeholder="やまだ たろう">
+                            </div>
+                            <div class="form-group">
+                                <label>電話番号</label>
+                                <input type="tel" name="phone" placeholder="084-XXX-XXXX" required>
+                            </div>
+                            <div class="form-group">
+                                <label>メールアドレス</label>
+                                <input type="email" name="email" placeholder="example@domain.com">
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>備考</label>
+                                <textarea name="notes" rows="4" placeholder="特記事項があれば入力してください"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="secondary-btn" onclick="closeModal()">キャンセル</button>
+                        <button type="submit" class="primary-btn">登録を完了する</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- Vite Entry Point -->
+    <script type="module" src="../../src/pages/admin/collaborators/main.js"></script>
+</body>
+
+</html>

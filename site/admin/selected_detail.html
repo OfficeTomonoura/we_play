@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>選抜者詳細 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+
+
+    <style>
+        .detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .detail-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .info-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .role-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .role-director {
+            background: rgba(112, 0, 255, 0.1);
+            color: #7000ff;
+            border: 1px solid rgba(112, 0, 255, 0.3);
+        }
+
+        .role-actor {
+            background: rgba(255, 0, 122, 0.1);
+            color: #ff007a;
+            border: 1px solid rgba(255, 0, 122, 0.3);
+        }
+
+        .role-producer {
+            background: rgba(255, 234, 0, 0.1);
+            color: #ffea00;
+            border: 1px solid rgba(255, 234, 0, 0.3);
+        }
+
+        .role-props {
+            background: rgba(0, 255, 122, 0.1);
+            color: #00ff7a;
+            border: 1px solid rgba(0, 255, 122, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="page-template">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div>
+                    <button onclick="window.history.back()"
+                        style="background:none; border:none; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                        <i data-lucide="arrow-left"></i> 戻る
+                    </button>
+                    <h1 id="applicantName" style="font-size: 1.8rem; font-weight: 800; margin:0;">Loading...</h1>
+                </div>
+                <div id="statusBadgeContainer">
+                    <!-- Status Badge injected here -->
+                </div>
+            </div>
+
+            <div class="detail-grid">
+                <!-- Left Column: Basic Info -->
+                <div class="detail-section">
+                    <h2
+                        style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="user"></i> 基本情報
+                    </h2>
+
+                    <div class="info-group">
+                        <label class="info-label">ふりがな</label>
+                        <div class="info-value" id="valKana">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">学校名 / 学年</label>
+                        <div class="info-value"><span id="valSchool">-</span> <span id="valGrade"
+                                style="font-size:0.9em; margin-left:0.5rem; color:var(--text-dim);">-</span></div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">連絡先 (電話)</label>
+                        <div class="info-value" id="valPhone">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">連絡先 (Email)</label>
+                        <div class="info-value" id="valEmail">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">緊急連絡先</label>
+                        <div class="info-value">
+                            <span id="valEmergencyContactPhone">-</span>
+                            <span id="valEmergencyContactCategory"
+                                style="color:var(--text-dim); margin-left:0.5rem;"></span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <label class="info-label">現在の配属役職</label>
+                        <div class="info-value" id="valRole">-</div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Selection Info -->
+                <div class="detail-section">
+                    <h2
+                        style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="users"></i> サポート体制
+                    </h2>
+
+                    <div class="info-group">
+                        <label class="info-label">担当サポーター</label>
+                        <div class="info-value" id="valSupporter" style="font-weight:bold;">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <label class="info-label">サポート期間</label>
+                        <div class="info-value" id="valPeriod">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div style="margin-top:0.8rem;">
+                            <label class="info-label" style="font-size:0.8rem;">担当予定</label>
+                            <ul id="valSupporterHistory"
+                                style="list-style:none; padding:0; margin:0.3rem 0 0 0; font-size:0.85rem; color:var(--text-dim);">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 1.5rem 0;">
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="action-btn" onclick="openEditModal()"
+                            style="flex:1; padding:0.8rem; border-radius:8px; border:1px solid var(--primary); background:rgba(0, 242, 255, 0.1); color:var(--primary); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition: all 0.2s;">
+                            <i data-lucide="edit"></i> 情報編集
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Section: Remarks / Comments -->
+            <div class="detail-section">
+                <h2
+                    style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; justify-content: space-between;">
+                    <span style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="clipboard-list"></i> 備考
+                    </span>
+                    <button onclick="openCommentModal()"
+                        style="padding: 0.5rem 1rem; background: var(--primary); border: none; border-radius: 6px; color: black; font-weight: bold; cursor:pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.3rem;">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        コメントを追加
+                    </button>
+                </h2>
+                <div id="commentsContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Comments will be rendered here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Modals -->
+    <div id="comment-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="commentModalTitleHeading"
+                    style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i data-lucide="message-square"></i> <span id="commentModalTitle">コメントを追加</span>
+                </h3>
+                <button class="close-modal" onclick="closeCommentModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group">
+                    <label class="info-label" style="margin-bottom:0.5rem; display:block;">コメント</label>
+                    <textarea id="commentTextarea" class="admin-select"
+                        style="width:100%; height:150px; font-family:inherit; font-size:0.9rem; resize:vertical;"
+                        placeholder="コメントを入力してください..." oninput="updateCharCount()"></textarea>
+                    <div style="text-align:right; margin-top:0.3rem; font-size:0.85rem; color:var(--text-dim);">
+                        <span id="charCount">0</span> / 2000文字
+                    </div>
+                </div>
+                <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
+                    <button onclick="closeCommentModal()"
+                        style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
+                    <button onclick="saveComment()"
+                        style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editModalTitleHeading"
+                    style="color:white; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i data-lucide="edit-3"></i> 情報編集
+                </h3>
+                <button class="close-modal" onclick="closeEditModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group">
+                    <label class="info-label" style="margin-bottom:0.5rem; display:block;">担当予定</label>
+                    <div id="editHistoryContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
+                    </div>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <input type="date" id="newHistoryStart" class="admin-select" style="flex:1;">
+                        <span style="color:var(--text-dim);">～</span>
+                        <input type="date" id="newHistoryEnd" class="admin-select" style="flex:1;">
+                        <select id="newHistoryName" class="admin-select" style="flex:1;">
+                            <option value="">メンバーを選択</option>
+                        </select>
+                        <button onclick="addHistoryItem()"
+                            style="padding:0.6rem; background:var(--primary); border:none; border-radius:4px; cursor:pointer; color:black;">
+                            <i data-lucide="plus" style="width:16px; height:16px;"></i>
+                        </button>
+                    </div>
+                </div>
+                <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:1rem;">
+                    <button onclick="closeEditModal()"
+                        style="padding:0.6rem 1.2rem; background:transparent; border:1px solid var(--glass-border); color:var(--text-dim); border-radius:8px; cursor:pointer;">キャンセル</button>
+                    <button onclick="saveEdit()"
+                        style="padding:0.6rem 1.2rem; background:var(--primary); border:none; color:black; font-weight:bold; border-radius:8px; cursor:pointer;">保存する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vite Entry Point -->
+    <script type="module" src="../../src/pages/admin/selected_detail/main.js"></script>
+</body>
+
+</html>

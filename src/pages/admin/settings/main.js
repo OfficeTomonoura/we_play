@@ -1,3 +1,4 @@
+import '../../../styles/admin/index.js';
 import { createIcons, icons } from 'lucide';
 import { authApi } from '../../../api/auth';
 import { renderAdminLayout, getTemplateContent } from '../../../lib/admin/layout';

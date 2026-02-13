@@ -1,3 +1,4 @@
+import '../../../styles/main.css';
 import { createIcons, icons } from 'lucide';
 import { authApi } from '../../../api/auth';
 import { membersApi } from '../../../api/members';

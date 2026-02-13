@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会議詳細 | We Play 管理システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    
+
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="page-template">
+        <div class="meeting-header"
+            style="margin: 2rem 0; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1
+                    style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff, var(--text-dim)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                    第01回理事会</h1>
+                <div style="display: flex; gap: 1.5rem; color: var(--text-dim); font-size: 0.95rem;">
+                    <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="calendar"
+                            style="width: 16px;"></i> 2026年2月10日(火)</span>
+                    <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="clock"
+                            style="width: 16px;"></i> 19:00 - 21:00</span>
+                    <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="map-pin"
+                            style="width: 16px;"></i> 商工会議所 4F 会議室</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="export-btn"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1.2rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    <i data-lucide="download" style="width: 18px;"></i> 資料一括ダウンロード
+                </button>
+            </div>
+        </div>
+
+        <!-- Agenda Cards Grid -->
+        <div class="agendas-grid" style="display: grid; gap: 1.5rem; margin-top: 2rem;">
+
+            <!-- Agenda Item 1: 協議 -->
+            <a href="agenda-item-details.html" class="agenda-card"
+                style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; display: flex; gap: 2.5rem; transition: all 0.3s ease; position: relative; overflow: hidden; text-decoration: none; color: inherit; cursor: pointer;">
+
+                <!-- Protocol Status Badge (Left) -->
+                <div class="agenda-status-box"
+                    style="min-width: 100px; height: 100px; background: rgba(0, 242, 255, 0.1); border: 2px solid var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    <span style="font-size: 1.8rem; font-weight: 800; letter-spacing: 2px;">協議</span>
+                </div>
+
+                <div class="agenda-content" style="flex: 1;">
+                    <h3
+                        style="font-size: 1.4rem; font-weight: 800; margin-bottom: 2rem; line-height: 1.4; color: #fff; border-left: 4px solid var(--primary); padding-left: 1.5rem;">
+                        ともに学び、ともに挑む人財の育成の推進<br>年間事業計画(案)について
+                    </h3>
+
+                    <!-- Info Grid -->
+                    <div
+                        style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; background: rgba(255, 255, 255, 0.02); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05);">
+
+                        <div class="info-group">
+                            <label
+                                style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">担当
+                                / 委員会名</label>
+                            <p style="font-size: 0.95rem; font-weight: 600; color: #fff;">Weからはじまる未来創造室</p>
+                            <p style="font-size: 0.85rem; color: var(--primary);">We Play 未来人財育成委員会</p>
+                        </div>
+
+                        <div class="info-group">
+                            <label
+                                style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">担当役員
+                                / 確認日</label>
+                            <p style="font-size: 0.9rem; font-weight: 600;">Weからはじまる未来創造室 室長</p>
+                            <p style="font-size: 0.95rem; color: #fff;">中尾 朋宏 <span
+                                    style="margin-left: 0.8rem; color: var(--text-dim); font-size: 0.75rem;">📅
+                                    2025/11/24</span></p>
+                        </div>
+
+                        <div class="info-group">
+                            <label
+                                style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">委員長名
+                                / 確認日</label>
+                            <p style="font-size: 0.9rem; font-weight: 600;">We Play 未来人財育成委員会 委員長</p>
+                            <p style="font-size: 0.95rem; color: #fff;">菅田 直人 <span
+                                    style="margin-left: 0.8rem; color: var(--text-dim); font-size: 0.75rem;">📅
+                                    2025/11/24</span></p>
+                        </div>
+
+                        <div class="info-group">
+                            <label
+                                style="display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; letter-spacing: 1px;">文書作成者
+                                / 作成日時</label>
+                            <p style="font-size: 0.9rem; font-weight: 600;">We Play 未来人財育成委員会 委員長</p>
+                            <p style="font-size: 0.95rem; color: #fff;">菅田 直人 <span
+                                    style="margin-left: 0.8rem; color: var(--text-dim); font-size: 0.75rem;">🕒
+                                    2025/11/24</span></p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Agenda Item 2: 審議 (Sample) -->
+            <div class="agenda-card"
+                style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; display: flex; gap: 2.5rem; transition: all 0.3s ease; opacity: 0.8;">
+                <div class="agenda-status-box"
+                    style="min-width: 100px; height: 100px; background: rgba(112, 0, 255, 0.1); border: 2px solid var(--secondary); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--secondary);">
+                    <span style="font-size: 1.8rem; font-weight: 800; letter-spacing: 2px;">審議</span>
+                </div>
+                <div class="agenda-content" style="flex: 1; display: flex; align-items: center;">
+                    <p style="color: var(--text-dim); font-style: italic;">次の議案は準備中、または非公開です。</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Vite Entry Point -->
+    <script type="module" src="../../src/pages/admin/meeting_details/main.js"></script>
+</body>
+
+</html>

@@ -1,3 +1,5 @@
+import '../../../styles/lp.css';
+import '../../../styles/print.css';
 import { createIcons, icons } from 'lucide';
 import liff from '@line/liff';
 import { authApi } from '../../../api/auth';

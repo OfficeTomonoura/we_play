@@ -1,3 +1,4 @@
+import '../../../styles/admin/index.js';
 import { createIcons, icons } from 'lucide';
 import { meetingsApi } from '../../../api/meetings';
 import { renderAdminLayout, getTemplateContent } from '../../../lib/admin/layout';

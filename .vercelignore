@@ -14,9 +14,6 @@
 **/seed_dummy_*.sql
 
 # Local experiments
-test_*/
-sandbox/
-archive/
-
 # Internal documents (if not public)
-assets/docs/
+docs/
+playground/
