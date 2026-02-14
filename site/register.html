@@ -629,6 +629,7 @@
             text-align: center;
         }
 
+        /* Catchphrase styling */
         .catchphrase {
             font-size: 1rem;
             color: #ddd;
@@ -637,6 +638,130 @@
             text-align: center;
             letter-spacing: 0.5px;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- PRIVACY MODAL STYLES --- */
+        .privacy-trigger-wrap {
+            margin-bottom: 25px;
+            text-align: right;
+        }
+
+        .privacy-trigger-btn {
+            background: none;
+            border: none;
+            color: #ffaa00;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: underline;
+            padding: 0;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .privacy-trigger-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+
+        #privacy-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(8px);
+        }
+
+        .privacy-modal-content {
+            background: #fff;
+            /* Requirement specified #fff */
+            color: #333;
+            /* For readability on white */
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            /* Control scroll on body */
+            padding: 0;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .privacy-modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .privacy-modal-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .privacy-modal-close {
+            background: #f5f5f5;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: #666;
+            transition: 0.3s;
+        }
+
+        .privacy-modal-close:hover {
+            background: #eee;
+            color: #000;
+        }
+
+        .privacy-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex-grow: 1;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .privacy-modal-body h3 {
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #000;
+            border-left: 4px solid #ffaa00;
+            padding-left: 12px;
+        }
+
+        .privacy-modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .privacy-modal-body hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 2rem 0;
+        }
+
+        /* Prevent background scroll when modal is open */
+        body.modal-open {
+            overflow: hidden !important;
         }
     </style>
 </head>
@@ -790,11 +915,17 @@
             <textarea id="message" name="message" rows="4" placeholder="ご質問や特別なリクエストがあればご記入ください"></textarea>
         </div>
 
+        <div class="privacy-trigger-wrap">
+            <button type="button" id="open-privacy" class="privacy-trigger-btn">
+                <i data-lucide="external-link" size="14"></i> プライバシーポリシーを確認する
+            </button>
+        </div>
+
         <div class="checkbox-group">
             <label class="custom-checkbox">
-                <input type="checkbox" name="privacy" required>
+                <input type="checkbox" name="privacy" required aria-required="true">
                 <span class="checkmark"></span>
-                <span><a href="#">プライバシーポリシー</a>に同意する</span>
+                <span>プライバシーポリシーに同意する</span>
             </label>
         </div>
 
@@ -813,6 +944,95 @@
             <button type="button" class="close-btn" onclick="window.reloadPage()">CLOSE</button>
         </div>
     </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
+        <div class="privacy-modal-content" id="privacy-modal-content" tabindex="-1">
+            <div class="privacy-modal-header">
+                <h2 id="privacy-modal-title">プライバシーポリシー</h2>
+                <button type="button" class="privacy-modal-close" id="close-privacy" aria-label="閉じる">&times;</button>
+            </div>
+            <div class="privacy-modal-body">
+                <p>一般社団法人福山青年会議所 We Play
+                    未来人財育成委員会（以下、「当委員会」といいます。）は、当委員会が主宰する「ぼくらのフィルム革命」プロジェクト（以下、「本プロジェクト」といいます。）に関わる参加申込者、保護者、ならびに関係者（以下、総称して「利用者」といいます。）の個人情報保護の重要性を認識し、以下の通りプライバシーポリシーを定めます。
+                </p>
+
+                <h3>1. 個人情報の取得について</h3>
+                <p>当委員会は、適法かつ公正な手段によって個人情報を取得します。本プロジェクトにおける参加申込時に、氏名、性別、学校名、学年、住所、電話番号、メールアドレス等の情報を取得させていただきます。</p>
+
+                <h3>2. 個人情報の利用目的について</h3>
+                <p>取得した個人情報は、以下の目的のためにのみ利用し、目的外利用は行いません。<br>
+                    ・本プロジェクトの選考、連絡、運営に付随する業務<br>
+                    ・活動報告、次年度以降の広報資料（ウェブサイト、SNS、報告書等）への掲載<br>
+                    ・万が一の事故に対するレクリエーション保険加入手続き<br>
+                    ・主催者からの関連イベント等のご案内</p>
+
+                <h3>3. 個人情報の第三者への提供について</h3>
+                <p>当委員会は、次の場合を除き、個人情報を第三者に提供することはありません。<br>
+                    ・ご本人の同意（未成年の場合は保護者の同意）がある場合<br>
+                    ・法令に基づく公開請求があった場合<br>
+                    ・保険手続き等、本プロジェクト運営に不可欠な業務を外部に委託する場合</p>
+
+                <h3>4. 個人情報の管理について</h3>
+                <p>当委員会は、管理する個人情報の漏洩、紛失、破壊、改ざんを防止するため、適切な安全管理措置を講じます。また、プロジェクト終了後、不要となった個人情報は速やかに、かつ適切に廃棄いたします。</p>
+
+                <h3>5. 肖像権、SNS等の取り扱いについて</h3>
+                <p>本プロジェクトは映画制作およびその過程を記録・公開する活動を含みます。活動中に撮影された写真や映像は、本プロジェクトの広報活動のために使用される場合があります。これらについては、別途「肖像権に関する承諾書」にて詳細を確認させていただきます。
+                </p>
+
+                <h3>6. お問い合わせ先</h3>
+                <p>本プライバシーポリシーに関するお問い合わせは、下記までお願いいたします。</p>
+                <p>一般社団法人福山青年会議所 事務局<br>
+                    〒720-0067 広島県福山市西町2-10-1<br>
+                    TEL : 084-922-5992 (平日 10:00〜17:00)</p>
+
+                <hr>
+                <p style="font-size: 0.8rem; color: #888; text-align: center;">© 2026 We Play 未来人財育成委員会</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Control Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const openBtn = document.getElementById('open-privacy');
+            const closeBtn = document.getElementById('close-privacy');
+            const overlay = document.getElementById('privacy-modal-overlay');
+            const content = document.getElementById('privacy-modal-content');
+
+            const openModal = () => {
+                overlay.style.display = 'flex';
+                document.body.classList.add('modal-open');
+                content.focus();
+            };
+
+            const closeModal = () => {
+                overlay.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                openBtn.focus();
+            };
+
+            openBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal();
+            });
+
+            // Close on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+
+            // Re-run lucide for the new trigger icon
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
 
     <!-- Vite Entry Point -->
     <script type="module" src="../src/pages/public/register/main.js"></script>
